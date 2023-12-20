@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/pop_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:cardCornerRadius="20dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        style="@style/LayoutStyle"
+        android:orientation="vertical">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="350dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="lottie_music.json"
+            app:lottie_loop="true" />
+
+        <TextView
+            android:id="@+id/bottomMenuEqualizerOption"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            style="@style/TextViewStyle"
+            android:gravity="center|start"
+            android:text="Equalizer"
+            android:drawableStart="@drawable/icon_equalizer"
+            android:paddingStart="20dp"
+            android:drawablePadding="20dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            style="@style/ViewStyle"/>
+
+
+        <TextView
+            android:id="@+id/bottomMenuSleepModeOption"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            style="@style/TextViewStyle"
+            android:gravity="center|start"
+            android:text="Sleep Mode"
+            android:paddingStart="10dp"
+            android:drawablePadding="20dp"
+            app:drawableStartCompat="@drawable/icon_sleepmode" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            style="@style/ViewStyle"/>
+
+
+        <TextView
+            android:id="@+id/bottomMenuAudioBoostOption"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            style="@style/TextViewStyle"
+            android:gravity="center|start"
+            android:text="Audio Boost"
+            android:drawableStart="@drawable/icon_audioboost"
+            android:paddingStart="17dp"
+            android:drawablePadding="20dp" />
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

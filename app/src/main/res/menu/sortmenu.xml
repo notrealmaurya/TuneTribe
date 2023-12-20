@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:theme="@style/AppPopupMenuStyle">
+
+
+    <item
+        android:id="@+id/newestDatefirst"
+        android:title="Newest first" />
+    <item
+        android:id="@+id/oldestDatefirst"
+        android:title="Oldest first" />
+    <item
+        android:id="@+id/largestSizefirst"
+        android:title="Size (Largest first)" />
+    <item
+        android:id="@+id/smallestSizefirst"
+        android:title="Size (Smallest first)" />
+    <item
+        android:id="@+id/nameAtoZ"
+        android:title="Name (A -> Z)" />
+    <item
+        android:id="@+id/nameZtoA"
+        android:title="Name (Z -> A)" />
+
+
+</menu>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="MaterialNavigationView">
+        <attr name="itemStyle" format="enum">
+            <enum name="default_style" value="1" />
+            <enum name="rounded_right" value="2" />
+            <enum name="rounded_rectangle" value="3" />
+        </attr>
+    </declare-styleable>
+
+    <attr name="bgColor" format="reference"/>
+    <attr name="bgSecondColor" format="reference"/>
+    <attr name="textColorBold" format="reference"/>
+    <attr name="customTextColor" format="reference"/>
+    <attr name="customTextSecondColor" format="reference"/>
+    <attr name="textHighlightColor" format="reference"/>
+    <attr name="customButtonbgColor" format="reference"/>
+    <attr name="customButtonbgSecondColor" format="reference" />
+    <attr name="customButtonTextColor" format="reference" />
+    <attr name="customButtonTextSecondColor" format="reference" />
+    <attr name="customButtonTheme" format="reference" />
+    <attr name="customSecondaryButtonTheme" format="reference" />
+    <attr name="bordercolor" format="reference" />
+    <attr name="customIconColor" format="reference"/>
+    <attr name="customIconSecondColor" format="reference"/>
+    <attr name="appicon" format="reference"/>
+    <attr name="appicon_full" format="reference"/>
+    <attr name="customBadgeColor" format="reference"/>
+    <attr name="customBadgeTextColor" format="reference"/>
+    <attr name="customNavbgColor" format="reference"/>
+    <attr name="customNavTextColor" format="reference"/>
+    <attr name="customNavIconColor" format="reference"/>
+    <attr name="customTextViewTheme" format="reference"/>
+    <attr name="customEditTextTheme" format="reference"/>
+    <attr name="customEditTextSecondTheme" format="reference"/>
+    <attr name="customSpinnerTheme" format="reference"/>
+
+</resources>

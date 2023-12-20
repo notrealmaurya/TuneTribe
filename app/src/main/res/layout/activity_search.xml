@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    style="@style/LayoutStyle"
+    tools:context=".Activities.SearchActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/StatusBarLayoutStyle"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            style="@style/StatusBarSearchLayoutStyle"
+            android:layout_marginRight="15dp">
+
+
+            <ImageView
+                android:id="@+id/SearchActivityBackBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                style="@style/BackButtonStyle"
+                android:padding="10dp"
+                android:src="@drawable/icon_left_arrow" />
+
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/SearchMusicViewSearchActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                app:queryBackground="@null"
+                app:queryHint="Search Music"
+                app:searchIcon="@drawable/icon_search" />
+
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/MusicListTotalSongFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="10dp"
+            android:text="0 song"
+            android:layout_marginBottom="10dp"
+            style="@style/TextViewStyle"
+            android:textSize="13sp" />
+
+
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewSearchActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:scrollbarThumbVertical="@drawable/icon_scrollbar"
+        android:scrollbars="vertical" />
+
+
+</LinearLayout>

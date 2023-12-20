@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="InnerDrawer">
+        <attr name="appbarColor" format="color" />
+        <attr name="appbarTitleTextColor" format="color" />
+        <attr name="appbarTitleTextSize" format="dimension"/>
+        <attr name="HamMenuIconTintColor" format="color" />
+        <attr name="HamMenuIconSize" format="dimension" />
+        <attr name="navigationDrawerBackgroundColor" format="color" />
+        <attr name="menuItemTextColor" format="color" />
+        <attr name="menuItemTextSize" format="dimension"/>
+        <attr name="menuItemIconColor" format="color" />
+        <!--<attr name="menuItemIconSize" format="dimension"/>-->
+        <attr name="shrinkValue" format="float"/>
+        <attr name="statusBarDark" format="boolean"/>
+        <attr name="headerLayout" format="reference"/>
+        <attr name="footerlayout" format="reference"/>
+        <attr name="footerInsideMenuList" format="boolean"/>
+        <attr name="headerInsideMenuList" format="boolean"/>
+        <attr name="appBarEnabled" format="boolean"/>
+        <attr name="closeDrawerOnMenuClick" format="boolean"/>
+        <attr name="blurContent" format="boolean"/>
+
+        <attr name="menuItemGravity">
+            <flag name="bottom" value="80" />
+            <flag name="center" value="17" />
+            <flag name="center_horizontal" value="1" />
+            <flag name="center_vertical" value="16" />
+            <flag name="clip_horizontal" value="8" />
+            <flag name="clip_vertical" value="128" />
+            <flag name="end" value="8388613" />
+            <flag name="fill" value="119" />
+            <flag name="fill_horizontal" value="7" />
+            <flag name="fill_vertical" value="112" />
+            <flag name="left" value="3" />
+            <flag name="right" value="5" />
+            <flag name="start" value="8388611" />
+            <flag name="top" value="48" />
+        </attr>
+    </declare-styleable>
+
+</resources>

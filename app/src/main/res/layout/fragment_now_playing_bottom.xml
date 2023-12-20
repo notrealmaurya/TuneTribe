@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/BottomPlayerHome"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    style="@style/LayoutStyle"
+    tools:context=".Fragments.NowPlayingBottomFragment">
+
+    <SeekBar
+        android:id="@+id/seekBarMiniPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:progressTint="#FF4D4D"
+        android:thumbTint="#FFA2A2" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/AlbumArtMiniPlayer"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        android:scaleType="centerCrop"
+        android:padding="12dp"
+        android:src="@drawable/music" />
+
+    <TextView
+        android:id="@+id/songNameMiniPlayer"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@id/AlbumArtMiniPlayer"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="This is Song Name"
+        style="@style/TextViewStyle"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/songArtistMiniPlayer"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/songNameMiniPlayer"
+        android:layout_marginTop="2dp"
+        android:layout_toEndOf="@id/AlbumArtMiniPlayer"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="This is Artist Name"
+        style="@style/TextViewStyle"
+        android:textSize="13sp" />
+
+
+    <ImageView
+        android:id="@+id/playPauseMiniPlayer"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        style="@style/next_previous_ripple"
+        android:padding="8dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@id/songArtistMiniPlayer"
+        android:clickable="true"
+        android:src="@drawable/icon_play" />
+
+    <ImageView
+        android:id="@+id/NextMiniPlayer"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        style="@style/next_previous_ripple"
+        android:padding="8dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@id/playPauseMiniPlayer"
+        android:clickable="true"
+        android:src="@drawable/icon_next" />
+
+    <ImageView
+        android:id="@+id/queueNowPlayingFragment"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        style="@style/next_previous_ripple"
+        android:padding="8dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@id/NextMiniPlayer"
+        android:clickable="true"
+        android:src="@drawable/icon_play_playlist" />
+
+
+</RelativeLayout>
+

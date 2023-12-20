@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:cardCornerRadius="20dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        style="@style/LayoutStyle"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/TimerMenu15min"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            style="@style/TextViewStyle"
+            android:gravity="center|start"
+            android:paddingStart="40dp"
+            android:text="PlayList Name"/>
+
+
+        <LinearLayout
+            android:id="@+id/PlayListListFragmentPopUpDelete"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:minHeight="?attr/actionBarSize"
+            android:background="@drawable/bg_about_ripple"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="40dp"
+                android:src="@drawable/icon_delete_popup" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:textSize="15sp"
+                style="@style/TextViewStyle"
+                android:layout_marginStart="20dp"
+                android:drawablePadding="25dp"
+                android:gravity="center|start"
+                android:text="Delete" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/PlayListListFragmentPopUpRename"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:clickable="true"
+            android:background="@drawable/bg_about_ripple"
+            android:gravity="center_vertical"
+            android:minHeight="?attr/actionBarSize"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="40dp"
+                android:src="@drawable/icon_rename_popup" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:gravity="center|start"
+                android:layout_marginStart="21dp"
+                android:text="Rename"
+                android:textSize="15sp"
+                style="@style/TextViewStyle" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/LayoutStyle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:scaleType="centerCrop"
+        app:lottie_autoPlay="true"
+        android:layout_marginTop="40dp"
+        app:lottie_fileName="loop.json"
+        app:lottie_loop="true" />
+
+    <TextView
+        style="@style/TextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Loop"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:id="@+id/layout_clock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="20dp"
+        android:orientation="vertical">
+
+        <TextClock
+            style="@style/TextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="15sp" />
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/nav_line"
+        style="@style/ViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp" />
+
+</LinearLayout>

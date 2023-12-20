@@ -1,0 +1,126 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.DTxLoopPlayer" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/statusBarDark</item>
+
+    </style>
+
+    <style name="expandedBarText" parent="Theme.DTxLoopPlayer">
+        <item name="android:textSize">0sp</item>
+        <item name="android:textColor">@android:color/transparent</item>
+    </style>
+
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/colorPrimary</item>
+    </style>
+
+
+    <!--    Navigation view-->
+    <style name="NavigationView" parent="@style/Widget.MaterialComponents.NavigationView">
+        <item name="android:background">@drawable/mode_dark_navigation_view</item>
+        <item name="itemHorizontalPadding">@dimen/nav_item_horizontal_padding</item>
+    </style>
+
+
+    <!--  StatusBarLayoutStyle-->
+    <style name="StatusBarLayoutStyle">
+        <item name="android:background">@drawable/mode_night_bg_custom_appbar</item>
+    </style>
+
+    <!-- StatusBarSearchLayoutStyle-->
+    <style name="StatusBarSearchLayoutStyle">
+        <item name="android:background">@drawable/mode_dark_bg_toolbar</item>
+    </style>
+
+
+    <!--  layout style-->
+    <style name="LayoutStyle">
+        <item name="android:background">@color/dark_black</item>
+    </style>
+
+
+    <!--"TabLayoutStyle"-->
+    <style name="TabLayoutStyle">
+        <item name="tabIndicatorColor">#FFFFFF</item>
+        <item name="tabSelectedTextColor">#FFFFFF</item>
+        <item name="tabTextColor">#9F9F9F</item>
+        <item name="android:background">@drawable/mode_night_bg_tablayout</item>
+    </style>
+
+    <!--"BackButtonStyle"-->
+    <style name="BackButtonStyle">
+        <item name="android:background">@drawable/mode_night_bg_backbutton</item>
+    </style>
+
+    <!--    "AppCompatButton"-->
+    <style name="AppCompatButton">
+        <item name="android:background">@drawable/bg_shuffle</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!--"EdiText"-->
+    <style name="EditTextStyle">
+        <item name="android:background">@drawable/mode_night_edittext</item>
+    </style>
+
+
+    <!--NextPreviousRipple-->
+<!--    <style name="next_previous_ripple">-->
+<!--        <item name="android:background">@drawable/mode_dark_bg_next_previous_ripple</item>-->
+<!--    </style>-->
+
+    <!-- Custom style for the TextView -->
+    <style name="TextViewStyle">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <!-- Custom style for the TextViewSmall -->
+    <style name="TextViewStyleSmall">
+        <item name="android:textColor">#BFBFBF</item>
+    </style>
+
+    <!--    View line-->
+    <style name="ViewStyle">
+        <item name="android:background">@color/line_colour</item>
+    </style>
+
+    <!--    Shapeable image View-->
+    <style name="RoundedImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+
+    <!--    Bottom Dialog-->
+
+    <style name="ThemeOverlay.App.BottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/ShoppingList.BottomSheetDialog</item>
+    </style>
+
+    <style name="ShoppingList.BottomSheetDialog" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="backgroundTint">@android:color/transparent</item>
+    </style>
+
+    <!--    Cardview-->
+    <style name="CardView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">8dp</item>
+        <item name="cornerSizeTopRight">8dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+
+</resources>
