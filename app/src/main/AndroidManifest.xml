@@ -42,7 +42,6 @@
             android:theme="@style/Theme.DTxLoopPlayer" />
         <activity
             android:name=".Activities.PlayListActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.DTxLoopPlayer"
             tools:ignore="LockedOrientationActivity" />
         <activity

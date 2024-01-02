@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.maurya.dtxloopplayer"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.maurya.dtxloopplayer"
