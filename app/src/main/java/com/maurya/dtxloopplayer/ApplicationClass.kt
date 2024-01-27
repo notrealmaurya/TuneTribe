@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
 import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 
 class ApplicationClass:Application() {
@@ -19,6 +20,10 @@ class ApplicationClass:Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        val sharedPreferenceHelper = SharedPreferenceHelper(this)
+        AppCompatDelegate.setDefaultNightMode(sharedPreferenceHelper.themeFlag[sharedPreferenceHelper.theme])
+
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -24,26 +24,21 @@ class AboutDialogFragment : DialogFragment() {
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        // Inflate the custom layout
         val inflater = requireActivity().layoutInflater
         val view = inflater.inflate(R.layout.about_dialog, null)
 
-        // Create and return the AlertDialog
         val builder = AlertDialog.Builder(requireActivity())
         builder.setView(view)
 
         val closeButton = view.findViewById<Button>(R.id.about_dialog_thankyou_button)
         closeButton.setOnClickListener {
-            // Handle the close button click
-            dismiss() // Dismiss the dialog
+            dismiss()
         }
 
-        //NAvView About clickable
         val textView = view.findViewById<TextView>(R.id.spannableTextView_Dialog)
-        // Create a SpannableString with clickable text
-        val spannableString = SpannableString("If you'd like to share your thoughts or provide Feedback , please feel free to do so. Your input is valuable, and I'd appreciate hearing from you.❤\uFE0F\"\n ")
+        val spannableString =
+            SpannableString("If you'd like to share your thoughts or provide Feedback , please feel free to do so. Your input is valuable, and I'd appreciate hearing from you.❤\uFE0F\"\n ")
 
-        // Define a ClickableSpan
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
                 val websiteUrl =
@@ -53,13 +48,11 @@ class AboutDialogFragment : DialogFragment() {
             }
         }
 
-        // Apply the ClickableSpan to a portion of the text
         spannableString.setSpan(
             clickableSpan,
             48, 56,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
-        // Apply a ForegroundColorSpan to change the color to blue
         val blueColor = Color.BLUE
         spannableString.setSpan(
             ForegroundColorSpan(blueColor),

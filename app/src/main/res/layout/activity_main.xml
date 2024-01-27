@@ -141,7 +141,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:visibility="gone"
+        android:visibility="visible"
         app:headerLayout="@layout/nav_drawer_top_text"
         app:menu="@menu/home_menu">
 
@@ -153,16 +153,15 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/darkModeSwitch"
+
+            <TextView
+                android:id="@+id/darkModeText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:thumb="@drawable/thumb_layerlist"
+                android:padding="10dp"
                 android:text="Dark Mode"
                 android:gravity="center"
-                android:paddingEnd="40dp"
-                android:layout_marginBottom="20dp"
-                app:track="@drawable/track_backgrounds" />
+                android:layout_marginBottom="20dp"/>
 
 
         </LinearLayout>

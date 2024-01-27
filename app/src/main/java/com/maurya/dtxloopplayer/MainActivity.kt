@@ -17,6 +17,7 @@ import android.provider.Settings
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.NightMode
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -25,6 +26,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.GsonBuilder
@@ -40,8 +42,7 @@ import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var sharedPreferencesDarkMode: SharedPreferences
-    private var isDarkModeEnabled: Boolean = false
+    private val themeList = arrayOf("Light Mode", "Night Mode", "Auto (System Defaults)")
     private lateinit var sharedPreferencesHelper: SharedPreferenceHelper
 
     companion object {
@@ -57,20 +58,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-
-        sharedPreferencesHelper = SharedPreferenceHelper(this)
-
-// SharedPreference for Switching Dark Mode
-        sharedPreferencesDarkMode = PreferenceManager.getDefaultSharedPreferences(this)
-        isDarkModeEnabled = sharedPreferencesHelper.isDarkModeEnabled()
-
-// Initialize the app's theme based on the stored mode
-        val nightMode =
-            if (isDarkModeEnabled) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
-        AppCompatDelegate.setDefaultNightMode(nightMode)
-
         setContentView(binding.root)
 
+        sharedPreferencesHelper = SharedPreferenceHelper(this)
 
         ListsFragment.musicPlayList = MusicPlayList()
         // Retrieve Playlist data using shared preferences
@@ -82,6 +72,33 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.navView.visibility = View.VISIBLE
+
+        //NightMode
+        var checkedTheme = sharedPreferencesHelper.theme
+        binding.darkModeText.text = "Theme: ${themeList[sharedPreferencesHelper.theme]}"
+
+        binding.darkModeText.setOnClickListener {
+            val dialog = MaterialAlertDialogBuilder(this)
+                .setTitle("Change theme")
+                .setPositiveButton("Ok") { _, _ ->
+                    sharedPreferencesHelper.theme = checkedTheme
+                    AppCompatDelegate.setDefaultNightMode(sharedPreferencesHelper.themeFlag[checkedTheme])
+                    binding.darkModeText.text = "Theme: ${themeList[sharedPreferencesHelper.theme]}"
+                }
+                .setSingleChoiceItems(themeList, checkedTheme) { _, which ->
+                    checkedTheme = which
+                }
+                .setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setCancelable(false)
+                .show()
+
+            dialog.setOnDismissListener {
+                dialog.dismiss()
+            }
+        }
+
 
         permission()
         initViewPager()
@@ -166,6 +183,48 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    private fun listeners() {
+
+        //top toolbar
+        binding.menuImageView.setOnClickListener(View.OnClickListener {
+            binding.MainDrawerLayout.openDrawer(GravityCompat.START)
+
+        })
+
+        binding.SearchMusicViewMainActivity.setOnClickListener {
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
+        }
+
+
+        binding.navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_feedback -> {
+                    val websiteUrl =
+                        "https://docs.google.com/forms/d/e/1FAIpQLSfRsCpO9jc0t61V6E5IkjH6L0HSoWmk2LQdy0EPJ1SmBL7_hQ/viewform"
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl))
+                    startActivity(intent)
+                }
+
+                R.id.nav_Settings -> {
+
+                }
+
+                R.id.nav_about -> {
+                    val customDialogFragment = AboutDialogFragment()
+                    customDialogFragment.show(supportFragmentManager, "CustomDialogFragment")
+                }
+
+            }
+            menuItem.isChecked = false
+            binding.MainDrawerLayout.closeDrawer(GravityCompat.START)
+            true // Return true to indicate that the click was handled
+        }
+
+
+    }
+
+
     private fun initViewPager() {
 
         val myAdapter = ViewPagerAdapter(this)
@@ -222,65 +281,6 @@ class MainActivity : AppCompatActivity() {
         val appBarLayoutParams = binding.appbar.layoutParams as CoordinatorLayout.LayoutParams
         appBarLayoutParams.behavior = AppBarLayout.Behavior()
         binding.appbar.layoutParams = appBarLayoutParams
-    }
-
-    private fun listeners() {
-
-        //top toolbar
-        binding.menuImageView.setOnClickListener(View.OnClickListener {
-            binding.MainDrawerLayout.openDrawer(GravityCompat.START)
-
-        })
-
-        binding.SearchMusicViewMainActivity.setOnClickListener {
-            val intent = Intent(this, SearchActivity::class.java)
-            startActivity(intent)
-        }
-
-
-        binding.navView.setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.nav_feedback -> {
-                    val websiteUrl =
-                        "https://docs.google.com/forms/d/e/1FAIpQLSfRsCpO9jc0t61V6E5IkjH6L0HSoWmk2LQdy0EPJ1SmBL7_hQ/viewform"
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl))
-                    startActivity(intent)
-                }
-
-                R.id.nav_Settings -> {
-
-                }
-
-                R.id.nav_about -> {
-                    val customDialogFragment = AboutDialogFragment()
-                    customDialogFragment.show(supportFragmentManager, "CustomDialogFragment")
-                }
-
-            }
-            menuItem.isChecked = false
-            binding.MainDrawerLayout.closeDrawer(GravityCompat.START)
-            true // Return true to indicate that the click was handled
-        }
-
-
-        //dark mode switch
-        val isDarkModeEnabled = sharedPreferencesHelper.isDarkModeEnabled()
-        // Initialize the dark mode switch
-        binding.darkModeSwitch.isChecked = isDarkModeEnabled
-        binding.darkModeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            // Update the shared preference using the helper
-            sharedPreferencesHelper.setDarkModeEnabled(isChecked)
-            // Update the theme based on the switch state
-            val nightMode = if (isChecked) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
-            AppCompatDelegate.setDefaultNightMode(nightMode)
-
-            this.isDarkModeEnabled = isChecked
-        }
-
     }
 
     private fun permission() {
@@ -391,6 +391,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (binding.MainDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.MainDrawerLayout.closeDrawer(GravityCompat.START)
