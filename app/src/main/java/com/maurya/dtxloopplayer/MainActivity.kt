@@ -5,12 +5,19 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
+import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -28,12 +35,12 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.GsonBuilder
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.activities.SearchActivity
-import com.maurya.dtxloopplayer.fragments.AboutDialogFragment
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.fragments.SongsFragment
 import com.maurya.dtxloopplayer.dataEntity.MusicData
 import com.maurya.dtxloopplayer.dataEntity.MusicPlayList
 import com.maurya.dtxloopplayer.databinding.ActivityMainBinding
+import com.maurya.dtxloopplayer.databinding.PopupAboutDialogBinding
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import java.io.File
 import kotlin.system.exitProcess
@@ -210,8 +217,48 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.nav_about -> {
-                    val customDialogFragment = AboutDialogFragment()
-                    customDialogFragment.show(supportFragmentManager, "CustomDialogFragment")
+                    val popUpDialog = LayoutInflater.from(this)
+                        .inflate(R.layout.popup_about_dialog, binding.root, false)
+                    val bindingPopUp = PopupAboutDialogBinding.bind(popUpDialog)
+                    val dialog =
+                        MaterialAlertDialogBuilder(this).setView(popUpDialog)
+                            .setOnCancelListener {
+
+                            }
+                            .create()
+
+                    bindingPopUp.aboutDialogThankyouButton.setOnClickListener {
+                        dialog.dismiss()
+                    }
+
+                    val textView = bindingPopUp.spannableTextViewDialog
+                    val spannableString = SpannableString("If you'd like to share your thoughts or provide Feedback , please feel free to do so. Your input is valuable, and I'd appreciate hearing from you.❤\uFE0F\"\n ")
+
+                    val clickableSpan = object : ClickableSpan() {
+                        override fun onClick(widget: View) {
+                            val websiteUrl =
+                                "https://forms.gle/4gC2XzHDCaio7hUh8"
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl))
+                            startActivity(intent)
+                        }
+                    }
+
+                    spannableString.setSpan(
+                        clickableSpan,
+                        48, 56,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    val blueColor = Color.BLUE
+                    spannableString.setSpan(
+                        ForegroundColorSpan(blueColor),
+                        48, 56,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+
+                    textView.text = spannableString
+                    textView.movementMethod = LinkMovementMethod.getInstance()
+
+                    dialog.show()
                 }
 
             }
