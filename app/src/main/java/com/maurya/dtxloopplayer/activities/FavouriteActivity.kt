@@ -1,14 +1,13 @@
-package com.maurya.dtxloopplayer.Activities
+package com.maurya.dtxloopplayer.activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maurya.dtxloopplayer.Adapter.FavouriteAdapter
-import com.maurya.dtxloopplayer.Adapter.MusicAdapter
-import com.maurya.dtxloopplayer.MusicData
-import com.maurya.dtxloopplayer.checkPlayListData
+import com.maurya.dtxloopplayer.adapter.FavouriteAdapter
+import com.maurya.dtxloopplayer.dataEntity.MusicData
+import com.maurya.dtxloopplayer.dataEntity.checkPlayListData
 import com.maurya.dtxloopplayer.databinding.ActivityFavouriteBinding
 
 class FavouriteActivity : AppCompatActivity() {

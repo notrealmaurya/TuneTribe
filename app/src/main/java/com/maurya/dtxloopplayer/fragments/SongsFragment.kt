@@ -1,4 +1,4 @@
-package com.maurya.dtxloopplayer.Fragments
+package com.maurya.dtxloopplayer.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,12 +8,12 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maurya.dtxloopplayer.Activities.PlayerActivity
-import com.maurya.dtxloopplayer.Adapter.MusicAdapter
+import com.maurya.dtxloopplayer.activities.PlayerActivity
+import com.maurya.dtxloopplayer.adapter.MusicAdapter
 import com.maurya.dtxloopplayer.MainActivity
-import com.maurya.dtxloopplayer.MusicData
+import com.maurya.dtxloopplayer.dataEntity.MusicData
 import com.maurya.dtxloopplayer.R
-import com.maurya.dtxloopplayer.SharedPreferenceHelper
+import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.databinding.FragmentSongsBinding
 
 

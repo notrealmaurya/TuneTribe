@@ -1,4 +1,4 @@
-package com.maurya.dtxloopplayer.Fragments
+package com.maurya.dtxloopplayer.fragments
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -9,19 +9,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.maurya.dtxloopplayer.Activities.PlayerActivity
-import com.maurya.dtxloopplayer.Adapter.MusicAdapter
+import com.maurya.dtxloopplayer.activities.PlayerActivity
+import com.maurya.dtxloopplayer.adapter.MusicAdapter
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.databinding.FragmentNowPlayingBottomBinding
-import com.maurya.dtxloopplayer.notifyAdapterSongTextPosition
-import com.maurya.dtxloopplayer.setSongPosition
+import com.maurya.dtxloopplayer.dataEntity.notifyAdapterSongTextPosition
+import com.maurya.dtxloopplayer.dataEntity.setSongPosition
 
 
 class NowPlayingBottomFragment : Fragment() {

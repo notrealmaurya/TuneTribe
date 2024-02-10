@@ -26,30 +26,30 @@
         android:theme="@style/Theme.DTxLoopPlayer"
         tools:targetApi="31">
         <activity
-            android:name=".Activities.FolderTracksActivity"
+            android:name=".activities.FolderTracksActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.FolderActivity"
+            android:name=".activities.FolderActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.SelectionActivity"
+            android:name=".activities.SelectionActivity"
             android:exported="false"
             android:theme="@style/Theme.DTxLoopPlayer" />
         <activity
-            android:name=".Activities.SearchActivity"
+            android:name=".activities.SearchActivity"
             android:exported="false"
             android:theme="@style/Theme.DTxLoopPlayer" />
         <activity
-            android:name=".Activities.PlayListActivity"
+            android:name=".activities.PlayListActivity"
             android:theme="@style/Theme.DTxLoopPlayer"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".Activities.FavouriteActivity"
+            android:name=".activities.FavouriteActivity"
             android:exported="false"
             android:label="@string/title_activity_favourite"
             android:theme="@style/Theme.DTxLoopPlayer" />
         <activity
-            android:name=".Activities.PlayerActivity"
+            android:name=".activities.PlayerActivity"
             android:exported="true"
             android:theme="@style/Theme.DTxLoopPlayer" />
         <activity

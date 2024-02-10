@@ -1,13 +1,12 @@
-package com.maurya.dtxloopplayer.Activities
+package com.maurya.dtxloopplayer.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maurya.dtxloopplayer.Adapter.MusicAdapter
-import com.maurya.dtxloopplayer.Fragments.SongsFragment
+import com.maurya.dtxloopplayer.adapter.MusicAdapter
 import com.maurya.dtxloopplayer.MainActivity
-import com.maurya.dtxloopplayer.MusicData
+import com.maurya.dtxloopplayer.dataEntity.MusicData
 import com.maurya.dtxloopplayer.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {

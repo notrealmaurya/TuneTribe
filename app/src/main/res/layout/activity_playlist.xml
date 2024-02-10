@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     style="@style/LayoutStyle"
     android:orientation="vertical"
-    tools:context=".Activities.PlayListActivity">
+    tools:context=".activities.PlayListActivity">
 
     <LinearLayout
         android:id="@+id/layout_topBTN"

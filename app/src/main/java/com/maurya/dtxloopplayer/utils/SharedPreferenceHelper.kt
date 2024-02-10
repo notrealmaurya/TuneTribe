@@ -1,4 +1,4 @@
-package com.maurya.dtxloopplayer
+package com.maurya.dtxloopplayer.utils
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity

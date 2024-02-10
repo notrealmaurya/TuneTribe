@@ -1,4 +1,4 @@
-package com.maurya.dtxloopplayer.Activities
+package com.maurya.dtxloopplayer.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,10 +7,10 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.GsonBuilder
-import com.maurya.dtxloopplayer.Adapter.MusicAdapter
-import com.maurya.dtxloopplayer.Adapter.PlayListViewAdapter
-import com.maurya.dtxloopplayer.Fragments.ListsFragment
-import com.maurya.dtxloopplayer.checkPlayListData
+import com.maurya.dtxloopplayer.adapter.MusicAdapter
+import com.maurya.dtxloopplayer.adapter.PlayListViewAdapter
+import com.maurya.dtxloopplayer.fragments.ListsFragment
+import com.maurya.dtxloopplayer.dataEntity.checkPlayListData
 import com.maurya.dtxloopplayer.databinding.ActivityPlaylistBinding
 
 class PlayListActivity : AppCompatActivity() {

@@ -122,7 +122,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/BottomPlayerHome"
-            android:name="com.maurya.dtxloopplayer.Fragments.NowPlayingBottomFragment"
+            android:name="com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment"
             style="@style/LayoutStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

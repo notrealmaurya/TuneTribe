@@ -6,7 +6,7 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
+import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 
 class ApplicationClass:Application() {
 

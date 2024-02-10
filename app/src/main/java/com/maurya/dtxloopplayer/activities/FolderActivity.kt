@@ -1,15 +1,13 @@
-package com.maurya.dtxloopplayer.Activities
+package com.maurya.dtxloopplayer.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.ListFragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maurya.dtxloopplayer.Adapter.FolderAdapter
-import com.maurya.dtxloopplayer.FolderData
-import com.maurya.dtxloopplayer.Fragments.ListsFragment
-import com.maurya.dtxloopplayer.MusicFolderScanner
+import com.maurya.dtxloopplayer.adapter.FolderAdapter
+import com.maurya.dtxloopplayer.dataEntity.FolderData
+import com.maurya.dtxloopplayer.dataEntity.MusicFolderScanner
 import com.maurya.dtxloopplayer.databinding.ActivityFolderBinding
-import com.maurya.dtxloopplayer.updateTextViewWithFolderCount
+import com.maurya.dtxloopplayer.dataEntity.updateTextViewWithFolderCount
 
 class FolderActivity : AppCompatActivity() {
 

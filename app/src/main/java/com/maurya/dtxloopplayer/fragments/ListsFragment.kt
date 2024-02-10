@@ -1,4 +1,4 @@
-package com.maurya.dtxloopplayer.Fragments
+package com.maurya.dtxloopplayer.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context.MODE_PRIVATE
@@ -17,20 +17,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import com.maurya.dtxloopplayer.Activities.FavouriteActivity
-import com.maurya.dtxloopplayer.Activities.FolderActivity
-import com.maurya.dtxloopplayer.Adapter.FavouriteAdapter
-import com.maurya.dtxloopplayer.Adapter.FolderAdapter
-import com.maurya.dtxloopplayer.Adapter.MusicAdapter
-import com.maurya.dtxloopplayer.Adapter.PlayListViewAdapter
-import com.maurya.dtxloopplayer.MusicData
-import com.maurya.dtxloopplayer.MusicFolderScanner
-import com.maurya.dtxloopplayer.MusicPlayList
-import com.maurya.dtxloopplayer.PlayList
+import com.maurya.dtxloopplayer.activities.FavouriteActivity
+import com.maurya.dtxloopplayer.activities.FolderActivity
+import com.maurya.dtxloopplayer.adapter.FavouriteAdapter
+import com.maurya.dtxloopplayer.adapter.FolderAdapter
+import com.maurya.dtxloopplayer.adapter.MusicAdapter
+import com.maurya.dtxloopplayer.adapter.PlayListViewAdapter
+import com.maurya.dtxloopplayer.dataEntity.MusicData
+import com.maurya.dtxloopplayer.dataEntity.MusicFolderScanner
+import com.maurya.dtxloopplayer.dataEntity.MusicPlayList
+import com.maurya.dtxloopplayer.dataEntity.PlayList
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.databinding.FragmentListsBinding
-import com.maurya.dtxloopplayer.updateTextViewWithFolderCount
-import com.maurya.dtxloopplayer.updateTextViewWithItemCount
+import com.maurya.dtxloopplayer.utils.updateTextViewWithFolderCount
+import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 
 
 class ListsFragment : Fragment() {

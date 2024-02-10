@@ -1,4 +1,4 @@
-package com.maurya.dtxloopplayer.Fragments
+package com.maurya.dtxloopplayer.fragments
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -11,10 +11,7 @@ import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment

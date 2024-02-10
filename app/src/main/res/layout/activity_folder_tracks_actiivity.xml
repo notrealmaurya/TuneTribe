@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Activities.FolderTracksActiivity">
+    tools:context=".activities.FolderTracksActiivity">
 
     <LinearLayout
         android:id="@+id/layout_topBTN"

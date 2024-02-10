@@ -1,19 +1,15 @@
-package com.maurya.dtxloopplayer.Adapter
+package com.maurya.dtxloopplayer.adapter
 
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.maurya.dtxloopplayer.Activities.FolderTracksActivity
-import com.maurya.dtxloopplayer.Activities.PlayListActivity
+import com.maurya.dtxloopplayer.activities.FolderTracksActivity
 import com.maurya.dtxloopplayer.R
-import com.maurya.dtxloopplayer.FolderData
-import com.maurya.dtxloopplayer.MusicData
-import com.maurya.dtxloopplayer.countMusicFilesInFolder
+import com.maurya.dtxloopplayer.dataEntity.FolderData
+import com.maurya.dtxloopplayer.dataEntity.countMusicFilesInFolder
 import com.maurya.dtxloopplayer.databinding.PlaylistViewBinding
-import java.io.File
 
 class FolderAdapter(
     private val context: Context,

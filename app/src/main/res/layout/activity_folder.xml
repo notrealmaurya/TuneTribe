@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     style="@style/LayoutStyle"
-    tools:context=".Activities.FolderActivity">
+    tools:context=".activities.FolderActivity">
 
 
     <LinearLayout

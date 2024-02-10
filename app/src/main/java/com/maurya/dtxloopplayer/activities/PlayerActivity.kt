@@ -1,11 +1,9 @@
-package com.maurya.dtxloopplayer.Activities
+package com.maurya.dtxloopplayer.activities
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.database.Cursor
 import android.graphics.Color
@@ -14,7 +12,6 @@ import android.media.MediaPlayer
 import android.media.audiofx.AudioEffect
 import android.media.audiofx.LoudnessEnhancer
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
@@ -26,31 +23,26 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.maurya.dtxloopplayer.Adapter.FavouriteAdapter
-import com.maurya.dtxloopplayer.Adapter.MusicAdapter
-import com.maurya.dtxloopplayer.Fragments.ListsFragment
-import com.maurya.dtxloopplayer.Fragments.NowPlayingBottomFragment
+import com.maurya.dtxloopplayer.adapter.FavouriteAdapter
+import com.maurya.dtxloopplayer.fragments.ListsFragment
+import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
 import com.maurya.dtxloopplayer.MainActivity
-import com.maurya.dtxloopplayer.MusicData
+import com.maurya.dtxloopplayer.dataEntity.MusicData
 import com.maurya.dtxloopplayer.MusicService
 import com.maurya.dtxloopplayer.R
-import com.maurya.dtxloopplayer.SharedPreferenceHelper
+import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.databinding.ActivityPlayerBinding
-import com.maurya.dtxloopplayer.exitApplication
-import com.maurya.dtxloopplayer.favouriteChecker
-import com.maurya.dtxloopplayer.formatDuration
-import com.maurya.dtxloopplayer.getMusicArt
-import com.maurya.dtxloopplayer.notifyAdapterSongTextPosition
-import com.maurya.dtxloopplayer.setSongPosition
-import com.maurya.dtxloopplayer.updateTextViewWithItemCount
+import com.maurya.dtxloopplayer.dataEntity.exitApplication
+import com.maurya.dtxloopplayer.dataEntity.favouriteChecker
+import com.maurya.dtxloopplayer.dataEntity.formatDuration
+import com.maurya.dtxloopplayer.dataEntity.getMusicArt
+import com.maurya.dtxloopplayer.dataEntity.notifyAdapterSongTextPosition
+import com.maurya.dtxloopplayer.dataEntity.setSongPosition
+import com.maurya.dtxloopplayer.dataEntity.updateTextViewWithItemCount
 
 
 class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {

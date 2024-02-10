@@ -1,28 +1,24 @@
-package com.maurya.dtxloopplayer.Adapter
+package com.maurya.dtxloopplayer.adapter
 
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.gson.Gson
-import com.maurya.dtxloopplayer.Activities.PlayListActivity
-import com.maurya.dtxloopplayer.MusicData
-import com.maurya.dtxloopplayer.Activities.PlayerActivity
+import com.maurya.dtxloopplayer.activities.PlayListActivity
+import com.maurya.dtxloopplayer.dataEntity.MusicData
+import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.R
-import com.maurya.dtxloopplayer.Activities.SearchActivity
-import com.maurya.dtxloopplayer.Activities.SelectionActivity
-import com.maurya.dtxloopplayer.Fragments.ListsFragment
-import com.maurya.dtxloopplayer.MainActivity
+import com.maurya.dtxloopplayer.activities.SearchActivity
+import com.maurya.dtxloopplayer.activities.SelectionActivity
+import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.databinding.MusicItemBinding
-import com.maurya.dtxloopplayer.formatDuration
+import com.maurya.dtxloopplayer.dataEntity.formatDuration
 
 class MusicAdapter(
     private val context: Context,

@@ -4,20 +4,16 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.preference.PreferenceManager
 import android.provider.MediaStore
 import android.provider.Settings
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.app.AppCompatDelegate.NightMode
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -30,12 +26,15 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.GsonBuilder
-import com.maurya.dtxloopplayer.Activities.PlayerActivity
-import com.maurya.dtxloopplayer.Activities.SearchActivity
-import com.maurya.dtxloopplayer.Fragments.AboutDialogFragment
-import com.maurya.dtxloopplayer.Fragments.ListsFragment
-import com.maurya.dtxloopplayer.Fragments.SongsFragment
+import com.maurya.dtxloopplayer.activities.PlayerActivity
+import com.maurya.dtxloopplayer.activities.SearchActivity
+import com.maurya.dtxloopplayer.fragments.AboutDialogFragment
+import com.maurya.dtxloopplayer.fragments.ListsFragment
+import com.maurya.dtxloopplayer.fragments.SongsFragment
+import com.maurya.dtxloopplayer.dataEntity.MusicData
+import com.maurya.dtxloopplayer.dataEntity.MusicPlayList
 import com.maurya.dtxloopplayer.databinding.ActivityMainBinding
+import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import java.io.File
 import kotlin.system.exitProcess
 
@@ -264,9 +263,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun disableCollapsingToolbarScrolling() {
         val toolbarLayoutParams =
-            binding.collapsingtoolbarlayout.getLayoutParams() as AppBarLayout.LayoutParams
+            binding.collapsingtoolbarlayout.layoutParams as AppBarLayout.LayoutParams
         toolbarLayoutParams.scrollFlags = 0
-        binding.collapsingtoolbarlayout.setLayoutParams(toolbarLayoutParams)
+        binding.collapsingtoolbarlayout.layoutParams = toolbarLayoutParams
         val appBarLayoutParams = binding.appbar.layoutParams as CoordinatorLayout.LayoutParams
         appBarLayoutParams.behavior = null
         binding.appbar.layoutParams = appBarLayoutParams
@@ -274,10 +273,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun enableCollapsingToolbarScrolling() {
         val toolbarLayoutParams =
-            binding.collapsingtoolbarlayout.getLayoutParams() as AppBarLayout.LayoutParams
+            binding.collapsingtoolbarlayout.layoutParams as AppBarLayout.LayoutParams
         toolbarLayoutParams.scrollFlags =
             AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
-        binding.collapsingtoolbarlayout.setLayoutParams(toolbarLayoutParams)
+        binding.collapsingtoolbarlayout.layoutParams = toolbarLayoutParams
         val appBarLayoutParams = binding.appbar.layoutParams as CoordinatorLayout.LayoutParams
         appBarLayoutParams.behavior = AppBarLayout.Behavior()
         binding.appbar.layoutParams = appBarLayoutParams

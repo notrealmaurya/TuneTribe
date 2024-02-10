@@ -5,8 +5,12 @@ import android.content.Context
 import android.content.Intent
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.maurya.dtxloopplayer.Activities.PlayerActivity
-import com.maurya.dtxloopplayer.Fragments.NowPlayingBottomFragment
+import com.maurya.dtxloopplayer.activities.PlayerActivity
+import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
+import com.maurya.dtxloopplayer.dataEntity.exitApplication
+import com.maurya.dtxloopplayer.dataEntity.favouriteChecker
+import com.maurya.dtxloopplayer.dataEntity.notifyAdapterSongTextPosition
+import com.maurya.dtxloopplayer.dataEntity.setSongPosition
 
 class NotificationReceiver : BroadcastReceiver() {
 

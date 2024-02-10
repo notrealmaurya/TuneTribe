@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     style="@style/LayoutStyle"
-    tools:context=".Fragments.SongsFragment"
+    tools:context=".fragments.SongsFragment"
     android:orientation="vertical">
 
     <LinearLayout
