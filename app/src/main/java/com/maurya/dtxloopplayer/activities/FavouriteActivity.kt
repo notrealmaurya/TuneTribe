@@ -7,8 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maurya.dtxloopplayer.adapter.FavouriteAdapter
 import com.maurya.dtxloopplayer.dataEntity.MusicData
-import com.maurya.dtxloopplayer.dataEntity.checkPlayListData
 import com.maurya.dtxloopplayer.databinding.ActivityFavouriteBinding
+import com.maurya.dtxloopplayer.utils.checkPlayListData
 
 class FavouriteActivity : AppCompatActivity() {
 

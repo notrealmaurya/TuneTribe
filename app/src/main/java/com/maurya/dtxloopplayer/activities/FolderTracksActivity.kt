@@ -10,7 +10,7 @@ import com.maurya.dtxloopplayer.dataEntity.MusicData
 import com.maurya.dtxloopplayer.databinding.ActivityFolderTracksActiivityBinding
 import java.io.File
 import android.util.Base64
-import com.maurya.dtxloopplayer.dataEntity.updateTextViewWithItemCount
+import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 
 
 class FolderTracksActivity : AppCompatActivity() {

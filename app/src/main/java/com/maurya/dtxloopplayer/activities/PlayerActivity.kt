@@ -36,13 +36,13 @@ import com.maurya.dtxloopplayer.MusicService
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.databinding.ActivityPlayerBinding
-import com.maurya.dtxloopplayer.dataEntity.exitApplication
-import com.maurya.dtxloopplayer.dataEntity.favouriteChecker
-import com.maurya.dtxloopplayer.dataEntity.formatDuration
-import com.maurya.dtxloopplayer.dataEntity.getMusicArt
-import com.maurya.dtxloopplayer.dataEntity.notifyAdapterSongTextPosition
-import com.maurya.dtxloopplayer.dataEntity.setSongPosition
-import com.maurya.dtxloopplayer.dataEntity.updateTextViewWithItemCount
+import com.maurya.dtxloopplayer.utils.exitApplication
+import com.maurya.dtxloopplayer.utils.favouriteChecker
+import com.maurya.dtxloopplayer.utils.formatDuration
+import com.maurya.dtxloopplayer.utils.getMusicArt
+import com.maurya.dtxloopplayer.utils.notifyAdapterSongTextPosition
+import com.maurya.dtxloopplayer.utils.setSongPosition
+import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 
 
 class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {

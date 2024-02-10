@@ -7,10 +7,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
-import com.maurya.dtxloopplayer.dataEntity.exitApplication
-import com.maurya.dtxloopplayer.dataEntity.favouriteChecker
-import com.maurya.dtxloopplayer.dataEntity.notifyAdapterSongTextPosition
-import com.maurya.dtxloopplayer.dataEntity.setSongPosition
+import com.maurya.dtxloopplayer.utils.exitApplication
+import com.maurya.dtxloopplayer.utils.favouriteChecker
+import com.maurya.dtxloopplayer.utils.notifyAdapterSongTextPosition
+import com.maurya.dtxloopplayer.utils.setSongPosition
 
 class NotificationReceiver : BroadcastReceiver() {
 

@@ -18,7 +18,7 @@ import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.activities.SelectionActivity
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.databinding.MusicItemBinding
-import com.maurya.dtxloopplayer.dataEntity.formatDuration
+import com.maurya.dtxloopplayer.utils.formatDuration
 
 class MusicAdapter(
     private val context: Context,

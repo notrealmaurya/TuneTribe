@@ -21,8 +21,8 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
-import com.maurya.dtxloopplayer.dataEntity.formatDuration
-import com.maurya.dtxloopplayer.dataEntity.getMusicArt
+import com.maurya.dtxloopplayer.utils.formatDuration
+import com.maurya.dtxloopplayer.utils.getMusicArt
 
 class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 

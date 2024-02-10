@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maurya.dtxloopplayer.activities.FolderTracksActivity
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.dataEntity.FolderData
-import com.maurya.dtxloopplayer.dataEntity.countMusicFilesInFolder
+import com.maurya.dtxloopplayer.utils.countMusicFilesInFolder
 import com.maurya.dtxloopplayer.databinding.PlaylistViewBinding
 
 class FolderAdapter(

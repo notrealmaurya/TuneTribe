@@ -13,7 +13,7 @@ import com.maurya.dtxloopplayer.dataEntity.MusicData
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.databinding.MusicItemBinding
-import com.maurya.dtxloopplayer.dataEntity.formatDuration
+import com.maurya.dtxloopplayer.utils.formatDuration
 
 class FavouriteAdapter(
     private val context: Context,

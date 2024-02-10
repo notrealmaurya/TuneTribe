@@ -10,7 +10,7 @@ import com.google.gson.GsonBuilder
 import com.maurya.dtxloopplayer.adapter.MusicAdapter
 import com.maurya.dtxloopplayer.adapter.PlayListViewAdapter
 import com.maurya.dtxloopplayer.fragments.ListsFragment
-import com.maurya.dtxloopplayer.dataEntity.checkPlayListData
+import com.maurya.dtxloopplayer.utils.checkPlayListData
 import com.maurya.dtxloopplayer.databinding.ActivityPlaylistBinding
 
 class PlayListActivity : AppCompatActivity() {
@@ -98,6 +98,8 @@ class PlayListActivity : AppCompatActivity() {
 
 
     }
+
+
 
     override fun onResume() {
         super.onResume()

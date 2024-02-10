@@ -19,8 +19,8 @@ import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.adapter.MusicAdapter
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.databinding.FragmentNowPlayingBottomBinding
-import com.maurya.dtxloopplayer.dataEntity.notifyAdapterSongTextPosition
-import com.maurya.dtxloopplayer.dataEntity.setSongPosition
+import com.maurya.dtxloopplayer.utils.notifyAdapterSongTextPosition
+import com.maurya.dtxloopplayer.utils.setSongPosition
 
 
 class NowPlayingBottomFragment : Fragment() {
