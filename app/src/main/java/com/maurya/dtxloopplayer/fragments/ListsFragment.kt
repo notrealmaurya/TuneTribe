@@ -35,9 +35,6 @@ import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 class ListsFragment : Fragment() {
 
     private lateinit var folderAdapter: FolderAdapter
-    private lateinit var recyclerViewRecentlyPlayed: RecyclerView
-
-    private lateinit var recyclerView: RecyclerView
 
     companion object {
         var musicPlayList: MusicPlayList = MusicPlayList()
@@ -67,7 +64,6 @@ class ListsFragment : Fragment() {
             LinearLayoutManager(context)
         playListAdapter = PlayListViewAdapter(requireContext(), playListList = musicPlayList.ref)
         fragmentListsBinding.recyclerViewListFragmentForMyPlayList.adapter = playListAdapter
-
 
 
         sharedPreferenceRetrievingData()
@@ -117,7 +113,6 @@ class ListsFragment : Fragment() {
     }
 
     private fun updateText() {
-
         //Size of MyFavourite
         musicAdapter = MusicAdapter(
             requireContext(),
@@ -144,7 +139,6 @@ class ListsFragment : Fragment() {
         super.onPause()
         sharedPreferenceStoringData()
         updateText()
-
     }
 
 
