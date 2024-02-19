@@ -11,9 +11,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -163,7 +161,7 @@ class ListsFragment : Fragment() {
         val newPlayListSheetDialog =
             BottomSheetDialog(requireContext(), R.style.ThemeOverlay_App_BottomSheetDialog)
         val newPlayListSheetView =
-            layoutInflater.inflate(R.layout.playlist_listfragment_newplaylist_dialog, null)
+            layoutInflater.inflate(R.layout.popup_dialog_newplaylist, null)
         newPlayListSheetDialog.setContentView(newPlayListSheetView)
         newPlayListSheetDialog.setCanceledOnTouchOutside(true)
 

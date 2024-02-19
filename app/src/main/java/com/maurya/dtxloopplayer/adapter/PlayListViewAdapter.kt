@@ -22,8 +22,6 @@ import com.maurya.dtxloopplayer.databinding.PlaylistViewBinding
 class PlayListViewAdapter(
     private val context: Context,
     private var playListList: ArrayList<PlayList>,
-    private val selectionActivity: Boolean = false
-
 ) :
     RecyclerView.Adapter<PlayListViewAdapter.PlayListHolder>() {
 
@@ -74,7 +72,7 @@ class PlayListViewAdapter(
     private fun showBottomSheetDialog(playlist: PlayList, position: Int) {
         val bottomSheetDialog = BottomSheetDialog(context)
         val sheetView = LayoutInflater.from(context)
-            .inflate(R.layout.playlist_listfragment_popup_onlongclick, null)
+            .inflate(R.layout.popup_dialog_playlist_edit, null)
 
         val renameOption =
             sheetView.findViewById<LinearLayout>(R.id.PlayListListFragmentPopUpRename)
@@ -86,7 +84,7 @@ class PlayListViewAdapter(
             val renameSheetDialog =
                 BottomSheetDialog(context, R.style.ThemeOverlay_App_BottomSheetDialog)
             val renameSheetView =
-                LayoutInflater.from(context).inflate(R.layout.bottomsheet_rename, null)
+                LayoutInflater.from(context).inflate(R.layout.popup_dialog_rename, null)
 
             renameSheetDialog.setContentView(renameSheetView)
             renameSheetDialog.setCanceledOnTouchOutside(true)

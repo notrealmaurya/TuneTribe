@@ -155,7 +155,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         val bottomSheetDialog =
             BottomSheetDialog(this, R.style.ThemeOverlay_App_BottomSheetDialog)
         val bottomSheetView: View =
-            layoutInflater.inflate(R.layout.bottomsheet_playeractivity_menu, null)
+            layoutInflater.inflate(R.layout.popup_dialog_playeractivity_menu, null)
         val bottomMenuSleepModeOption =
             bottomSheetView.findViewById<TextView>(R.id.bottomMenuSleepModeOption)
 
@@ -371,7 +371,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         val bottomSheetDialog =
             BottomSheetDialog(this, R.style.ThemeOverlay_App_BottomSheetDialog)
         val bottomSheetView: View =
-            layoutInflater.inflate(R.layout.bottomsheet_playeractivity_menu, null)
+            layoutInflater.inflate(R.layout.popup_dialog_playeractivity_menu, null)
         val bottomMenuAudioBoostOption =
             bottomSheetView.findViewById<TextView>(R.id.bottomMenuAudioBoostOption)
         val bottomMenuSleepModeOption =
@@ -409,7 +409,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         val sleepModeDialog =
             BottomSheetDialog(this, R.style.ThemeOverlay_App_BottomSheetDialog)
         val sleepModeSheetView: View =
-            layoutInflater.inflate(R.layout.bottomsheet_playeractivity_menu_sleepmode, null)
+            layoutInflater.inflate(R.layout.popup_dialog_sleepmode, null)
         sleepModeDialog.setContentView(sleepModeSheetView)
         sleepModeDialog.setCanceledOnTouchOutside(true)
 

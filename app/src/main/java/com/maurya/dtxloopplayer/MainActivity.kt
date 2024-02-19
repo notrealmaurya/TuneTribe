@@ -218,7 +218,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.nav_about -> {
                     val popUpDialog = LayoutInflater.from(this)
-                        .inflate(R.layout.popup_about_dialog, binding.root, false)
+                        .inflate(R.layout.popup_dialog_about, binding.root, false)
                     val bindingPopUp = PopupAboutDialogBinding.bind(popUpDialog)
                     val dialog =
                         MaterialAlertDialogBuilder(this).setView(popUpDialog)

@@ -66,7 +66,7 @@ class NowPlayingBottomFragment : Fragment() {
         fragmentNowPlayingBottomBinding.queueNowPlayingFragment.setOnClickListener {
             val bottomSheetDialog =
                 BottomSheetDialog(requireContext(), R.style.ThemeOverlay_App_BottomSheetDialog)
-            val bottomSheetView = layoutInflater.inflate(R.layout.dialog_queue, null)
+            val bottomSheetView = layoutInflater.inflate(R.layout.popup_dialog_queue, null)
             val recyclerView =
                 bottomSheetView.findViewById<RecyclerView>(R.id.recyclerViewQueueActivity)
             val totalSongsTextView =

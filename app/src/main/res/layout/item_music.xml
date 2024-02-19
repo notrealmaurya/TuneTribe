@@ -20,8 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/MusicArt"
@@ -46,6 +45,7 @@
 
                 <TextView
                     android:id="@+id/MusicName"
+                    style="@style/TextViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
@@ -54,11 +54,11 @@
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:text="Your Full Music Name Here"
-                    style="@style/TextViewStyle"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/MusicArtist"
+                    style="@style/TextViewStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
@@ -67,7 +67,6 @@
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:text="Music Artist"
-                    style="@style/TextViewStyleSmall"
                     android:textSize="13sp" />
 
 
@@ -84,6 +83,7 @@
 
         <TextView
             android:id="@+id/MusicDuration"
+            style="@style/TextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -91,7 +91,6 @@
             android:singleLine="true"
             android:text="00:00"
             android:textAlignment="gravity"
-            style="@style/TextViewStyle"
             android:textSize="13sp" />
 
 

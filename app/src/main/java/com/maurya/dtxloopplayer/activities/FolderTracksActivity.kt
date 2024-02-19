@@ -11,14 +11,15 @@ import com.maurya.dtxloopplayer.databinding.ActivityFolderTracksActiivityBinding
 import java.io.File
 import android.util.Base64
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
+import java.util.Locale
 
 
 class FolderTracksActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityFolderTracksActiivityBinding
 
     companion object {
         var folderMusicFiles = ArrayList<MusicData>()
-        lateinit var binding: ActivityFolderTracksActiivityBinding
         lateinit var musicAdapter: MusicAdapter
         var isInitialized = false
     }
@@ -79,7 +80,7 @@ class FolderTracksActivity : AppCompatActivity() {
 
         for (file in folderFiles) {
             if (file.isFile) {
-                val fileName = file.name.toLowerCase()
+                val fileName = file.name.lowercase(Locale.ROOT)
                 if (musicFileExtensions.any { fileName.endsWith(it) }) {
                     val mediaMetadataRetriever = MediaMetadataRetriever().apply {
                         setDataSource(file.absolutePath)

@@ -8,16 +8,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.GsonBuilder
 import com.maurya.dtxloopplayer.adapter.MusicAdapter
-import com.maurya.dtxloopplayer.adapter.PlayListViewAdapter
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.utils.checkPlayListData
 import com.maurya.dtxloopplayer.databinding.ActivityPlaylistBinding
+import com.maurya.dtxloopplayer.utils.showToast
 
 class PlayListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlaylistBinding
-    private lateinit var playListAdapter: PlayListViewAdapter
-
     companion object {
         var currentPlayListPosition: Int = -1
         var isInitialized = false
@@ -31,15 +29,14 @@ class PlayListActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         isInitialized = true
-
         currentPlayListPosition = intent.extras?.get("index") as Int
-        //check file is present or not
+
         try {
             val currentPlayList = ListsFragment.musicPlayList.ref[currentPlayListPosition]
             currentPlayList.playList = checkPlayListData(playList = currentPlayList.playList)
         }
         catch (e :Exception){
-            Toast.makeText(this,"Playlist Error",Toast.LENGTH_SHORT).show()
+            showToast(this,"Playlist Error")
         }
 
         binding.recyclerViewPlayListActivity.setItemViewCacheSize(10)
