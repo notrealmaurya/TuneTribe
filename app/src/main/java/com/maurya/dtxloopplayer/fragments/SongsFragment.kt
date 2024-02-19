@@ -20,9 +20,7 @@ import com.maurya.dtxloopplayer.databinding.FragmentSongsBinding
 class SongsFragment : Fragment() {
 
     private lateinit var fragmentSongsBinding: FragmentSongsBinding
-//    private val musicViewModel by activityViewModels<MusicViewModel>()
     private lateinit var sharedPreferencesHelper: SharedPreferenceHelper
-
 
     companion object {
         lateinit var musicListSongFragment: ArrayList<MusicData>
@@ -63,18 +61,7 @@ class SongsFragment : Fragment() {
         }
 
         val sortingOrder = sharedPreferencesHelper.getSortingOrder()
-        // Apply the saved sorting order to your music list if it exists
-        when (sortingOrder) {
-            "newest_date_first" -> sortMusicListByNewestDateFirst()
-            "oldest_date_first" -> sortMusicListByOldestDateFirst()
-            "largest_size_first" -> sortMusicListByLargestSizeFirst()
-            "smallest_size_first" -> sortMusicListBySmallestSizeFirst()
-            "a_to_z" -> sortMusicListByNameAtoZ()
-            "z_to_a" -> sortMusicListByNameZtoA()
-            else -> {
-                sortMusicListByNewestDateFirst()
-            }
-        }
+        sortMusicList(sortingOrder.toString())
 
         return view
 
@@ -87,32 +74,32 @@ class SongsFragment : Fragment() {
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.newestDatefirst -> {
-                    sortMusicListByNewestDateFirst()
+                    sortMusicList("newest_date_first")
                     true
                 }
 
                 R.id.oldestDatefirst -> {
-                    sortMusicListByOldestDateFirst()
+                    sortMusicList("oldest_date_first")
                     true
                 }
 
                 R.id.largestSizefirst -> {
-                    sortMusicListByLargestSizeFirst()
+                    sortMusicList("largest_size_first")
                     true
                 }
 
                 R.id.smallestSizefirst -> {
-                    sortMusicListBySmallestSizeFirst()
+                    sortMusicList("smallest_size_first")
                     true
                 }
 
                 R.id.nameAtoZ -> {
-                    sortMusicListByNameAtoZ()
+                    sortMusicList("a_to_z")
                     true
                 }
 
                 R.id.nameZtoA -> {
-                    sortMusicListByNameZtoA()
+                    sortMusicList("z_to_a")
                     true
                 }
 
@@ -122,52 +109,23 @@ class SongsFragment : Fragment() {
         popupMenu.show()
     }
 
-    // Sort music list by newest date first
-    private fun sortMusicListByNewestDateFirst() {
-        MainActivity.tempList.sortByDescending { it.dateModified }
-        musicAdapter.updateMusicList(MainActivity.tempList)
-        musicAdapter.notifyDataSetChanged()
-        sharedPreferencesHelper.saveSortingOrder("newest_date_first")
-    }
 
-    // Sort music list by oldest date first
-    private fun sortMusicListByOldestDateFirst() {
-        MainActivity.tempList.sortBy { it.dateModified }
-        musicAdapter.updateMusicList(MainActivity.tempList)
-        musicAdapter.notifyDataSetChanged()
-        sharedPreferencesHelper.saveSortingOrder("oldest_date_first")
-    }
+    private fun sortMusicList(sortBy: String) {
+        when (sortBy) {
+            "newest_date_first" -> MainActivity.tempList.sortByDescending { it.dateModified }
+            "oldest_date_first" -> MainActivity.tempList.sortBy { it.dateModified }
+            "largest_size_first" -> MainActivity.tempList.sortByDescending { it.duration }
+            "smallest_size_first" -> MainActivity.tempList.sortBy { it.duration }
+            "a_to_z" -> MainActivity.tempList.sortBy { it.title }
+            "z_to_a" -> MainActivity.tempList.sortByDescending { it.title }
+            else -> {
+                MainActivity.tempList.sortByDescending { it.dateModified }
+            }
+        }
 
-    // Sort music list by largest size first
-    private fun sortMusicListByLargestSizeFirst() {
-        MainActivity.tempList.sortByDescending { it.duration }
         musicAdapter.updateMusicList(MainActivity.tempList)
         musicAdapter.notifyDataSetChanged()
-        sharedPreferencesHelper.saveSortingOrder("largest_size_first")
-    }
-
-    // Sort music list by smallest size first
-    private fun sortMusicListBySmallestSizeFirst() {
-        MainActivity.tempList.sortBy { it.duration }
-        musicAdapter.updateMusicList(MainActivity.tempList)
-        musicAdapter.notifyDataSetChanged()
-        sharedPreferencesHelper.saveSortingOrder("smallest_size_first")
-    }
-
-    // Sort music list by name (A to Z)
-    private fun sortMusicListByNameAtoZ() {
-        MainActivity.tempList.sortBy { it.title }
-        musicAdapter.updateMusicList(MainActivity.tempList)
-        musicAdapter.notifyDataSetChanged()
-        sharedPreferencesHelper.saveSortingOrder("a_to_z")
-    }
-
-    // Sort music list by name (Z to A)
-    private fun sortMusicListByNameZtoA() {
-        MainActivity.tempList.sortByDescending { it.title }
-        musicAdapter.updateMusicList(MainActivity.tempList)
-        musicAdapter.notifyDataSetChanged()
-        sharedPreferencesHelper.saveSortingOrder("z_to_a")
+        sharedPreferencesHelper.saveSortingOrder(sortBy)
     }
 
 
