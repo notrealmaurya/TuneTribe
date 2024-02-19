@@ -1,7 +1,9 @@
 package com.maurya.dtxloopplayer.utils
 
+import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.maurya.dtxloopplayer.activities.FavouriteActivity
 import com.maurya.dtxloopplayer.activities.FolderTracksActivity
@@ -146,4 +148,8 @@ fun notifyAdapterSongTextPosition() {
     }
 }
 
+
+fun showToast(context: Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+}
 

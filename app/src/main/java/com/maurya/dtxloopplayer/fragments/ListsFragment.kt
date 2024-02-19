@@ -28,6 +28,7 @@ import com.maurya.dtxloopplayer.database.MusicPlayList
 import com.maurya.dtxloopplayer.database.PlayList
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.databinding.FragmentListsBinding
+import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.utils.updateTextViewWithFolderCount
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 
@@ -97,7 +98,6 @@ class ListsFragment : Fragment() {
             musicPlayList = dataPlaylist
         }
 
-
     }
 
     private fun sharedPreferenceStoringData() {
@@ -113,7 +113,6 @@ class ListsFragment : Fragment() {
     }
 
     private fun updateText() {
-        //Size of MyFavourite
         musicAdapter = MusicAdapter(
             requireContext(),
             FavouriteActivity.favouriteSongs,
@@ -121,7 +120,6 @@ class ListsFragment : Fragment() {
         )
         updateTextViewWithItemCount(musicAdapter, fragmentListsBinding.ListsMyFavouritesSize)
 
-        //Size of FolderList
         val musicFolderScanner = MusicFolderScanner(requireActivity().contentResolver)
         val musicFolders = musicFolderScanner.getAllMusicFolders()
         folderAdapter = FolderAdapter(requireContext(), musicFolders)
@@ -144,23 +142,19 @@ class ListsFragment : Fragment() {
 
     private fun listeners() {
 
-
         fragmentListsBinding.LayoutFolderList.setOnClickListener {
             val intent = Intent(activity, FolderActivity::class.java)
             startActivity(intent)
         }
-
 
         fragmentListsBinding.LayoutMyFavourites.setOnClickListener {
             val intent = Intent(context, FavouriteActivity::class.java)
             startActivity(intent)
         }
 
-
         fragmentListsBinding.AddNewPlayListListFragment.setOnClickListener {
             newPlayList()
         }
-
 
     }
 
@@ -173,40 +167,33 @@ class ListsFragment : Fragment() {
         newPlayListSheetDialog.setContentView(newPlayListSheetView)
         newPlayListSheetDialog.setCanceledOnTouchOutside(true)
 
-
         val newPlayListEditText =
             newPlayListSheetView.findViewById<EditText>(R.id.newPlayListEditTextDialog)
         val newPlayListOKText =
             newPlayListSheetView.findViewById<TextView>(R.id.newPlayListOKTextDialog)
         val newPlayListCancelText =
             newPlayListSheetView.findViewById<TextView>(R.id.newPlayListCancelTextDialog)
-        newPlayListEditText.selectAll() // select all edit text
-        newPlayListEditText.requestFocus() // open keyboard
-        newPlayListSheetDialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) // Show the keyboard below card
-
+        newPlayListEditText.selectAll()
+        newPlayListEditText.requestFocus()
+        newPlayListSheetDialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
         newPlayListOKText.setOnClickListener {
             val playlistName = newPlayListEditText.text.toString().trim()
-            if (playlistName != null) {
-                if (playlistName.isNotEmpty()) {
-                    addPlayList(playlistName.toString())
-                }
+            if (playlistName.isNotEmpty()) {
+                addPlayList(playlistName)
             } else {
-                Toast.makeText(context, "Set playlist Name", Toast.LENGTH_SHORT).show()
+                showToast(requireContext(), "Error in creating Playlist")
             }
             newPlayListSheetDialog.dismiss()
-
         }
 
         newPlayListCancelText.setOnClickListener {
-            // Handle Cancel button click
             newPlayListSheetDialog.dismiss()
         }
 
         newPlayListSheetDialog.show()
 
     }
-
 
     private fun addPlayList(name: String) {
         var playListExist = false
@@ -217,7 +204,7 @@ class ListsFragment : Fragment() {
             }
         }
         if (playListExist) {
-            Toast.makeText(context, "PlayList Exist!!", Toast.LENGTH_SHORT).show()
+            showToast(requireContext(), "PlayList Exist!!")
         } else {
             val tempPlayList = PlayList()
             tempPlayList.name = name
