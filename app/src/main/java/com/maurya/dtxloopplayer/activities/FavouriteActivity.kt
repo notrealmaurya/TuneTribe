@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maurya.dtxloopplayer.adapter.FavouriteAdapter
+import com.maurya.dtxloopplayer.adapter.MusicAdapter
 import com.maurya.dtxloopplayer.database.MusicData
 import com.maurya.dtxloopplayer.databinding.ActivityFavouriteBinding
 import com.maurya.dtxloopplayer.utils.checkPlayListData
@@ -16,7 +16,7 @@ class FavouriteActivity : AppCompatActivity() {
         var favouriteSongs: ArrayList<MusicData> = ArrayList()
         var favouritesChanged: Boolean = false
         lateinit var binding: ActivityFavouriteBinding
-        lateinit var favouriteAdapter: FavouriteAdapter
+        lateinit var musicAdapter: MusicAdapter
 
 
         var isInitialized = false
@@ -39,19 +39,12 @@ class FavouriteActivity : AppCompatActivity() {
         binding.recyclerViewFavouriteActivity.setHasFixedSize(true)
         binding.recyclerViewFavouriteActivity.setItemViewCacheSize(13)
         binding.recyclerViewFavouriteActivity.layoutManager = LinearLayoutManager(this)
-        favouriteAdapter = FavouriteAdapter(this, favouriteSongs)
-        binding.recyclerViewFavouriteActivity.adapter = favouriteAdapter
+        musicAdapter = MusicAdapter(this, favouriteSongs, favouriteActivity = true)
+        binding.recyclerViewFavouriteActivity.adapter = musicAdapter
 
-
-        val itemCount = favouriteAdapter.itemCount
-        if (itemCount == 1 || itemCount == 0) {
-            binding.totalSongsFavouriteActivity.text = "${itemCount} song"
-        } else {
-            binding.totalSongsFavouriteActivity.text = "${itemCount} songs"
-        }
+        itemCount()
 
         favouritesChanged = false
-
 
         if (favouriteSongs.size >= 1) {
             binding.shuffleSongCheckboxLayout.visibility = View.VISIBLE
@@ -70,19 +63,20 @@ class FavouriteActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (favouritesChanged) {
-            favouriteAdapter.updateFavourites(favouriteSongs)
+            musicAdapter.updateFavourites(favouriteSongs)
             favouritesChanged = false
         }
+        itemCount()
+    }
 
-        val itemCount = favouriteAdapter.itemCount
+    private fun itemCount(){
+        val itemCount = musicAdapter.itemCount
         if (itemCount == 1 || itemCount == 0) {
             binding.totalSongsFavouriteActivity.text = "${itemCount} song"
         } else {
             binding.totalSongsFavouriteActivity.text = "${itemCount} songs"
         }
-
     }
-
 
 
 }

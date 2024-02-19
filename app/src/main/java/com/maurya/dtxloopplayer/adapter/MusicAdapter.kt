@@ -27,7 +27,8 @@ class MusicAdapter(
     private val selectionActivity: Boolean = false,
     private val folderSongsActivity: Boolean = false,
     private val queueActivity: Boolean = false,
-    private val searchActivity: Boolean = false
+    private val searchActivity: Boolean = false,
+    private val favouriteActivity: Boolean = false
 ) :
     RecyclerView.Adapter<MusicAdapter.MusicHolder>() {
 
@@ -122,6 +123,13 @@ class MusicAdapter(
                 }
             }
 
+            favouriteActivity -> {
+                holder.root.setOnClickListener {
+                    sendIntent(ref = "FavouriteAdapter", position = position)
+                }
+
+            }
+
 
             else -> {
                 holder.root.setOnClickListener {
@@ -152,6 +160,12 @@ class MusicAdapter(
     fun updateMusicList(searchList: ArrayList<MusicData>) {
         musicList = ArrayList()
         musicList.addAll(searchList)
+        notifyDataSetChanged()
+    }
+
+    fun updateFavourites(newList: ArrayList<MusicData>) {
+        musicList = ArrayList()
+        musicList.addAll(newList)
         notifyDataSetChanged()
     }
 

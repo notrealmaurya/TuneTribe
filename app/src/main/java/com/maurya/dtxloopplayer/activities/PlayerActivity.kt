@@ -27,13 +27,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.maurya.dtxloopplayer.adapter.FavouriteAdapter
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
 import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.database.MusicData
 import com.maurya.dtxloopplayer.MusicService
 import com.maurya.dtxloopplayer.R
+import com.maurya.dtxloopplayer.adapter.MusicAdapter
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.databinding.ActivityPlayerBinding
 import com.maurya.dtxloopplayer.utils.exitApplication
@@ -47,7 +47,7 @@ import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 
 class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
 
-    private lateinit var favouriteAdapter: FavouriteAdapter
+    private lateinit var musicAdapter: MusicAdapter
     private var shuffle: Boolean = false
 
 
@@ -81,7 +81,8 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
         isInitialized = true
 
-        favouriteAdapter = FavouriteAdapter(this, FavouriteActivity.favouriteSongs)
+        musicAdapter =
+            MusicAdapter(this, FavouriteActivity.favouriteSongs, favouriteActivity = true)
 
 
         binding.songNAME.isSelected = true
@@ -550,7 +551,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 FavouriteActivity.favouriteSongs.removeAt(favouriteIndex)
                 Toast.makeText(this, "Removed from Favourite", Toast.LENGTH_SHORT).show()
                 updateTextViewWithItemCount(
-                    favouriteAdapter,
+                    musicAdapter,
                     ListsFragment.fragmentListsBinding.ListsMyFavouritesSize
                 )
             } else {
@@ -559,7 +560,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 FavouriteActivity.favouriteSongs.add(musicListPlayerActivity[musicPosition])
                 Toast.makeText(this, "Added in Favourite", Toast.LENGTH_SHORT).show()
                 updateTextViewWithItemCount(
-                    favouriteAdapter,
+                    musicAdapter,
                     ListsFragment.fragmentListsBinding.ListsMyFavouritesSize
                 )
             }

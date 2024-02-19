@@ -139,7 +139,7 @@ fun notifyAdapterSongTextPosition() {
         PlayListActivity.musicAdapter.notifyDataSetChanged()
     }
     if (FavouriteActivity.isInitialized) {
-        FavouriteActivity.favouriteAdapter.notifyDataSetChanged()
+        FavouriteActivity.musicAdapter.notifyDataSetChanged()
     }
     if (FolderTracksActivity.isInitialized) {
         FolderTracksActivity.musicAdapter.notifyDataSetChanged()

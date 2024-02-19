@@ -19,7 +19,6 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.maurya.dtxloopplayer.activities.FavouriteActivity
 import com.maurya.dtxloopplayer.activities.FolderActivity
-import com.maurya.dtxloopplayer.adapter.FavouriteAdapter
 import com.maurya.dtxloopplayer.adapter.FolderAdapter
 import com.maurya.dtxloopplayer.adapter.MusicAdapter
 import com.maurya.dtxloopplayer.adapter.PlayListViewAdapter
@@ -35,8 +34,6 @@ import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 
 class ListsFragment : Fragment() {
 
-
-    private lateinit var favouriteAdapter: FavouriteAdapter
     private lateinit var folderAdapter: FolderAdapter
     private lateinit var recyclerViewRecentlyPlayed: RecyclerView
 
@@ -122,8 +119,12 @@ class ListsFragment : Fragment() {
     private fun updateText() {
 
         //Size of MyFavourite
-        favouriteAdapter = FavouriteAdapter(requireContext(), FavouriteActivity.favouriteSongs)
-        updateTextViewWithItemCount(favouriteAdapter, fragmentListsBinding.ListsMyFavouritesSize)
+        musicAdapter = MusicAdapter(
+            requireContext(),
+            FavouriteActivity.favouriteSongs,
+            favouriteActivity = true
+        )
+        updateTextViewWithItemCount(musicAdapter, fragmentListsBinding.ListsMyFavouritesSize)
 
         //Size of FolderList
         val musicFolderScanner = MusicFolderScanner(requireActivity().contentResolver)
@@ -131,9 +132,7 @@ class ListsFragment : Fragment() {
         folderAdapter = FolderAdapter(requireContext(), musicFolders)
         updateTextViewWithFolderCount(folderAdapter, fragmentListsBinding.ListsFolderListSize)
 
-
     }
-
 
     override fun onResume() {
         super.onResume()
