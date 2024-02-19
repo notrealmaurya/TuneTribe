@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maurya.dtxloopplayer.activities.FolderTracksActivity
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.database.FolderData
+import com.maurya.dtxloopplayer.databinding.ItemPlaylistBinding
 import com.maurya.dtxloopplayer.utils.countMusicFilesInFolder
-import com.maurya.dtxloopplayer.databinding.PlaylistViewBinding
 
 class FolderAdapter(
     private val context: Context,
@@ -18,7 +18,7 @@ class FolderAdapter(
     RecyclerView.Adapter<FolderAdapter.FolderHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FolderHolder {
-        return FolderHolder(PlaylistViewBinding.inflate(LayoutInflater.from(context), parent, false))
+        return FolderHolder(ItemPlaylistBinding.inflate(LayoutInflater.from(context), parent, false))
     }
 
     override fun onBindViewHolder(holder: FolderHolder, position: Int) {
@@ -57,7 +57,7 @@ class FolderAdapter(
     }
 
 
-    class FolderHolder(binding: PlaylistViewBinding) : RecyclerView.ViewHolder(binding.root) {
+    class FolderHolder(binding: ItemPlaylistBinding) : RecyclerView.ViewHolder(binding.root) {
         val folderName = binding.ListsMyPlayListsName
         val folderPath = binding.ListsMyPlayListsSize
         val folderImage = binding.img

@@ -16,8 +16,8 @@ import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.activities.SelectionActivity
+import com.maurya.dtxloopplayer.databinding.ItemMusicBinding
 import com.maurya.dtxloopplayer.fragments.ListsFragment
-import com.maurya.dtxloopplayer.databinding.MusicItemBinding
 import com.maurya.dtxloopplayer.utils.formatDuration
 
 class MusicAdapter(
@@ -33,7 +33,7 @@ class MusicAdapter(
     RecyclerView.Adapter<MusicAdapter.MusicHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicHolder {
-        return MusicHolder(MusicItemBinding.inflate(LayoutInflater.from(context), parent, false))
+        return MusicHolder(ItemMusicBinding.inflate(LayoutInflater.from(context), parent, false))
     }
 
     override fun onBindViewHolder(holder: MusicHolder, position: Int) {
@@ -213,7 +213,7 @@ class MusicAdapter(
         return musicList.size
     }
 
-    class MusicHolder(binding: MusicItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class MusicHolder(binding: ItemMusicBinding) : RecyclerView.ViewHolder(binding.root) {
         val MusicName = binding.MusicName
         val MusicArist = binding.MusicArtist
         val MusicDuration = binding.MusicDuration

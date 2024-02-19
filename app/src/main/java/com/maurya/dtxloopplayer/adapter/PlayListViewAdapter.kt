@@ -17,7 +17,7 @@ import com.maurya.dtxloopplayer.activities.PlayListActivity
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.database.PlayList
 import com.maurya.dtxloopplayer.R
-import com.maurya.dtxloopplayer.databinding.PlaylistViewBinding
+import com.maurya.dtxloopplayer.databinding.ItemPlaylistBinding
 
 class PlayListViewAdapter(
     private val context: Context,
@@ -29,7 +29,7 @@ class PlayListViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayListHolder {
         return PlayListHolder(
-            PlaylistViewBinding.inflate(
+            ItemPlaylistBinding.inflate(
                 LayoutInflater.from(context),
                 parent,
                 false
@@ -154,7 +154,7 @@ class PlayListViewAdapter(
     }
 
 
-    class PlayListHolder(binding: PlaylistViewBinding) : RecyclerView.ViewHolder(binding.root) {
+    class PlayListHolder(binding: ItemPlaylistBinding) : RecyclerView.ViewHolder(binding.root) {
         val PlayListName = binding.ListsMyPlayListsName
         val PlayListSize = binding.ListsMyPlayListsSize
         val root = binding.root

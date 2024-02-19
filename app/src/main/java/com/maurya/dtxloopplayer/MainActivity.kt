@@ -40,7 +40,8 @@ import com.maurya.dtxloopplayer.fragments.SongsFragment
 import com.maurya.dtxloopplayer.database.MusicData
 import com.maurya.dtxloopplayer.database.MusicPlayList
 import com.maurya.dtxloopplayer.databinding.ActivityMainBinding
-import com.maurya.dtxloopplayer.databinding.PopupAboutDialogBinding
+import com.maurya.dtxloopplayer.databinding.PopupDialogAboutBinding
+
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import java.io.File
 import kotlin.system.exitProcess
@@ -219,7 +220,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_about -> {
                     val popUpDialog = LayoutInflater.from(this)
                         .inflate(R.layout.popup_dialog_about, binding.root, false)
-                    val bindingPopUp = PopupAboutDialogBinding.bind(popUpDialog)
+                    val bindingPopUp = PopupDialogAboutBinding.bind(popUpDialog)
                     val dialog =
                         MaterialAlertDialogBuilder(this).setView(popUpDialog)
                             .setOnCancelListener {
@@ -232,7 +233,8 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     val textView = bindingPopUp.spannableTextViewDialog
-                    val spannableString = SpannableString("If you'd like to share your thoughts or provide Feedback , please feel free to do so. Your input is valuable, and I'd appreciate hearing from you.❤\uFE0F\"\n ")
+                    val spannableString =
+                        SpannableString("If you'd like to share your thoughts or provide Feedback , please feel free to do so. Your input is valuable, and I'd appreciate hearing from you.❤\uFE0F\"\n ")
 
                     val clickableSpan = object : ClickableSpan() {
                         override fun onClick(widget: View) {
