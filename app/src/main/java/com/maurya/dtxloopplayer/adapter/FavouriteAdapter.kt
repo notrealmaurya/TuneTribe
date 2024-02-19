@@ -18,7 +18,7 @@ import com.maurya.dtxloopplayer.utils.formatDuration
 class FavouriteAdapter(
     private val context: Context,
     private var musicList: ArrayList<MusicData>,
-    val playNext: Boolean = false
+    private val playNext: Boolean = false
 
 ) :
     RecyclerView.Adapter<FavouriteAdapter.MusicHolder>() {
