@@ -12,24 +12,17 @@ import com.maurya.dtxloopplayer.utils.updateTextViewWithFolderCount
 class FolderActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFolderBinding
-    private var folders = ArrayList<FolderData>()
 
-
-    companion object {
-        var search: Boolean = false
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFolderBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Usage in your activity or fragment
         val musicFolderScanner = MusicFolderScanner(contentResolver)
         val musicFolders = musicFolderScanner.getAllMusicFolders()
 
 
-        // Set up the RecyclerView with the adapter
         binding.recyclerViewFolderActivity.setHasFixedSize(true)
         binding.recyclerViewFolderActivity.setItemViewCacheSize(13)
         binding.recyclerViewFolderActivity.layoutManager = LinearLayoutManager(this)
@@ -38,12 +31,8 @@ class FolderActivity : AppCompatActivity() {
 
         updateTextViewWithFolderCount(folderAdapter, binding.totalFoldersFolderActivity)
 
-
         binding.FolderActivityBackBtn.setOnClickListener { finish() }
     }
-
-
-
 
 
 }

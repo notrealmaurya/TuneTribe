@@ -12,12 +12,12 @@ import com.maurya.dtxloopplayer.utils.checkPlayListData
 
 class FavouriteActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityFavouriteBinding
+
     companion object {
         var favouriteSongs: ArrayList<MusicData> = ArrayList()
         var favouritesChanged: Boolean = false
-        lateinit var binding: ActivityFavouriteBinding
         lateinit var musicAdapter: MusicAdapter
-
 
         var isInitialized = false
     }
@@ -69,7 +69,7 @@ class FavouriteActivity : AppCompatActivity() {
         itemCount()
     }
 
-    private fun itemCount(){
+    private fun itemCount() {
         val itemCount = musicAdapter.itemCount
         if (itemCount == 1 || itemCount == 0) {
             binding.totalSongsFavouriteActivity.text = "${itemCount} song"
