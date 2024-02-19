@@ -4,8 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maurya.dtxloopplayer.adapter.FolderAdapter
-import com.maurya.dtxloopplayer.dataEntity.FolderData
-import com.maurya.dtxloopplayer.dataEntity.MusicFolderScanner
+import com.maurya.dtxloopplayer.database.FolderData
+import com.maurya.dtxloopplayer.database.MusicFolderScanner
 import com.maurya.dtxloopplayer.databinding.ActivityFolderBinding
 import com.maurya.dtxloopplayer.utils.updateTextViewWithFolderCount
 

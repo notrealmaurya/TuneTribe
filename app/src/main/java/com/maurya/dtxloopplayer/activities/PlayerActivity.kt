@@ -31,7 +31,7 @@ import com.maurya.dtxloopplayer.adapter.FavouriteAdapter
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
 import com.maurya.dtxloopplayer.MainActivity
-import com.maurya.dtxloopplayer.dataEntity.MusicData
+import com.maurya.dtxloopplayer.database.MusicData
 import com.maurya.dtxloopplayer.MusicService
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper

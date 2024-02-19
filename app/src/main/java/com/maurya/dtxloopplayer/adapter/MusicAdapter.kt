@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.maurya.dtxloopplayer.activities.PlayListActivity
-import com.maurya.dtxloopplayer.dataEntity.MusicData
+import com.maurya.dtxloopplayer.database.MusicData
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.activities.SearchActivity

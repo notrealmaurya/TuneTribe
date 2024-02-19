@@ -8,7 +8,7 @@ import com.maurya.dtxloopplayer.activities.FolderTracksActivity
 import com.maurya.dtxloopplayer.activities.PlayListActivity
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.activities.SearchActivity
-import com.maurya.dtxloopplayer.dataEntity.MusicData
+import com.maurya.dtxloopplayer.database.MusicData
 import com.maurya.dtxloopplayer.fragments.SongsFragment
 import java.io.File
 import java.util.concurrent.TimeUnit

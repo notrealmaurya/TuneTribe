@@ -37,8 +37,8 @@ import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.fragments.SongsFragment
-import com.maurya.dtxloopplayer.dataEntity.MusicData
-import com.maurya.dtxloopplayer.dataEntity.MusicPlayList
+import com.maurya.dtxloopplayer.database.MusicData
+import com.maurya.dtxloopplayer.database.MusicPlayList
 import com.maurya.dtxloopplayer.databinding.ActivityMainBinding
 import com.maurya.dtxloopplayer.databinding.PopupAboutDialogBinding
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper

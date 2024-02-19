@@ -1,21 +1,8 @@
-package com.maurya.dtxloopplayer.dataEntity
+package com.maurya.dtxloopplayer.database
 
 import android.content.ContentResolver
 import android.database.Cursor
-import android.media.MediaMetadataRetriever
 import android.provider.MediaStore
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-import com.maurya.dtxloopplayer.activities.FavouriteActivity
-import com.maurya.dtxloopplayer.activities.PlayerActivity
-import java.io.File
-import java.util.concurrent.TimeUnit
-import kotlin.system.exitProcess
-
-import com.maurya.dtxloopplayer.activities.FolderTracksActivity
-import com.maurya.dtxloopplayer.activities.PlayListActivity
-import com.maurya.dtxloopplayer.activities.SearchActivity
-import com.maurya.dtxloopplayer.fragments.SongsFragment
 
 data class MusicData(
     val id: String,

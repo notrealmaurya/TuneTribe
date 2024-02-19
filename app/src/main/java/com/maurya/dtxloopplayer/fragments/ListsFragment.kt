@@ -23,10 +23,10 @@ import com.maurya.dtxloopplayer.adapter.FavouriteAdapter
 import com.maurya.dtxloopplayer.adapter.FolderAdapter
 import com.maurya.dtxloopplayer.adapter.MusicAdapter
 import com.maurya.dtxloopplayer.adapter.PlayListViewAdapter
-import com.maurya.dtxloopplayer.dataEntity.MusicData
-import com.maurya.dtxloopplayer.dataEntity.MusicFolderScanner
-import com.maurya.dtxloopplayer.dataEntity.MusicPlayList
-import com.maurya.dtxloopplayer.dataEntity.PlayList
+import com.maurya.dtxloopplayer.database.MusicData
+import com.maurya.dtxloopplayer.database.MusicFolderScanner
+import com.maurya.dtxloopplayer.database.MusicPlayList
+import com.maurya.dtxloopplayer.database.PlayList
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.databinding.FragmentListsBinding
 import com.maurya.dtxloopplayer.utils.updateTextViewWithFolderCount

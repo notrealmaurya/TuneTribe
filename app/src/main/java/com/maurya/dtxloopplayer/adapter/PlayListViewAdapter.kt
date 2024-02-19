@@ -15,7 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.maurya.dtxloopplayer.activities.PlayListActivity
 import com.maurya.dtxloopplayer.fragments.ListsFragment
-import com.maurya.dtxloopplayer.dataEntity.PlayList
+import com.maurya.dtxloopplayer.database.PlayList
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.databinding.PlaylistViewBinding
 

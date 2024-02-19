@@ -7,7 +7,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maurya.dtxloopplayer.adapter.MusicAdapter
 import com.maurya.dtxloopplayer.MainActivity
-import com.maurya.dtxloopplayer.dataEntity.MusicData
+import com.maurya.dtxloopplayer.database.MusicData
 import com.maurya.dtxloopplayer.databinding.ActivitySelectionBinding
 
 class SelectionActivity : AppCompatActivity() {
