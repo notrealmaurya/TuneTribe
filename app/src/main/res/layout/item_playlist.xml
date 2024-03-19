@@ -33,7 +33,7 @@
 
             <TextView
                 android:id="@+id/ListsMyPlayListsName"
-                style="@style/TextViewStyle"
+                android:textColor="@color/ImageViewAndTextViewColour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="marquee"
@@ -46,7 +46,7 @@
 
             <TextView
                 android:id="@+id/ListsMyPlayListsSize"
-                style="@style/TextViewStyleSmall"
+                android:textColor="@color/ImageViewAndTextViewColour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="marquee"

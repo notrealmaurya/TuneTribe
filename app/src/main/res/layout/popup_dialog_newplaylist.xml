@@ -28,12 +28,12 @@
 
 
         <TextView
-            style="@style/TextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="40dp"
             android:text="New playList"
+            android:textColor="@color/ImageViewAndTextViewColour"
             android:textSize="17sp" />
 
         <LinearLayout
@@ -48,19 +48,19 @@
 
             <EditText
                 android:id="@+id/newPlayListEditTextDialog"
-                style="@style/TextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="5dp"
                 android:text="My PlayList 1"
+                android:textColor="@color/ImageViewAndTextViewColour"
                 android:textSize="14sp" />
 
         </LinearLayout>
 
         <View
-            style="@style/ViewStyle"
             android:layout_width="match_parent"
-            android:layout_height="1dp" />
+            android:layout_height="1dp"
+            android:background="@color/ViewColor" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,12 +69,12 @@
 
             <TextView
                 android:id="@+id/newPlayListCancelTextDialog"
-                style="@style/TextViewStyle"
-                android:background="@drawable/bg_about_ripple"
+                android:textColor="@color/ImageViewAndTextViewColour"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
+                android:background="@drawable/bg_about_ripple"
                 android:gravity="center"
                 android:text="Cancel"
                 android:textSize="16sp" />
@@ -85,7 +85,7 @@
                 android:orientation="vertical">
 
                 <View
-                    style="@style/ViewStyle"
+                    android:background="@color/ViewColor"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
@@ -93,7 +93,7 @@
 
             <TextView
                 android:id="@+id/newPlayListOKTextDialog"
-                style="@style/TextViewStyle"
+                android:textColor="@color/ImageViewAndTextViewColour"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

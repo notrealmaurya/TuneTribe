@@ -2,29 +2,64 @@ package com.maurya.dtxloopplayer.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.PopupMenu
+import android.widget.PopupWindow
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.R
+import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.databinding.FragmentSongsBinding
+import com.maurya.dtxloopplayer.utils.sortMusicList
+import com.maurya.dtxloopplayer.viewModelsObserver.ModelResult
+import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class SongsFragment : Fragment() {
 
     private lateinit var fragmentSongsBinding: FragmentSongsBinding
-    private lateinit var sharedPreferencesHelper: SharedPreferenceHelper
+
+    private lateinit var adapterMusic: AdapterMusic
+
+    @Inject
+    lateinit var sharedPreferencesHelper: SharedPreferenceHelper
+
+    private var sortingOrder: String = ""
+
+    private val viewModel: ViewModelObserver by viewModels()
+
+    private val sortOptions = arrayOf(
+        "DISPLAY_NAME ASC",
+        "DISPLAY_NAME DESC",
+        "SIZE DESC",
+        "SIZE ASC",
+        "DATE_ADDED DESC",
+        "DATE_ADDED ASC"
+    )
+
 
     companion object {
-        lateinit var musicAdapter: AdapterMusic
-        var isInitialized = false
+        var musicList: ArrayList<MusicDataClass> = arrayListOf()
+        var isSearchViewOpen: Boolean = false
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,18 +68,75 @@ class SongsFragment : Fragment() {
         fragmentSongsBinding = FragmentSongsBinding.inflate(inflater, container, false)
         val view = fragmentSongsBinding.root
 
+        return view
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
         sharedPreferencesHelper = SharedPreferenceHelper(requireContext())
+        sortingOrder = sharedPreferencesHelper.getSortingOrder().toString()
 
-        isInitialized = true
+
+        lifecycle.addObserver(viewModel)
+
+        fragmentSongsBinding.recyclerViewSongFragment.apply {
+            setHasFixedSize(true)
+            setItemViewCacheSize(13)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            adapterMusic = AdapterMusic(
+                requireContext(),
+                musicList
+            )
+            adapter = adapterMusic
+        }
 
 
-        fragmentSongsBinding.recyclerViewSongFragment.setHasFixedSize(true)
-        fragmentSongsBinding.recyclerViewSongFragment.setItemViewCacheSize(13)
-        fragmentSongsBinding.recyclerViewSongFragment.layoutManager =
-            LinearLayoutManager(context)
-        musicAdapter = AdapterMusic(requireContext(), MainActivity.tempList)
-        fragmentSongsBinding.recyclerViewSongFragment.adapter = musicAdapter
-        fragmentSongsBinding.MusicListTotalSongFragment.text = "${musicAdapter.itemCount} songs"
+        listener()
+
+
+    }
+
+    private fun fetchVideosUsingViewModel() {
+        viewModel.fetchSongs(requireContext())
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.songsStateFLow.collect {
+                    when (it) {
+                        is ModelResult.Success -> {
+                            fragmentSongsBinding.progressBar.visibility = View.GONE
+                            musicList.clear()
+                            musicList.addAll(it.data!!)
+                            fragmentSongsBinding.MusicListTotalSongFragment.text =
+                                "${musicList.size} songs"
+                            sortMusicList(sortingOrder, musicList, adapterMusic)
+                        }
+
+                        is ModelResult.Error -> {
+                            fragmentSongsBinding.progressBar.visibility = View.GONE
+                            Toast.makeText(
+                                requireContext(),
+                                it.message.toString(),
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        }
+
+                        is ModelResult.Loading -> {
+                            fragmentSongsBinding.progressBar.visibility = View.VISIBLE
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
+    private fun listener() {
 
         fragmentSongsBinding.shuffleBtnSongFragment.setOnClickListener {
             val intent = Intent(context, PlayerActivity::class.java)
@@ -53,84 +145,51 @@ class SongsFragment : Fragment() {
             startActivity(intent)
         }
 
-        fragmentSongsBinding.sortMenuSongFragment.setOnClickListener {
-            showSortingMenu(view)
+        fragmentSongsBinding.sortingVideoFragment.setOnClickListener {
+            showSortingMenu()
         }
-
-        val sortingOrder = sharedPreferencesHelper.getSortingOrder()
-        sortMusicList(sortingOrder.toString())
-
-        return view
 
     }
 
-    private fun showSortingMenu(view: View) {
-        val popupMenu = PopupMenu(requireContext(), view)
-        val inflater = popupMenu.menuInflater
-        inflater.inflate(R.menu.sortmenu, popupMenu.menu)
-        popupMenu.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.newestDatefirst -> {
-                    sortMusicList("newest_date_first")
-                    true
-                }
+    private fun showSortingMenu() {
+        val inflater =
+            requireActivity().getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val popupView = inflater.inflate(R.layout.layout_home_menu, null)
 
-                R.id.oldestDatefirst -> {
-                    sortMusicList("oldest_date_first")
-                    true
-                }
+        val wid = LinearLayout.LayoutParams.WRAP_CONTENT
+        val high = LinearLayout.LayoutParams.WRAP_CONTENT
+        val focus = true
+        val popupWindow = PopupWindow(popupView, wid, high, focus)
 
-                R.id.largestSizefirst -> {
-                    sortMusicList("largest_size_first")
-                    true
-                }
+        val location = IntArray(2)
+        fragmentSongsBinding.sortingVideoFragment.getLocationOnScreen(location)
+        val x = location[0] + fragmentSongsBinding.sortingVideoFragment.width
+        val y = location[1] + fragmentSongsBinding.sortingVideoFragment.height
 
-                R.id.smallestSizefirst -> {
-                    sortMusicList("smallest_size_first")
-                    true
-                }
 
-                R.id.nameAtoZ -> {
-                    sortMusicList("a_to_z")
-                    true
-                }
+        popupWindow.showAtLocation(fragmentSongsBinding.root, Gravity.NO_GRAVITY, x, y)
 
-                R.id.nameZtoA -> {
-                    sortMusicList("z_to_a")
-                    true
-                }
 
-                else -> false
+        val layoutIds = arrayOf(
+            R.id.nameAtoZLayoutPopUpMenu,
+            R.id.nameZtoALayoutPopUpMenu,
+            R.id.largestFirstLayoutPopUpMenu,
+            R.id.smallestFirstLayoutPopUpMenu,
+            R.id.newestFirstLayoutPopUpMenu,
+            R.id.oldestFirstLayoutPopUpMenu
+        )
+
+        layoutIds.forEachIndexed { index, layoutId ->
+            val layout = popupView.findViewById<LinearLayout>(layoutId)
+            layout.setOnClickListener {
+                sortMusicList(sortOptions[index], MainActivity.musicList, adapterMusic)
+                sharedPreferencesHelper.saveSortingOrder(sortOptions[index])
+                popupWindow.dismiss()
             }
         }
-        popupMenu.show()
+
+
     }
 
-    private fun sortMusicList(sortBy: String) {
-        when (sortBy) {
-            "newest_date_first" -> MainActivity.tempList.sortByDescending { it.dateModified }
-            "oldest_date_first" -> MainActivity.tempList.sortBy { it.dateModified }
-            "largest_size_first" -> MainActivity.tempList.sortByDescending { it.duration }
-            "smallest_size_first" -> MainActivity.tempList.sortBy { it.duration }
-            "a_to_z" -> MainActivity.tempList.sortBy { it.title }
-            "z_to_a" -> MainActivity.tempList.sortByDescending { it.title }
-            else -> {
-                MainActivity.tempList.sortByDescending { it.dateModified }
-            }
-        }
-        musicAdapter.updateMusicList(MainActivity.tempList)
-        musicAdapter.notifyDataSetChanged()
-        sharedPreferencesHelper.saveSortingOrder(sortBy)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        musicAdapter.notifyDataSetChanged()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        musicAdapter.notifyDataSetChanged()
-    }
 
 }

@@ -210,7 +210,7 @@ suspend fun getSongsFromFolderPath(
 fun sortMusicList(
     sortBy: String,
     videoList: ArrayList<MusicDataClass>,
-    adapterVideo: AdapterMusic
+    adapterMusic: AdapterMusic
 ) {
     when (sortBy) {
         "DATE_ADDED ASC" -> videoList.sortBy { it.dateModified }
@@ -223,7 +223,7 @@ fun sortMusicList(
             videoList.sortByDescending { it.dateModified }
         }
     }
-    adapterVideo.notifyDataSetChanged()
+    adapterMusic.notifyDataSetChanged()
 }
 
 
@@ -382,9 +382,7 @@ fun updateTextViewWithFolderCount(adapter: RecyclerView.Adapter<*>, textView: Te
 
 
 fun notifyAdapterSongTextPosition() {
-    if (SongsFragment.isInitialized) {
-        SongsFragment.musicAdapter.notifyDataSetChanged()
-    }
+
     if (SearchActivity.isInitialized) {
         SearchActivity.musicAdapter.notifyDataSetChanged()
     }

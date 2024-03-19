@@ -1,11 +1,10 @@
-package com.maurya.flexivid.viewModelsObserver
+package com.maurya.dtxloopplayer.viewModelsObserver
 
 import android.content.Context
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maurya.dtxloopplayer.viewModelsObserver.Repository
-import com.maurya.flexivid.util.showToast
+import com.maurya.dtxloopplayer.utils.showToast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,16 +13,16 @@ import javax.inject.Inject
 class ViewModelObserver @Inject constructor(private val repository: Repository) :
     ViewModel(), DefaultLifecycleObserver {
 
-    val videosStateFLow get() = repository.videosStateFlow
+    val songsStateFLow get() = repository.songsStateFlow
 
     val foldersStateFLow get() = repository.foldersStateFlow
-    val videoFromFoldersStateFLow get() = repository.videosFromFolderStateFlow
+    val songFromFoldersStateFLow get() = repository.songsFromFolderStateFlow
 
 
-    fun fetchVideos(context: Context) {
+    fun fetchSongs(context: Context) {
         viewModelScope.launch {
             try {
-                repository.getVideos(context)
+                repository.getSongs(context)
             } catch (e: Exception) {
                 showToast(context, e.message.toString())
             }
@@ -40,7 +39,7 @@ class ViewModelObserver @Inject constructor(private val repository: Repository) 
         }
     }
 
-    fun fetchVideosFromFolder(context: Context, folderId: String) {
+    fun fetchSongsFromFolder(context: Context, folderId: String) {
         viewModelScope.launch {
             try {
                 repository.getVideosFromFolder(context, folderId)

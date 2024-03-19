@@ -18,7 +18,6 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:padding="10dp"
-            style="@style/BackButtonStyle"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:src="@drawable/icon_left_arrow" />
@@ -32,7 +31,7 @@
             android:layout_marginStart="15dp"
             android:singleLine="true"
             android:text="Favourite Songs"
-            style="@style/TextViewStyle"
+            android:textColor="@color/ImageViewAndTextViewColour"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -57,16 +56,16 @@
             android:paddingEnd="8dp"
             android:text="Shuffle"
             android:textAllCaps="false"
-            style="@style/AppCompatButton" />
+            />
 
         <TextView
             android:id="@+id/totalSongsFavouriteActivity"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:text="0 song"
-            style="@style/TextViewStyleSmall"
+            android:textColor="@color/ImageViewAndTextViewColour"
             android:textSize="13sp" />
 
 
@@ -81,7 +80,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        style="@style/ViewStyle"
+        android:background="@color/ViewColor"
         android:layout_marginTop="10dp"
         />
 

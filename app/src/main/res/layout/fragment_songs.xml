@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/LayoutStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/LayoutStyle"
-    tools:context=".fragments.SongsFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".fragments.SongsFragment">
 
     <LinearLayout
+        android:id="@+id/topLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -20,48 +21,54 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:drawableStart="@drawable/icon_shuffle"
+            android:paddingHorizontal="10dp"
             android:text="Shuffle"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:textAllCaps="false"
-            style="@style/AppCompatButton" />
+            android:textAllCaps="false" />
 
         <TextView
             android:id="@+id/MusicListTotalSongFragment"
-            style="@style/TextViewStyleSmall"
-            android:layout_width="261dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:text="0 song"
+            android:textColor="@color/ImageViewAndTextViewColour"
             android:textSize="13sp" />
 
 
         <ImageView
-            android:id="@+id/sortMenuSongFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="end|center"
-            android:layout_marginEnd="20dp"
-            android:padding="5dp"
-            android:src="@drawable/icon_checkbox_empty" />
+            android:id="@+id/sortingVideoFragment"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="30dp"
+            android:padding="8dp"
+            android:src="@drawable/icon_menu_home" />
+
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/line_colour"
+        android:layout_below="@id/topLayout"
         android:layout_marginTop="10dp"
-        />
+        android:background="@color/ViewColor" />
 
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewSongFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/topLayout"
         android:layout_marginTop="20dp"
         android:scrollbarThumbVertical="@drawable/icon_scrollbar"
         android:scrollbars="vertical" />
 
 
-</LinearLayout>
+</RelativeLayout>

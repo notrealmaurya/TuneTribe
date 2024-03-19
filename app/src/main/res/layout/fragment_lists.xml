@@ -15,8 +15,8 @@
         android:layout_height="65dp"
         android:gravity="center"
         android:minHeight="?attr/actionBarSize"
-        android:visibility="gone"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
 
         <ImageView
@@ -43,7 +43,6 @@
 
                 <TextView
                     android:id="@+id/Lists_RecenntlyPlayed"
-                    style="@style/TextViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -51,15 +50,16 @@
                     android:singleLine="true"
                     android:text="Recently played"
                     android:textAlignment="gravity"
+                    android:textColor="@color/ImageViewAndTextViewColour"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/Lists_RecenntlyPlayed_size"
-                    style="@style/TextViewStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="0 song"
+                    android:textColor="@color/ImageViewAndTextViewColour"
                     android:textSize="13sp" />
 
 
@@ -75,10 +75,10 @@
         android:id="@+id/LayoutRecentlyAdded"
         android:layout_width="match_parent"
         android:layout_height="65dp"
-        android:visibility="gone"
         android:gravity="center"
         android:minHeight="?attr/actionBarSize"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
 
         <ImageView
@@ -103,7 +103,6 @@
 
                 <TextView
                     android:id="@+id/Lists_RecenntlyAdded"
-                    style="@style/TextViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -111,15 +110,16 @@
                     android:singleLine="true"
                     android:text="Recently added"
                     android:textAlignment="gravity"
+                    android:textColor="@color/ImageViewAndTextViewColour"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/Lists_RecenntlyAdded_size"
-                    style="@style/TextViewStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="0 song"
+                    android:textColor="@color/ImageViewAndTextViewColour"
                     android:textSize="13sp" />
 
 
@@ -165,7 +165,6 @@
 
                 <TextView
                     android:id="@+id/Lists_FolderList"
-                    style="@style/TextViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -173,15 +172,16 @@
                     android:singleLine="true"
                     android:text="Folder list"
                     android:textAlignment="gravity"
+                    android:textColor="@color/ImageViewAndTextViewColour"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/Lists_FolderList_Size"
-                    style="@style/TextViewStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="0 folder"
+                    android:textColor="@color/ImageViewAndTextViewColour"
                     android:textSize="13sp" />
 
 
@@ -195,10 +195,10 @@
 
 
     <View
-        style="@style/ViewStyle"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="15dp"
+        android:background="@color/ViewColor" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -208,7 +208,6 @@
 
         <TextView
             android:id="@+id/AddNewPlayListListFragment"
-            style="@style/TextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -217,6 +216,7 @@
             android:drawableEnd="@drawable/icon_plus"
             android:gravity="center_vertical"
             android:text="NEW PLAYLIST"
+            android:textColor="@color/ImageViewAndTextViewColour"
             android:textSize="13sp" />
 
 
@@ -253,7 +253,6 @@
 
                     <TextView
                         android:id="@+id/Lists_MyFavourites"
-                        style="@style/TextViewStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -261,15 +260,16 @@
                         android:singleLine="true"
                         android:text="My favourites"
                         android:textAlignment="gravity"
+                        android:textColor="@color/ImageViewAndTextViewColour"
                         android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/Lists_MyFavourites_Size"
-                        style="@style/TextViewStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="40Music"
+                        android:textColor="@color/ImageViewAndTextViewColour"
                         android:textSize="13sp" />
 
 

@@ -19,7 +19,7 @@
 
         <TextView
             android:id="@+id/totalSongsQueueActivity"
-            style="@style/TextViewStyle"
+            android:textColor="@color/ImageViewAndTextViewColour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -34,7 +34,7 @@
 
 
         <View
-            style="@style/ViewStyle"
+            android:background="@color/ViewColor"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="10dp" />

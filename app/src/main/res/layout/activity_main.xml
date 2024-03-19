@@ -28,7 +28,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:contentScrim="@android:color/transparent"
-                app:expandedTitleTextAppearance="@style/expandedBarText"
                 app:layout_scrollFlags="scroll|enterAlways">
 
                 <LinearLayout
@@ -37,7 +36,7 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        style="@style/StatusBarSearchLayoutStyle"
+                        style="@style/StatusBarLayoutStyle"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_gravity="center_vertical"
@@ -59,7 +58,7 @@
 
                         <TextView
                             android:id="@+id/MusicTextView"
-                            style="@style/TextViewStyle"
+                            android:textColor="@color/ImageViewAndTextViewColour"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -94,7 +93,7 @@
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"
-                    style="@style/TabLayoutStyle"
+                    android:background="@color/SplashColour"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -137,7 +136,6 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
-        style="@style/NavigationView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"

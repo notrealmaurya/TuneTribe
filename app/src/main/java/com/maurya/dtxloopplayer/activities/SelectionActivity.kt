@@ -7,13 +7,13 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.MainActivity
-import com.maurya.dtxloopplayer.database.MusicData
+import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivitySelectionBinding
 
 class SelectionActivity : AppCompatActivity() {
 
     private lateinit var adapter: AdapterMusic
-    private val musicList = mutableListOf<MusicData>() // Your list of songs
+    private val musicList = mutableListOf<MusicDataClass>() // Your list of songs
 
     companion object {
         @SuppressLint("StaticFieldLeak")
@@ -31,7 +31,7 @@ class SelectionActivity : AppCompatActivity() {
         binding.recyclerViewSelectionActivity.setHasFixedSize(true)
         binding.recyclerViewSelectionActivity.setItemViewCacheSize(25)
         binding.recyclerViewSelectionActivity.layoutManager = LinearLayoutManager(this)
-        adapter = AdapterMusic(this, MainActivity.tempList, selectionActivity = true)
+        adapter = AdapterMusic(this, MainActivity.musicList, selectionActivity = true)
         binding.recyclerViewSelectionActivity.adapter = adapter
 
 
@@ -56,12 +56,12 @@ class SelectionActivity : AppCompatActivity() {
                 SearchActivity.musicListSearch = ArrayList()
                 if (newText != null) {
                     val userInput = newText.lowercase()
-                    for (song in MainActivity.tempList) {
-                        if (song.title.lowercase().contains(userInput))
+                    for (song in MainActivity.musicList) {
+                        if (song.musicName.lowercase().contains(userInput))
                             SearchActivity.musicListSearch.add(song)
                     }
                     SearchActivity.search = true
-                    adapter.updateMusicList(searchList = SearchActivity.musicListSearch)
+                    adapter.updateSearchList(searchList = SearchActivity.musicListSearch)
                 }
                 return true
             }

@@ -11,10 +11,10 @@
 
 
     <LinearLayout
+        style="@style/LayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        style="@style/LayoutStyle"
         android:orientation="vertical">
 
         <com.airbnb.lottie.LottieAnimationView
@@ -29,47 +29,47 @@
             android:id="@+id/bottomMenuEqualizerOption"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            style="@style/TextViewStyle"
-            android:gravity="center|start"
-            android:text="Equalizer"
             android:drawableStart="@drawable/icon_equalizer"
+            android:drawablePadding="20dp"
+            android:gravity="center|start"
             android:paddingStart="20dp"
-            android:drawablePadding="20dp"/>
+            android:text="Equalizer"
+            android:textColor="@color/ImageViewAndTextViewColour" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            style="@style/ViewStyle"/>
+            android:background="@color/ViewColor" />
 
 
         <TextView
             android:id="@+id/bottomMenuSleepModeOption"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            style="@style/TextViewStyle"
-            android:gravity="center|start"
-            android:text="Sleep Mode"
-            android:paddingStart="10dp"
             android:drawablePadding="20dp"
+            android:gravity="center|start"
+            android:paddingStart="10dp"
+            android:text="Sleep Mode"
+            android:textColor="@color/ImageViewAndTextViewColour"
             app:drawableStartCompat="@drawable/icon_sleepmode" />
 
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            style="@style/ViewStyle"/>
+            android:background="@color/ViewColor" />
 
 
         <TextView
             android:id="@+id/bottomMenuAudioBoostOption"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            style="@style/TextViewStyle"
-            android:gravity="center|start"
-            android:text="Audio Boost"
             android:drawableStart="@drawable/icon_audioboost"
+            android:drawablePadding="20dp"
+            android:gravity="center|start"
             android:paddingStart="17dp"
-            android:drawablePadding="20dp" />
+            android:text="Audio Boost"
+            android:textColor="@color/ImageViewAndTextViewColour" />
 
 
     </LinearLayout>

@@ -6,7 +6,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.MainActivity
-import com.maurya.dtxloopplayer.database.MusicData
+import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {
@@ -15,7 +15,7 @@ class SearchActivity : AppCompatActivity() {
 
 
     companion object {
-        lateinit var musicListSearch: ArrayList<MusicData>
+        lateinit var musicListSearch: ArrayList<MusicDataClass>
         var search: Boolean = false
         var isInitialized = false
         lateinit var musicAdapter: AdapterMusic
@@ -38,7 +38,7 @@ class SearchActivity : AppCompatActivity() {
         binding.recyclerViewSearchActivity.setHasFixedSize(true)
         binding.recyclerViewSearchActivity.setItemViewCacheSize(13)
         binding.recyclerViewSearchActivity.layoutManager = LinearLayoutManager(this)
-        musicAdapter = AdapterMusic(this, MainActivity.tempList, searchActivity = true)
+        musicAdapter = AdapterMusic(this, MainActivity.musicList, searchActivity = true)
         binding.recyclerViewSearchActivity.adapter = musicAdapter
 
 
@@ -50,12 +50,12 @@ class SearchActivity : AppCompatActivity() {
                 musicListSearch = ArrayList()
                 if (newText != null) {
                     val userInput = newText.lowercase()
-                    for (song in MainActivity.tempList) {
-                        if (song.title.lowercase().contains(userInput))
+                    for (song in MainActivity.musicList) {
+                        if (song.musicName.lowercase().contains(userInput))
                             musicListSearch.add(song)
                     }
                     search = true
-                    musicAdapter.updateMusicList(searchList = musicListSearch)
+                    musicAdapter.updateSearchList(searchList = musicListSearch)
                     binding.MusicListTotalSongFragment.text = "${musicAdapter.itemCount} songs"
                 }
                 return true

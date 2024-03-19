@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.FolderTracksActiivity">
+    tools:context=".activities.FolderTracksActivity">
 
     <LinearLayout
         android:id="@+id/layout_topBTN"
@@ -16,7 +16,6 @@
 
         <ImageView
             android:id="@+id/folderTracksBackBtn"
-            style="@style/BackButtonStyle"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
@@ -26,7 +25,6 @@
 
         <TextView
             android:id="@+id/foldersNameFoldersTrackActivity"
-            style="@style/TextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -35,6 +33,7 @@
             android:gravity="start"
             android:singleLine="true"
             android:text="PlayList Name"
+            android:textColor="@color/ImageViewAndTextViewColour"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -53,7 +52,6 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/shuffleBtnFoldersTrackActivity"
-            style="@style/AppCompatButton"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:drawableStart="@drawable/icon_shuffle"
@@ -65,12 +63,12 @@
 
         <TextView
             android:id="@+id/totalSongsFoldersTrackActivity"
-            style="@style/TextViewStyleSmall"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:text="0 song"
+            android:textColor="@color/ImageViewAndTextViewColour"
             android:textSize="13sp" />
 
 
@@ -89,19 +87,16 @@
         android:layout_height="1dp"
         android:layout_below="@id/shuffle"
         android:layout_marginTop="10dp"
-        android:background="@color/line_colour" />
+        android:background="@color/ViewColor" />
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewFoldersTrackActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="60dp"
         android:layout_below="@id/viewLine"
         android:layout_marginTop="20dp"
-        android:background="@color/colorPrimary" />
-
-
+        android:layout_marginBottom="60dp" />
 
 
 </RelativeLayout>

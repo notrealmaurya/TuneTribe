@@ -89,7 +89,7 @@
             android:scaleType="centerCrop"
             android:padding="2dp"
             android:src="@drawable/music"
-            app:shapeAppearanceOverlay="@style/RoundedImageView" />
+            />
 
 
     </LinearLayout>
@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:text="01:28"
-            android:textColor="@color/black"
+            android:textColor="@color/ImageViewAndTextViewColour"
             android:textSize="12sp" />
 
         <SeekBar
@@ -127,7 +127,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
             android:text="04:28"
-            android:textColor="@color/black"
+            android:textColor="@color/ImageViewAndTextViewColour"
             android:textSize="12sp" />
 
     </LinearLayout>
@@ -145,7 +145,7 @@
 
         <ImageView
             android:id="@+id/repeatBtnPlayerActivity"
-            style="@style/next_previous_ripple"
+            android:background="@drawable/bg_ripplefactor"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentStart="true"
@@ -167,7 +167,7 @@
 
         <ImageView
             android:id="@+id/prevSongPlayerActivity"
-            style="@style/next_previous_ripple"
+            android:background="@drawable/bg_ripplefactor"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
@@ -179,7 +179,7 @@
 
         <ImageView
             android:id="@+id/nextSongPlayerActivity"
-            style="@style/next_previous_ripple"
+            android:background="@drawable/bg_ripplefactor"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
@@ -191,7 +191,7 @@
 
         <ImageView
             android:id="@+id/queuePlayerActivity"
-            style="@style/next_previous_ripple"
+            android:background="@drawable/bg_ripplefactor"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
@@ -216,7 +216,7 @@
 
         <ImageView
             android:id="@+id/addFavouritePlayerActivity"
-            style="@style/next_previous_ripple"
+            android:background="@drawable/bg_ripplefactor"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:clickable="true"
@@ -225,7 +225,7 @@
 
         <ImageView
             android:id="@+id/sharePlayerActivity"
-            style="@style/next_previous_ripple"
+            android:background="@drawable/bg_ripplefactor"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="30dp"
@@ -236,7 +236,7 @@
 
         <ImageView
             android:id="@+id/playerthemePlayerActivity"
-            style="@style/next_previous_ripple"
+            android:background="@drawable/bg_ripplefactor"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="30dp"
@@ -247,7 +247,7 @@
 
         <ImageView
             android:id="@+id/menuPlayerActivity"
-            style="@style/next_previous_ripple"
+            android:background="@drawable/bg_ripplefactor"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="30dp"

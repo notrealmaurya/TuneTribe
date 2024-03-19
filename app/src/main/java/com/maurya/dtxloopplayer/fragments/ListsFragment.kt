@@ -20,11 +20,8 @@ import com.maurya.dtxloopplayer.activities.FolderActivity
 import com.maurya.dtxloopplayer.adapter.FolderAdapter
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.adapter.PlayListViewAdapter
-import com.maurya.dtxloopplayer.database.MusicData
-import com.maurya.dtxloopplayer.database.MusicFolderScanner
-import com.maurya.dtxloopplayer.database.MusicPlayList
-import com.maurya.dtxloopplayer.database.PlayList
 import com.maurya.dtxloopplayer.R
+import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.FragmentListsBinding
 import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.utils.updateTextViewWithFolderCount
@@ -36,8 +33,7 @@ class ListsFragment : Fragment() {
     private lateinit var folderAdapter: FolderAdapter
 
     companion object {
-        var musicPlayList: MusicPlayList = MusicPlayList()
-        const val TAG = "ListFragment"
+//        var musicPlayList: MusicPlayList = MusicPlayList()
 
         @SuppressLint("StaticFieldLeak")
         lateinit var fragmentListsBinding: FragmentListsBinding
@@ -61,7 +57,7 @@ class ListsFragment : Fragment() {
         fragmentListsBinding.recyclerViewListFragmentForMyPlayList.setItemViewCacheSize(13)
         fragmentListsBinding.recyclerViewListFragmentForMyPlayList.layoutManager =
             LinearLayoutManager(context)
-        playListAdapter = PlayListViewAdapter(requireContext(), playListList = musicPlayList.ref)
+//        playListAdapter = PlayListViewAdapter(requireContext(), playListList = musicPlayList.ref)
         fragmentListsBinding.recyclerViewListFragmentForMyPlayList.adapter = playListAdapter
 
 
@@ -78,23 +74,23 @@ class ListsFragment : Fragment() {
 
         //for retrieving favourites data using shared preferences
         FavouriteActivity.favouriteSongs = ArrayList()
-        val typeToken = object : TypeToken<ArrayList<MusicData>>() {}.type
+        val typeToken = object : TypeToken<ArrayList<MusicDataClass>>() {}.type
         val jsonString = requireActivity().getSharedPreferences("FAVOURITES", MODE_PRIVATE)
             .getString("FavouriteSongs", null)
         if (jsonString != null) {
-            val data: ArrayList<MusicData> = GsonBuilder().create().fromJson(jsonString, typeToken)
+            val data: ArrayList<MusicDataClass> = GsonBuilder().create().fromJson(jsonString, typeToken)
             FavouriteActivity.favouriteSongs.addAll(data)
         }
 
         //for retrieving PlayList data using shared preferences
-        musicPlayList = MusicPlayList()
-        val jsonStringPlaylist = requireActivity().getSharedPreferences("FAVOURITES", MODE_PRIVATE)
-            .getString("MusicPlaylist", null)
-        if (jsonStringPlaylist != null) {
-            val dataPlaylist: MusicPlayList =
-                GsonBuilder().create().fromJson(jsonStringPlaylist, MusicPlayList::class.java)
-            musicPlayList = dataPlaylist
-        }
+//        musicPlayList = MusicPlayList()
+//        val jsonStringPlaylist = requireActivity().getSharedPreferences("FAVOURITES", MODE_PRIVATE)
+//            .getString("MusicPlaylist", null)
+//        if (jsonStringPlaylist != null) {
+//            val dataPlaylist: MusicPlayList =
+//                GsonBuilder().create().fromJson(jsonStringPlaylist, MusicPlayList::class.java)
+//            musicPlayList = dataPlaylist
+//        }
 
     }
 
@@ -104,8 +100,8 @@ class ListsFragment : Fragment() {
         val jsonStringFav = GsonBuilder().create().toJson(FavouriteActivity.favouriteSongs)
         editorFav.putString("FavouriteSongs", jsonStringFav)
         //for playlist
-        val jsonStringPlaylist = GsonBuilder().create().toJson(musicPlayList)
-        editorFav.putString("MusicPlaylist", jsonStringPlaylist)
+//        val jsonStringPlaylist = GsonBuilder().create().toJson(musicPlayList)
+//        editorFav.putString("MusicPlaylist", jsonStringPlaylist)
         playListAdapter.notifyDataSetChanged()
 
     }
@@ -117,11 +113,11 @@ class ListsFragment : Fragment() {
             favouriteActivity = true
         )
         updateTextViewWithItemCount(musicAdapter, fragmentListsBinding.ListsMyFavouritesSize)
-
-        val musicFolderScanner = MusicFolderScanner(requireActivity().contentResolver)
-        val musicFolders = musicFolderScanner.getAllMusicFolders()
-        folderAdapter = FolderAdapter(requireContext(), musicFolders)
-        updateTextViewWithFolderCount(folderAdapter, fragmentListsBinding.ListsFolderListSize)
+//
+//        val musicFolderScanner = MusicFolderScanner(requireActivity().contentResolver)
+//        val musicFolders = musicFolderScanner.getAllMusicFolders()
+//        folderAdapter = FolderAdapter(requireContext(), musicFolders)
+//        updateTextViewWithFolderCount(folderAdapter, fragmentListsBinding.ListsFolderListSize)
 
     }
 
@@ -195,21 +191,21 @@ class ListsFragment : Fragment() {
 
     private fun addPlayList(name: String) {
         var playListExist = false
-        for (i in musicPlayList.ref) {
-            if (name.equals(i.name, ignoreCase = true)) {
-                playListExist = true
-                break
-            }
-        }
+//        for (i in musicPlayList.ref) {
+//            if (name.equals(i.name, ignoreCase = true)) {
+//                playListExist = true
+//                break
+//            }
+//        }
         if (playListExist) {
             showToast(requireContext(), "PlayList Exist!!")
         } else {
-            val tempPlayList = PlayList()
-            tempPlayList.name = name
-            tempPlayList.playList = ArrayList()
-
-            musicPlayList.ref.add(tempPlayList)
-            playListAdapter.refreshPlayList()
+//            val tempPlayList = PlayList()
+//            tempPlayList.name = name
+//            tempPlayList.playList = ArrayList()
+//
+//            musicPlayList.ref.add(tempPlayList)
+//            playListAdapter.refreshPlayList()
 
         }
 

@@ -45,7 +45,7 @@
 
                 <TextView
                     android:id="@+id/MusicName"
-                    style="@style/TextViewStyle"
+                    android:textColor="@color/ImageViewAndTextViewColour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -58,7 +58,7 @@
 
                 <TextView
                     android:id="@+id/MusicArtist"
-                    style="@style/TextViewStyleSmall"
+                    android:textColor="@color/ImageViewAndTextViewColour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
@@ -76,14 +76,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_gravity="bottom"
-                android:background="@color/line_colour" />
+                android:background="@color/ViewColor" />
 
 
         </LinearLayout>
 
         <TextView
             android:id="@+id/MusicDuration"
-            style="@style/TextViewStyle"
+            android:textColor="@color/ImageViewAndTextViewColour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"

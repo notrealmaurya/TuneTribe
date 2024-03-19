@@ -32,7 +32,7 @@ class PlayListActivity : AppCompatActivity() {
 
         try {
             val currentPlayList = ListsFragment.musicPlayList.ref[currentPlayListPosition]
-            currentPlayList.playList = checkPlayListData(playList = currentPlayList.playList)
+//            currentPlayList.playList = checkPlayListData(playList = currentPlayList.playList)
         }
         catch (e :Exception){
             showToast(this,"Playlist Error")

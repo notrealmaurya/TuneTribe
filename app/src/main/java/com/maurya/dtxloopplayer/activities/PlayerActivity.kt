@@ -30,10 +30,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
 import com.maurya.dtxloopplayer.MainActivity
-import com.maurya.dtxloopplayer.database.MusicData
 import com.maurya.dtxloopplayer.MusicService
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
+import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.databinding.ActivityPlayerBinding
 import com.maurya.dtxloopplayer.utils.exitApplication
@@ -52,7 +52,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
 
     companion object {
-        lateinit var musicListPlayerActivity: ArrayList<MusicData>
+        lateinit var musicListPlayerActivity: ArrayList<MusicDataClass>
         var musicPosition: Int = 0
         var isPlaying: Boolean = false
         var musicService: MusicService? = null
@@ -110,8 +110,8 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 .load(getMusicArt(musicListPlayerActivity[musicPosition].path))
                 .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
                 .into(binding.songImagePlayerActivity)
-            binding.songNAME.text = musicListPlayerActivity[musicPosition].title
-            binding.songARTIST.text = musicListPlayerActivity[musicPosition].artist
+            binding.songNAME.text = musicListPlayerActivity[musicPosition].musicName
+            binding.songARTIST.text = musicListPlayerActivity[musicPosition].albumArtist
         } else {
             initializeLayout()
         }
@@ -161,13 +161,13 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
         if (!isFinishing && !isDestroyed) {
             Glide.with(this)
-                .load(musicListPlayerActivity[musicPosition].artUri)
+                .load(musicListPlayerActivity[musicPosition].image)
                 .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
                 .into(binding.songImagePlayerActivity)
         }
 
-        binding.songNAME.text = musicListPlayerActivity[musicPosition].title
-        binding.songARTIST.text = musicListPlayerActivity[musicPosition].artist
+        binding.songNAME.text = musicListPlayerActivity[musicPosition].musicName
+        binding.songARTIST.text = musicListPlayerActivity[musicPosition].albumArtist
         if (repeat) binding.repeatBtnPlayerActivity.setImageResource(R.drawable.icon_repeat_one)
         if (min15 || min30 || min60) bottomMenuSleepModeOption.text = "Stop timer"
         if (isFavourite) binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_added)
@@ -204,12 +204,12 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             )
 
             "SongsFragment" -> initServiceAndPlaylist(
-                MainActivity.tempList,
+                MainActivity.musicList,
                 shuffle = false
             )
 
             "SongsFragmentShuffle" -> initServiceAndPlaylist(
-                MainActivity.tempList,
+                MainActivity.musicList,
                 shuffle = true
             )
 
@@ -234,12 +234,12 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             )
 
             "folderSongsActivity" -> initServiceAndPlaylist(
-                FolderTracksActivity.folderMusicFiles as ArrayList<MusicData>, shuffle = false
+                FolderTracksActivity.folderMusicFiles as ArrayList<MusicDataClass>, shuffle = false
 
             )
 
             "folderSongsActivityShuffle" -> initServiceAndPlaylist(
-                FolderTracksActivity.folderMusicFiles as ArrayList<MusicData>, shuffle = true
+                FolderTracksActivity.folderMusicFiles as ArrayList<MusicDataClass>, shuffle = true
             )
 
             "queueActivity" -> {
@@ -253,7 +253,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
     }
 
     private fun initServiceAndPlaylist(
-        playlist: ArrayList<MusicData>,
+        playlist: ArrayList<MusicDataClass>,
         shuffle: Boolean,
         playNext: Boolean = false
     ) {
@@ -266,7 +266,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         setLayout()
     }
 
-    private fun getMusicDetails(contentUri: Uri): MusicData {
+    private fun getMusicDetails(contentUri: Uri): MusicDataClass {
 
         var cursor: Cursor? = null
         try {
@@ -287,15 +287,16 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             val dateModified =
                 dateAddedColumn?.let { cursor.getLong(it) } ?: 0 // Handle if DATE_ADDED is null
 
-            return MusicData(
+            return MusicDataClass(
                 id = "Unknown",
-                title = path.toString(),
-                album = "Unknown",
-                artist = "Unknown",
-                duration = duration,
-                artUri = "Unknown",
-                path = path.toString(),
-                dateModified = dateModified
+                 path.toString(),
+                 "Unknown",
+                duration,
+                "Unknown",
+                "Unknown",
+                 path.toString(),
+                Uri.EMPTY,
+                dateModified
             )
         } finally {
             cursor?.close()
@@ -580,15 +581,15 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.songArtistMiniPlayer.isSelected =
             true
         Glide.with(applicationContext)
-            .load(musicListPlayerActivity[musicPosition].artUri)
+            .load(musicListPlayerActivity[musicPosition].image)
             .apply(
                 RequestOptions().placeholder(R.drawable.icon_music).centerCrop()
             )
             .into(NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.AlbumArtMiniPlayer)
         NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.songNameMiniPlayer.text =
-            musicListPlayerActivity[musicPosition].title
+            musicListPlayerActivity[musicPosition].musicName
         NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.songArtistMiniPlayer.text =
-            musicListPlayerActivity[musicPosition].artist
+            musicListPlayerActivity[musicPosition].albumArtist
 
         notifyAdapterSongTextPosition()
 

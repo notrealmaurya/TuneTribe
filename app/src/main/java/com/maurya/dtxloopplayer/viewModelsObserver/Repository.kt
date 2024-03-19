@@ -30,7 +30,7 @@ class Repository @Inject constructor() {
     private val _songsFromFolderStateFlow =
         MutableStateFlow<ModelResult<ArrayList<MusicDataClass>>>(ModelResult.Loading())
 
-    val videosFromFolderStateFlow: StateFlow<ModelResult<ArrayList<MusicDataClass>>> get() = _songsFromFolderStateFlow
+    val songsFromFolderStateFlow: StateFlow<ModelResult<ArrayList<MusicDataClass>>> get() = _songsFromFolderStateFlow
 
 
     private val _statusStateFlow = MutableStateFlow<ModelResult<String>>(ModelResult.Loading())

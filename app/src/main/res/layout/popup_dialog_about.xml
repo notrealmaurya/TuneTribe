@@ -18,25 +18,24 @@
 
 
     <TextView
-        style="@style/TextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Build Version : 1.0"
+        android:textColor="@color/ImageViewAndTextViewColour"
         android:textSize="14sp" />
 
     <TextView
-        style="@style/TextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="Developed by Detroit.loop"
+        android:textColor="@color/ImageViewAndTextViewColour"
         android:textSize="14sp" />
 
     <TextView
         android:id="@+id/spannableTextView_Dialog"
-        style="@style/TextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
@@ -44,17 +43,18 @@
         android:layout_marginEnd="40dp"
         android:gravity="center"
         android:text="If you'd like to share your thoughts or provide feedback, please feel free to do so. Your input is valuable, and I'd appreciate hearing from you.❤️"
+        android:textColor="@color/ImageViewAndTextViewColour"
         android:textSize="14sp" />
 
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/about_dialog_thankyou_button"
-        style="@style/BackButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
+        android:background="@drawable/bg_ripplefactor"
         android:padding="20dp"
         android:text="THANK You❤️" />
 

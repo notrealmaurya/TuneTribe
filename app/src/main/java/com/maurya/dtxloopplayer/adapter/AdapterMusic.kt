@@ -1,5 +1,6 @@
 package com.maurya.dtxloopplayer.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -11,18 +12,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.maurya.dtxloopplayer.activities.PlayListActivity
-import com.maurya.dtxloopplayer.database.MusicData
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.activities.SelectionActivity
+import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ItemMusicBinding
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.utils.formatDuration
 
 class AdapterMusic(
     private val context: Context,
-    private var musicList: ArrayList<MusicData>,
+    private var musicList: ArrayList<MusicDataClass> = arrayListOf(),
     private val playListActivity: Boolean = false,
     private val selectionActivity: Boolean = false,
     private val folderSongsActivity: Boolean = false,
@@ -38,46 +39,15 @@ class AdapterMusic(
 
     override fun onBindViewHolder(holder: MusicHolder, position: Int) {
 
-        holder.MusicName.text = musicList[position].title
+        holder.MusicName.text = musicList[position].musicName
         holder.MusicName.isSelected = true
-        holder.MusicArist.text = musicList[position].artist
+        holder.MusicArist.text = musicList[position].albumArtist
         holder.MusicArist.isSelected = true
-        holder.MusicDuration.text = formatDuration(musicList[position].duration)
+        holder.MusicDuration.text = formatDuration(musicList[position].durationText)
         Glide.with(context)
-            .load(musicList[position].artUri)
+            .load(musicList[position].image)
             .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
             .into(holder.MusicArt)
-
-
-        if (PlayerActivity.isInitialized) {
-            val currentSongId =
-                PlayerActivity.musicListPlayerActivity.getOrNull(PlayerActivity.musicPosition)?.id
-            val musicItem = musicList[position].id
-
-            if (currentSongId != null && currentSongId == musicItem) {
-                holder.MusicName.setTextColor(ContextCompat.getColor(context, R.color.red))
-                holder.MusicArist.setTextColor(ContextCompat.getColor(context, R.color.red))
-                holder.MusicDuration.setTextColor(ContextCompat.getColor(context, R.color.red))
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    holder.MusicName.setTextAppearance(R.style.TextViewStyle)
-                    holder.MusicArist.setTextAppearance(R.style.TextViewStyle)
-                    holder.MusicDuration.setTextAppearance(R.style.TextViewStyle)
-                } else {
-                    holder.MusicName.setTextColor(ContextCompat.getColor(context, R.color.white))
-                    holder.MusicArist.setTextColor(ContextCompat.getColor(context, R.color.white))
-                    holder.MusicDuration.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.white
-                        )
-                    )
-                }
-            }
-        } else {
-            // Handle the case when PlayerActivity is not initialized (e.g., show an error message)
-        }
-
 
 
         when {
@@ -90,13 +60,12 @@ class AdapterMusic(
             selectionActivity -> {
                 holder.chekbox.visibility = View.VISIBLE
                 holder.chekbox.isClickable = false
-                holder.chekbox.isChecked = isSongAdded(musicList[position])
+//                holder.chekbox.isChecked = isSongAdded(musicList[position])
 
                 holder.root.setOnClickListener {
                     val musicData = musicList[position]
-                    val added = addSong(musicData)
-                    holder.chekbox.isChecked = added
-                    updateSelectedCountSelectionActivity() // Call the function to update the selected count
+//                    val added = addSong(musicData)
+//                    holder.chekbox.isChecked = added
                 }
             }
 
@@ -157,49 +126,13 @@ class AdapterMusic(
         ContextCompat.startActivity(context, intent, null)
     }
 
-    fun updateMusicList(searchList: ArrayList<MusicData>) {
-        musicList = ArrayList()
-        musicList.addAll(searchList)
-        notifyDataSetChanged()
-    }
 
-    fun updateFavourites(newList: ArrayList<MusicData>) {
+    fun updateFavourites(newList: ArrayList<MusicDataClass>) {
         musicList = ArrayList()
         musicList.addAll(newList)
         notifyDataSetChanged()
     }
 
-    private fun updateSelectedCountSelectionActivity() {
-        var checkedCount = 0
-        for (musicData in musicList) {
-            if (isSongAdded(musicData)) {
-                checkedCount++
-            }
-        }
-        SelectionActivity.binding.selectedSongSelectionActivity.text =
-            "Selected: $checkedCount songs"
-    }
-
-    private fun addSong(musicData: MusicData): Boolean {
-        ListsFragment.musicPlayList.ref[PlayListActivity.currentPlayListPosition].playList.forEachIndexed { index, music ->
-            if (musicData.id == music.id) {
-                ListsFragment.musicPlayList.ref[PlayListActivity.currentPlayListPosition].playList.removeAt(
-                    index
-                )
-                return false
-            }
-        }
-        ListsFragment.musicPlayList.ref[PlayListActivity.currentPlayListPosition].playList.add(
-            musicData
-        )
-        return true
-    }
-
-
-    private fun isSongAdded(musicData: MusicData): Boolean {
-        val playList = ListsFragment.musicPlayList.ref[PlayListActivity.currentPlayListPosition]
-        return playList.playList.any { it.id == musicData.id }
-    }
 
 
     fun refreshPlayList() {
@@ -211,6 +144,13 @@ class AdapterMusic(
 
     override fun getItemCount(): Int {
         return musicList.size
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateSearchList(searchList: ArrayList<MusicDataClass>) {
+        musicList = ArrayList()
+        musicList.addAll(searchList)
+        notifyDataSetChanged()
     }
 
     class MusicHolder(binding: ItemMusicBinding) : RecyclerView.ViewHolder(binding.root) {

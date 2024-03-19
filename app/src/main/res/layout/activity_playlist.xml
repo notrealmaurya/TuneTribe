@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/LayoutStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/LayoutStyle"
     android:orientation="vertical"
     tools:context=".activities.PlayListActivity">
 
@@ -16,16 +16,15 @@
 
         <ImageView
             android:id="@+id/PlayListBackBtn"
-            style="@style/BackButtonStyle"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
+            android:background="@drawable/bg_ripplefactor"
             android:padding="10dp"
             android:src="@drawable/icon_left_arrow" />
 
         <TextView
-            style="@style/TextViewStyle"
             android:id="@+id/playlistNamePlayListActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,6 +34,7 @@
             android:gravity="start"
             android:singleLine="true"
             android:text="PlayList Name"
+            android:textColor="@color/ImageViewAndTextViewColour"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -52,7 +52,6 @@
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatButton
-            style="@style/AppCompatButton"
             android:id="@+id/shuffleBtnPlayListActivity"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
@@ -70,7 +69,7 @@
             android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:text="0 song"
-            style="@style/TextViewStyleSmall"
+            android:textColor="@color/ImageViewAndTextViewColour"
             android:textSize="13sp" />
 
 
@@ -89,7 +88,7 @@
         android:layout_height="1dp"
         android:layout_below="@id/shuffle"
         android:layout_marginTop="10dp"
-        android:background="@color/line_colour" />
+        android:background="@color/ViewColor" />
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -98,28 +97,26 @@
         android:layout_height="match_parent"
         android:layout_above="@id/bottomadd"
         android:layout_below="@id/viewLine"
-        android:layout_marginTop="20dp"
-        android:background="@color/colorPrimary" />
+        android:layout_marginTop="20dp" />
 
     <LinearLayout
         android:id="@+id/bottomadd"
+        style="@style/LayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:weightSum="2"
         android:layout_marginBottom="10dp"
         android:gravity="center"
-        style="@style/LayoutStyle">
+        android:weightSum="2">
 
         <TextView
             android:id="@+id/addBtnPlayListActivity"
-            style="@style/AppCompatButton"
             android:layout_width="120dp"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
-            android:paddingStart="15dp"
-            android:gravity="center"
             android:layout_weight="1"
+            android:gravity="center"
+            android:paddingStart="15dp"
             android:text="Add"
             android:textSize="16sp"
             app:drawableStartCompat="@drawable/icon_add" />
@@ -127,21 +124,21 @@
         <View
             android:layout_width="1dp"
             android:layout_height="30dp"
-            android:layout_marginEnd="15dp"
             android:layout_marginStart="15dp"
-            style="@style/ViewStyle"/>
+            android:layout_marginEnd="15dp"
+            android:background="@color/ViewColor" />
 
         <TextView
             android:id="@+id/removeAllBtnPlayListActivity"
             android:layout_width="120dp"
             android:layout_height="match_parent"
-            android:paddingStart="15dp"
             android:layout_marginEnd="10dp"
-            android:gravity="center"
-            android:text="Remove all"
-            style="@style/AppCompatButton"
-            android:textSize="16sp"
             android:layout_weight="1"
+            android:gravity="center"
+            android:paddingStart="15dp"
+            android:text="Remove all"
+            android:textColor="@color/ImageViewAndTextViewColour"
+            android:textSize="16sp"
             app:drawableStartCompat="@drawable/icon_remove" />
 
     </LinearLayout>
