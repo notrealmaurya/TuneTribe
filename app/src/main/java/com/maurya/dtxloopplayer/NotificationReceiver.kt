@@ -78,7 +78,6 @@ class NotificationReceiver : BroadcastReceiver() {
         if(PlayerActivity.isFavourite) PlayerActivity.binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_added)
         else PlayerActivity.binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_empty)
 
-
         notifyAdapterSongTextPosition()
     }
 }

@@ -37,13 +37,10 @@ import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.fragments.SongsFragment
-import com.maurya.dtxloopplayer.database.MusicData
-import com.maurya.dtxloopplayer.database.MusicPlayList
+import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivityMainBinding
 import com.maurya.dtxloopplayer.databinding.PopupDialogAboutBinding
-
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
-import java.io.File
 import kotlin.system.exitProcess
 
 
@@ -53,8 +50,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedPreferencesHelper: SharedPreferenceHelper
 
     companion object {
-        val tempList = ArrayList<MusicData>()
-        var musicList: ArrayList<MusicData> = ArrayList()
+        var musicList: ArrayList<MusicDataClass> = ArrayList()
         var sortOrder: Int = 0
         val sortingList = arrayOf(
             MediaStore.Audio.Media.DATE_ADDED + " DESC", MediaStore.Audio.Media.TITLE,
@@ -69,14 +65,14 @@ class MainActivity : AppCompatActivity() {
 
         sharedPreferencesHelper = SharedPreferenceHelper(this)
 
-        ListsFragment.musicPlayList = MusicPlayList()
-        // Retrieve Playlist data using shared preferences
-        val jsonStringPlaylist = sharedPreferencesHelper.getPlaylistData()
-        if (jsonStringPlaylist != null) {
-            val dataPlaylist: MusicPlayList =
-                GsonBuilder().create().fromJson(jsonStringPlaylist, MusicPlayList::class.java)
-            ListsFragment.musicPlayList = dataPlaylist
-        }
+//        ListsFragment.musicPlayList = MusicPlayList()
+//        // Retrieve Playlist data using shared preferences
+//        val jsonStringPlaylist = sharedPreferencesHelper.getPlaylistData()
+//        if (jsonStringPlaylist != null) {
+//            val dataPlaylist: MusicPlayList =
+//                GsonBuilder().create().fromJson(jsonStringPlaylist, MusicPlayList::class.java)
+//            ListsFragment.musicPlayList = dataPlaylist
+//        }
 
         binding.navView.visibility = View.VISIBLE
 
@@ -112,81 +108,9 @@ class MainActivity : AppCompatActivity() {
         listeners()
 
 
-        val tempList = findMusicFiles()
-        musicList.addAll(tempList)
+//        val tempList = findMusicFiles()
+        musicList.addAll(musicList)
 
-    }
-
-    @SuppressLint("Range")
-    private fun findMusicFiles(): ArrayList<MusicData> {
-        tempList.clear()
-        val uniquePaths = HashSet<String>()
-
-        val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0"
-        val projection = arrayOf(
-            MediaStore.Audio.Media._ID,
-            MediaStore.Audio.Media.TITLE,
-            MediaStore.Audio.Media.ALBUM,
-            MediaStore.Audio.Media.ARTIST,
-            MediaStore.Audio.Media.DURATION,
-            MediaStore.Audio.Media.DATE_MODIFIED,
-            MediaStore.Audio.Media.DATA,
-            MediaStore.Audio.Media.ALBUM_ID
-        )
-
-        this.contentResolver.query(
-            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-            projection,
-            selection,
-            null,
-            sortingList[sortOrder],
-            null
-        )?.use { cursor ->
-            if (cursor.moveToFirst()) {
-                do {
-                    val idSF = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID))
-                    val titleSF =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
-                    val albumSF =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM))
-                    val artistSF =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
-                    val durationSF =
-                        cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
-                    val pathSF =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
-                    val albumIDSF =
-                        cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))
-                            .toString()
-
-                    val uri = Uri.parse("content://media/external/audio/albumart")
-                    val artUriSF = Uri.withAppendedPath(uri, albumIDSF).toString()
-
-                    val dateSF =
-                        cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED))
-
-                    if (durationSF >= 20000) { // 20 seconds in milliseconds
-                        val music = MusicData(
-                            id = idSF,
-                            title = titleSF,
-                            album = albumSF,
-                            artist = artistSF,
-                            duration = durationSF,
-                            path = pathSF,
-                            artUri = artUriSF,
-                            dateModified = dateSF
-                        )
-
-                        val file = File(music.path)
-                        if (file.exists() && uniquePaths.add(music.path)) {
-                            tempList.add(music)
-                        }
-                    }
-                } while (cursor.moveToNext())
-            }
-        }
-
-        return tempList
     }
 
 

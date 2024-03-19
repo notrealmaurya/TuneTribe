@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maurya.dtxloopplayer.adapter.MusicAdapter
+import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicData
 import com.maurya.dtxloopplayer.databinding.ActivityFavouriteBinding
 import com.maurya.dtxloopplayer.utils.checkPlayListData
@@ -17,7 +17,7 @@ class FavouriteActivity : AppCompatActivity() {
     companion object {
         var favouriteSongs: ArrayList<MusicData> = ArrayList()
         var favouritesChanged: Boolean = false
-        lateinit var musicAdapter: MusicAdapter
+        lateinit var musicAdapter: AdapterMusic
 
         var isInitialized = false
     }
@@ -39,7 +39,7 @@ class FavouriteActivity : AppCompatActivity() {
         binding.recyclerViewFavouriteActivity.setHasFixedSize(true)
         binding.recyclerViewFavouriteActivity.setItemViewCacheSize(13)
         binding.recyclerViewFavouriteActivity.layoutManager = LinearLayoutManager(this)
-        musicAdapter = MusicAdapter(this, favouriteSongs, favouriteActivity = true)
+        musicAdapter = AdapterMusic(this, favouriteSongs, favouriteActivity = true)
         binding.recyclerViewFavouriteActivity.adapter = musicAdapter
 
         itemCount()

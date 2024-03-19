@@ -3,11 +3,10 @@ package com.maurya.dtxloopplayer.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.GsonBuilder
-import com.maurya.dtxloopplayer.adapter.MusicAdapter
+import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.utils.checkPlayListData
 import com.maurya.dtxloopplayer.databinding.ActivityPlaylistBinding
@@ -19,7 +18,7 @@ class PlayListActivity : AppCompatActivity() {
     companion object {
         var currentPlayListPosition: Int = -1
         var isInitialized = false
-        lateinit var musicAdapter: MusicAdapter
+        lateinit var musicAdapter: AdapterMusic
     }
 
 
@@ -42,7 +41,7 @@ class PlayListActivity : AppCompatActivity() {
         binding.recyclerViewPlayListActivity.setItemViewCacheSize(10)
         binding.recyclerViewPlayListActivity.setHasFixedSize(true)
         binding.recyclerViewPlayListActivity.layoutManager = LinearLayoutManager(this)
-        musicAdapter = MusicAdapter(
+        musicAdapter = AdapterMusic(
             this,
             ListsFragment.musicPlayList.ref[currentPlayListPosition].playList,
             playListActivity = true

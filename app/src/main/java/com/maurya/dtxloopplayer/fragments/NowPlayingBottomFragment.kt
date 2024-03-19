@@ -16,7 +16,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maurya.dtxloopplayer.activities.PlayerActivity
-import com.maurya.dtxloopplayer.adapter.MusicAdapter
+import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.databinding.FragmentNowPlayingBottomBinding
 import com.maurya.dtxloopplayer.utils.notifyAdapterSongTextPosition
@@ -30,7 +30,7 @@ class NowPlayingBottomFragment : Fragment() {
         lateinit var fragmentNowPlayingBottomBinding: FragmentNowPlayingBottomBinding
         var isInitialized = false
 
-        lateinit var musicAdapter: MusicAdapter
+        lateinit var musicAdapter: AdapterMusic
     }
 
     override fun onCreateView(
@@ -77,7 +77,7 @@ class NowPlayingBottomFragment : Fragment() {
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
             musicAdapter =
-                MusicAdapter(
+                AdapterMusic(
                     requireContext(),
                     PlayerActivity.musicListPlayerActivity,
                     queueActivity = true

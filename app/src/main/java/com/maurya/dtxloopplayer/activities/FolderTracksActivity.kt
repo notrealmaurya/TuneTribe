@@ -5,7 +5,7 @@ import android.media.MediaMetadataRetriever
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maurya.dtxloopplayer.adapter.MusicAdapter
+import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicData
 import com.maurya.dtxloopplayer.databinding.ActivityFolderTracksActiivityBinding
 import java.io.File
@@ -20,7 +20,7 @@ class FolderTracksActivity : AppCompatActivity() {
 
     companion object {
         var folderMusicFiles = ArrayList<MusicData>()
-        lateinit var musicAdapter: MusicAdapter
+        lateinit var musicAdapter: AdapterMusic
         var isInitialized = false
     }
 
@@ -38,7 +38,7 @@ class FolderTracksActivity : AppCompatActivity() {
         binding.recyclerViewFoldersTrackActivity.setHasFixedSize(true)
         binding.recyclerViewFoldersTrackActivity.layoutManager = LinearLayoutManager(this)
         musicAdapter =
-            MusicAdapter(this, folderMusicFiles, folderSongsActivity = true)
+            AdapterMusic(this, folderMusicFiles, folderSongsActivity = true)
         binding.recyclerViewFoldersTrackActivity.adapter = musicAdapter
 
         updateTextViewWithItemCount(musicAdapter, binding.totalSongsFoldersTrackActivity)

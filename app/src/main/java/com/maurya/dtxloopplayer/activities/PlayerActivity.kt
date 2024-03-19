@@ -33,7 +33,7 @@ import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.database.MusicData
 import com.maurya.dtxloopplayer.MusicService
 import com.maurya.dtxloopplayer.R
-import com.maurya.dtxloopplayer.adapter.MusicAdapter
+import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.databinding.ActivityPlayerBinding
 import com.maurya.dtxloopplayer.utils.exitApplication
@@ -47,7 +47,7 @@ import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 
 class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
 
-    private lateinit var musicAdapter: MusicAdapter
+    private lateinit var musicAdapter: AdapterMusic
     private var shuffle: Boolean = false
 
 
@@ -82,7 +82,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         isInitialized = true
 
         musicAdapter =
-            MusicAdapter(this, FavouriteActivity.favouriteSongs, favouriteActivity = true)
+            AdapterMusic(this, FavouriteActivity.favouriteSongs, favouriteActivity = true)
 
 
         binding.songNAME.isSelected = true

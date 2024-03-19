@@ -5,14 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maurya.dtxloopplayer.adapter.MusicAdapter
+import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.database.MusicData
 import com.maurya.dtxloopplayer.databinding.ActivitySelectionBinding
 
 class SelectionActivity : AppCompatActivity() {
 
-    private lateinit var adapter: MusicAdapter
+    private lateinit var adapter: AdapterMusic
     private val musicList = mutableListOf<MusicData>() // Your list of songs
 
     companion object {
@@ -31,7 +31,7 @@ class SelectionActivity : AppCompatActivity() {
         binding.recyclerViewSelectionActivity.setHasFixedSize(true)
         binding.recyclerViewSelectionActivity.setItemViewCacheSize(25)
         binding.recyclerViewSelectionActivity.layoutManager = LinearLayoutManager(this)
-        adapter = MusicAdapter(this, MainActivity.tempList, selectionActivity = true)
+        adapter = AdapterMusic(this, MainActivity.tempList, selectionActivity = true)
         binding.recyclerViewSelectionActivity.adapter = adapter
 
 

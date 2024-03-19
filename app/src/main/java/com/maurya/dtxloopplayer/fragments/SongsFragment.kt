@@ -9,9 +9,8 @@ import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maurya.dtxloopplayer.activities.PlayerActivity
-import com.maurya.dtxloopplayer.adapter.MusicAdapter
+import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.MainActivity
-import com.maurya.dtxloopplayer.database.MusicData
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.databinding.FragmentSongsBinding
@@ -23,15 +22,14 @@ class SongsFragment : Fragment() {
     private lateinit var sharedPreferencesHelper: SharedPreferenceHelper
 
     companion object {
-        lateinit var musicListSongFragment: ArrayList<MusicData>
-        lateinit var musicAdapter: MusicAdapter
+        lateinit var musicAdapter: AdapterMusic
         var isInitialized = false
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         fragmentSongsBinding = FragmentSongsBinding.inflate(inflater, container, false)
         val view = fragmentSongsBinding.root
 
@@ -44,10 +42,9 @@ class SongsFragment : Fragment() {
         fragmentSongsBinding.recyclerViewSongFragment.setItemViewCacheSize(13)
         fragmentSongsBinding.recyclerViewSongFragment.layoutManager =
             LinearLayoutManager(context)
-        musicAdapter = MusicAdapter(requireContext(), MainActivity.tempList)
+        musicAdapter = AdapterMusic(requireContext(), MainActivity.tempList)
         fragmentSongsBinding.recyclerViewSongFragment.adapter = musicAdapter
         fragmentSongsBinding.MusicListTotalSongFragment.text = "${musicAdapter.itemCount} songs"
-
 
         fragmentSongsBinding.shuffleBtnSongFragment.setOnClickListener {
             val intent = Intent(context, PlayerActivity::class.java)
@@ -56,7 +53,7 @@ class SongsFragment : Fragment() {
             startActivity(intent)
         }
 
-        fragmentSongsBinding.sortMenuSongFragment.setOnClickListener { view ->
+        fragmentSongsBinding.sortMenuSongFragment.setOnClickListener {
             showSortingMenu(view)
         }
 
@@ -109,7 +106,6 @@ class SongsFragment : Fragment() {
         popupMenu.show()
     }
 
-
     private fun sortMusicList(sortBy: String) {
         when (sortBy) {
             "newest_date_first" -> MainActivity.tempList.sortByDescending { it.dateModified }
@@ -122,12 +118,10 @@ class SongsFragment : Fragment() {
                 MainActivity.tempList.sortByDescending { it.dateModified }
             }
         }
-
         musicAdapter.updateMusicList(MainActivity.tempList)
         musicAdapter.notifyDataSetChanged()
         sharedPreferencesHelper.saveSortingOrder(sortBy)
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -137,8 +131,6 @@ class SongsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         musicAdapter.notifyDataSetChanged()
-
-
     }
 
 }

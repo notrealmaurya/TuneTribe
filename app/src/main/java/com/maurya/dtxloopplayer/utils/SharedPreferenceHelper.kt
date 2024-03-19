@@ -33,7 +33,6 @@ class SharedPreferenceHelper(context: Context) {
     }
 
 
-
     fun saveSortingOrder(sortingOrder: String) {
         sharedPreferences.edit().putString("sorting_order", sortingOrder).apply()
     }

@@ -18,7 +18,7 @@ import com.google.gson.reflect.TypeToken
 import com.maurya.dtxloopplayer.activities.FavouriteActivity
 import com.maurya.dtxloopplayer.activities.FolderActivity
 import com.maurya.dtxloopplayer.adapter.FolderAdapter
-import com.maurya.dtxloopplayer.adapter.MusicAdapter
+import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.adapter.PlayListViewAdapter
 import com.maurya.dtxloopplayer.database.MusicData
 import com.maurya.dtxloopplayer.database.MusicFolderScanner
@@ -46,7 +46,7 @@ class ListsFragment : Fragment() {
         lateinit var playListAdapter: PlayListViewAdapter
 
         @SuppressLint("StaticFieldLeak")
-        lateinit var musicAdapter: MusicAdapter
+        lateinit var musicAdapter: AdapterMusic
     }
 
     override fun onCreateView(
@@ -111,7 +111,7 @@ class ListsFragment : Fragment() {
     }
 
     private fun updateText() {
-        musicAdapter = MusicAdapter(
+        musicAdapter = AdapterMusic(
             requireContext(),
             FavouriteActivity.favouriteSongs,
             favouriteActivity = true

@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maurya.dtxloopplayer.adapter.MusicAdapter
+import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.database.MusicData
 import com.maurya.dtxloopplayer.databinding.ActivitySearchBinding
@@ -18,7 +18,7 @@ class SearchActivity : AppCompatActivity() {
         lateinit var musicListSearch: ArrayList<MusicData>
         var search: Boolean = false
         var isInitialized = false
-        lateinit var musicAdapter: MusicAdapter
+        lateinit var musicAdapter: AdapterMusic
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +38,7 @@ class SearchActivity : AppCompatActivity() {
         binding.recyclerViewSearchActivity.setHasFixedSize(true)
         binding.recyclerViewSearchActivity.setItemViewCacheSize(13)
         binding.recyclerViewSearchActivity.layoutManager = LinearLayoutManager(this)
-        musicAdapter = MusicAdapter(this, MainActivity.tempList, searchActivity = true)
+        musicAdapter = AdapterMusic(this, MainActivity.tempList, searchActivity = true)
         binding.recyclerViewSearchActivity.adapter = musicAdapter
 
 
