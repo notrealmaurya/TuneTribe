@@ -114,7 +114,7 @@ class ListsFragment : Fragment() {
             FavouriteActivity.favouriteSongs,
             favouriteActivity = true
         )
-        updateTextViewWithItemCount(musicAdapter, fragmentListsBinding.ListsMyFavouritesSize)
+
 //
 //        val musicFolderScanner = MusicFolderScanner(requireActivity().contentResolver)
 //        val musicFolders = musicFolderScanner.getAllMusicFolders()

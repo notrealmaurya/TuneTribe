@@ -8,6 +8,13 @@
     android:orientation="vertical"
     tools:context=".activities.FolderTracksActivity">
 
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true" />
+
     <LinearLayout
         android:id="@+id/layout_topBTN"
         android:layout_width="match_parent"
@@ -21,7 +28,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:padding="10dp"
-            android:src="@drawable/icon_left_arrow" />
+            android:src="@drawable/icon_back" />
 
         <TextView
             android:id="@+id/foldersNameFoldersTrackActivity"

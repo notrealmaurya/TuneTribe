@@ -8,6 +8,7 @@ import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivitySearchBinding
+import com.maurya.dtxloopplayer.fragments.SongsFragment
 
 class SearchActivity : AppCompatActivity() {
 
@@ -38,7 +39,7 @@ class SearchActivity : AppCompatActivity() {
         binding.recyclerViewSearchActivity.setHasFixedSize(true)
         binding.recyclerViewSearchActivity.setItemViewCacheSize(13)
         binding.recyclerViewSearchActivity.layoutManager = LinearLayoutManager(this)
-        musicAdapter = AdapterMusic(this, MainActivity.musicList, searchActivity = true)
+        musicAdapter = AdapterMusic(this, SongsFragment.musicList, searchActivity = true)
         binding.recyclerViewSearchActivity.adapter = musicAdapter
 
 
@@ -50,7 +51,7 @@ class SearchActivity : AppCompatActivity() {
                 musicListSearch = ArrayList()
                 if (newText != null) {
                     val userInput = newText.lowercase()
-                    for (song in MainActivity.musicList) {
+                    for (song in SongsFragment.musicList) {
                         if (song.musicName.lowercase().contains(userInput))
                             musicListSearch.add(song)
                     }

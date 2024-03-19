@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/LayoutStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/LayoutStyle"
     android:orientation="vertical"
     tools:context=".activities.FavouriteActivity">
 
@@ -17,18 +17,18 @@
             android:id="@+id/FavouriteBackBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:padding="10dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
-            android:src="@drawable/icon_left_arrow" />
+            android:padding="10dp"
+            android:src="@drawable/icon_back" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="start"
             android:layout_gravity="center"
             android:layout_marginStart="15dp"
+            android:ellipsize="end"
+            android:gravity="start"
             android:singleLine="true"
             android:text="Favourite Songs"
             android:textColor="@color/ImageViewAndTextViewColour"
@@ -43,9 +43,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:visibility="gone"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/shuffleFavouriteActivity"
@@ -55,8 +55,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:text="Shuffle"
-            android:textAllCaps="false"
-            />
+            android:textAllCaps="false" />
 
         <TextView
             android:id="@+id/totalSongsFavouriteActivity"
@@ -80,41 +79,37 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/ViewColor"
         android:layout_marginTop="10dp"
-        />
+        android:background="@color/ViewColor" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewFavouriteActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="20dp"
-        android:visibility="gone"
-        android:scrollbarThumbVertical="@drawable/icon_scrollbar" />
+        android:scrollbarThumbVertical="@drawable/icon_scrollbar"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/NoSongsFavouriteActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:visibility="visible"
         android:orientation="vertical"
-        >
+        android:visibility="visible">
 
         <ImageView
             android:layout_width="250dp"
             android:layout_height="350dp"
             android:layout_gravity="center"
-            android:src="@drawable/icon_favouriteactivity_empty"
-            />
+            android:src="@drawable/icon_favouriteactivity_empty" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No songs"
-            android:textColor="@color/white"
             android:layout_gravity="center_horizontal"
-            />
+            android:text="No songs"
+            android:textColor="@color/white" />
 
 
     </LinearLayout>

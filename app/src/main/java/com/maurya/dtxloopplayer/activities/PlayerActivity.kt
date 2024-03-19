@@ -36,6 +36,7 @@ import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.databinding.ActivityPlayerBinding
+import com.maurya.dtxloopplayer.fragments.SongsFragment
 import com.maurya.dtxloopplayer.utils.exitApplication
 import com.maurya.dtxloopplayer.utils.favouriteChecker
 import com.maurya.dtxloopplayer.utils.formatDuration
@@ -204,12 +205,12 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             )
 
             "SongsFragment" -> initServiceAndPlaylist(
-                MainActivity.musicList,
+                SongsFragment.musicList,
                 shuffle = false
             )
 
             "SongsFragmentShuffle" -> initServiceAndPlaylist(
-                MainActivity.musicList,
+                SongsFragment.musicList,
                 shuffle = true
             )
 
@@ -234,12 +235,12 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 //            )
 
             "folderSongsActivity" -> initServiceAndPlaylist(
-                FolderTracksActivity.folderMusicFiles as ArrayList<MusicDataClass>, shuffle = false
+                FolderTracksActivity.folderMusicList , shuffle = false
 
             )
 
             "folderSongsActivityShuffle" -> initServiceAndPlaylist(
-                FolderTracksActivity.folderMusicFiles as ArrayList<MusicDataClass>, shuffle = true
+                FolderTracksActivity.folderMusicList , shuffle = true
             )
 
             "queueActivity" -> {
@@ -551,19 +552,19 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_empty)
                 FavouriteActivity.favouriteSongs.removeAt(favouriteIndex)
                 Toast.makeText(this, "Removed from Favourite", Toast.LENGTH_SHORT).show()
-                updateTextViewWithItemCount(
-                    musicAdapter,
-                    ListsFragment.fragmentListsBinding.ListsMyFavouritesSize
-                )
+//                updateTextViewWithItemCount(
+//                    musicAdapter,
+//                    ListsFragment.fragmentListsBinding.ListsMyFavouritesSize
+//                )
             } else {
                 isFavourite = true
                 binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_added)
                 FavouriteActivity.favouriteSongs.add(musicListPlayerActivity[musicPosition])
                 Toast.makeText(this, "Added in Favourite", Toast.LENGTH_SHORT).show()
-                updateTextViewWithItemCount(
-                    musicAdapter,
-                    ListsFragment.fragmentListsBinding.ListsMyFavouritesSize
-                )
+//                updateTextViewWithItemCount(
+//                    musicAdapter,
+//                    ListsFragment.fragmentListsBinding.ListsMyFavouritesSize
+//                )
             }
 
         }

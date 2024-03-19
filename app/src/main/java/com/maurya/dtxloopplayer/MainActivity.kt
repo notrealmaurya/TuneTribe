@@ -55,15 +55,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var sharedPreferencesHelper: SharedPreferenceHelper
 
 
-    companion object {
-        var musicList: ArrayList<MusicDataClass> = ArrayList()
-        var sortOrder: Int = 0
-        val sortingList = arrayOf(
-            MediaStore.Audio.Media.DATE_ADDED + " DESC", MediaStore.Audio.Media.TITLE,
-            MediaStore.Audio.Media.SIZE + " DESC"
-        )
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -112,8 +103,6 @@ class MainActivity : AppCompatActivity() {
         listeners()
 
 
-//        val tempList = findMusicFiles()
-        musicList.addAll(musicList)
 
     }
 

@@ -58,7 +58,6 @@ class SongsFragment : Fragment() {
 
     companion object {
         var musicList: ArrayList<MusicDataClass> = arrayListOf()
-        var isSearchViewOpen: Boolean = false
     }
 
 
@@ -99,7 +98,6 @@ class SongsFragment : Fragment() {
 
         listener()
 
-        Log.d("fragmentItemClass", musicList.size.toString())
 
     }
 
@@ -113,7 +111,6 @@ class SongsFragment : Fragment() {
                             fragmentSongsBinding.progressBar.visibility = View.GONE
                             musicList.clear()
                             musicList.addAll(it.data!!)
-                            Log.d("fragmentItemClass", musicList.size.toString())
                             fragmentSongsBinding.MusicListTotalSongFragment.text =
                                 "${musicList.size} songs"
                             sortMusicList(sortingOrder, musicList, adapterMusic)
@@ -121,8 +118,7 @@ class SongsFragment : Fragment() {
 
                         is ModelResult.Error -> {
                             fragmentSongsBinding.progressBar.visibility = View.GONE
-                            showToast(requireContext(),it.message.toString())
-                            Log.d("fragmentItemClass", it.message.toString())
+                            showToast(requireContext(), it.message.toString())
                         }
 
                         is ModelResult.Loading -> {
@@ -182,7 +178,7 @@ class SongsFragment : Fragment() {
         layoutIds.forEachIndexed { index, layoutId ->
             val layout = popupView.findViewById<LinearLayout>(layoutId)
             layout.setOnClickListener {
-                sortMusicList(sortOptions[index], MainActivity.musicList, adapterMusic)
+                sortMusicList(sortOptions[index], musicList, adapterMusic)
                 sharedPreferencesHelper.saveSortingOrder(sortOptions[index])
                 popupWindow.dismiss()
             }

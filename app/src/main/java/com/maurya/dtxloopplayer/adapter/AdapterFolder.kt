@@ -38,9 +38,8 @@ class AdapterFolder(
 
         // In FolderAdapter, when a folder item is clicked
         holder.itemView.setOnClickListener {
-            val folderPath = folderList[position].folderPath // Get the folder path
             val intent = Intent(context, FolderTracksActivity::class.java)
-            intent.putExtra("folderPath", folderPath) // Put the folder path as an extra
+            intent.putExtra("folderPath", folderPath)
             context.startActivity(intent)
         }
 

@@ -5,8 +5,8 @@
     android:id="@+id/PlayerActivityMainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="@color/white"
+    android:fitsSystemWindows="true"
     tools:context=".activities.PlayerActivity">
 
     <com.airbnb.lottie.LottieAnimationView
@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         app:lottie_autoPlay="true"
-        app:lottie_fileName="wave2.json"
+        app:lottie_fileName="wave.json"
         app:lottie_loop="true" />
 
     <RelativeLayout
@@ -28,10 +28,11 @@
             android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
             android:layout_marginStart="5dp"
-            android:padding="20dp"
-            android:src="@drawable/icon_left_arrow" />
+            android:background="@drawable/bg_ripplefactor"
+            android:backgroundTint="#000000"
+            android:padding="19dp"
+            android:src="@drawable/icon_back_player" />
 
 
         <TextView
@@ -39,26 +40,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:layout_marginEnd="25dp"
             android:layout_toEndOf="@id/PlayerBackBtn"
             android:ellipsize="marquee"
-            android:paddingEnd="25dp"
             android:gravity="center"
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:textColor="#575757"
             android:text="This is Song Name"
+            android:textColor="#575757"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/songARTIST"
-            android:textColor="#464646"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/songNAME"
             android:layout_marginTop="2dp"
-            android:paddingEnd="25dp"
+            android:layout_marginEnd="25dp"
             android:layout_toEndOf="@id/PlayerBackBtn"
             android:ellipsize="marquee"
             android:gravity="center"
@@ -66,6 +66,7 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:text="This is Artist Name"
+            android:textColor="#464646"
             android:textSize="13sp" />
 
     </RelativeLayout>
@@ -86,10 +87,9 @@
             android:layout_height="300dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:scaleType="centerCrop"
             android:padding="2dp"
-            android:src="@drawable/music"
-            />
+            android:scaleType="centerCrop"
+            android:src="@drawable/music" />
 
 
     </LinearLayout>
@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:text="01:28"
-            android:textColor="@color/ImageViewAndTextViewColour"
+            android:textColor="#000000"
             android:textSize="12sp" />
 
         <SeekBar
@@ -117,9 +117,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:progressTint="#FF4D4D"
-            android:thumbTint="#FFA2A2"
-            android:layout_weight="1" />
+            android:thumbTint="#FFA2A2" />
 
         <TextView
             android:id="@+id/durationTOTALPlayerActivity"
@@ -127,7 +127,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
             android:text="04:28"
-            android:textColor="@color/ImageViewAndTextViewColour"
+            android:textColor="#000000"
             android:textSize="12sp" />
 
     </LinearLayout>
@@ -145,12 +145,12 @@
 
         <ImageView
             android:id="@+id/repeatBtnPlayerActivity"
-            android:background="@drawable/bg_ripplefactor"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="25dp"
+            android:background="@drawable/bg_ripplefactor"
             android:clickable="true"
             android:padding="12dp"
             android:src="@drawable/icon_repeat_all" />
@@ -167,37 +167,37 @@
 
         <ImageView
             android:id="@+id/prevSongPlayerActivity"
-            android:background="@drawable/bg_ripplefactor"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginEnd="25dp"
             android:layout_toStartOf="@+id/playPausePlayerActivity"
+            android:background="@drawable/bg_ripplefactor"
             android:clickable="true"
             android:padding="9dp"
             android:src="@drawable/icon_play_previous" />
 
         <ImageView
             android:id="@+id/nextSongPlayerActivity"
-            android:background="@drawable/bg_ripplefactor"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="25dp"
             android:layout_toEndOf="@+id/playPausePlayerActivity"
+            android:background="@drawable/bg_ripplefactor"
             android:clickable="true"
             android:padding="9dp"
             android:src="@drawable/icon_play_next" />
 
         <ImageView
             android:id="@+id/queuePlayerActivity"
-            android:background="@drawable/bg_ripplefactor"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="25dp"
             android:layout_toStartOf="@+id/playPausePlayerActivity"
+            android:background="@drawable/bg_ripplefactor"
             android:clickable="true"
             android:padding="14dp"
             android:src="@drawable/icon_playlist" />
@@ -211,47 +211,47 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="60dp"
-        android:gravity="center"
-        android:clickable="false">
+        android:clickable="false"
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/addFavouritePlayerActivity"
-            android:background="@drawable/bg_ripplefactor"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:background="@drawable/bg_ripplefactor"
             android:clickable="true"
             android:padding="10dp"
             android:src="@drawable/icon_favourite_added" />
 
         <ImageView
             android:id="@+id/sharePlayerActivity"
-            android:background="@drawable/bg_ripplefactor"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="30dp"
             android:layout_toEndOf="@+id/addFavouritePlayerActivity"
+            android:background="@drawable/bg_ripplefactor"
             android:clickable="true"
             android:padding="10dp"
             android:src="@drawable/icon_share" />
 
         <ImageView
             android:id="@+id/playerthemePlayerActivity"
-            android:background="@drawable/bg_ripplefactor"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="30dp"
             android:layout_toEndOf="@+id/sharePlayerActivity"
+            android:background="@drawable/bg_ripplefactor"
             android:clickable="true"
             android:padding="8dp"
             android:src="@drawable/icon_player_theme" />
 
         <ImageView
             android:id="@+id/menuPlayerActivity"
-            android:background="@drawable/bg_ripplefactor"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="30dp"
             android:layout_toEndOf="@+id/playerthemePlayerActivity"
+            android:background="@drawable/bg_ripplefactor"
             android:clickable="true"
             android:padding="10dp"
             android:src="@drawable/icon_player_menu" />

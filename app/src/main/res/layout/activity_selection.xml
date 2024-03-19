@@ -33,7 +33,7 @@
                 android:layout_marginStart="5dp"
                 android:background="@drawable/bg_ripplefactor"
                 android:padding="10dp"
-                android:src="@drawable/icon_left_arrow" />
+                android:src="@drawable/icon_back" />
 
 
             <androidx.appcompat.widget.SearchView
@@ -68,17 +68,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
+                android:text="11"
                 android:textColor="@color/ImageViewAndTextViewColour"
                 android:textSize="13sp" />
-
-
-            <ImageView
-                android:id="@+id/checkBoxSelectionActivity"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="end|center"
-                android:src="@drawable/icon_checkbox_empty" />
-
 
         </LinearLayout>
 

@@ -41,6 +41,8 @@ suspend fun getAllSongs(
     withContext(Dispatchers.IO) {
         val tempList = ArrayList<MusicDataClass>()
 
+        Log.d("tempItemClass", folderId)
+
         val projection = arrayOf(
             _ID,
             DISPLAY_NAME,
@@ -56,15 +58,26 @@ suspend fun getAllSongs(
         val selection: String?
         val selectionArgs: Array<String>?
 
+//        if (isFolder) {
+//            selection =
+//                "$DATA LIKE ? AND $DURATION >= ? AND $IS_MUSIC != 0 AND ($MIME_TYPE != ? AND $MIME_TYPE != ? AND $MIME_TYPE != ?)"
+//            selectionArgs = arrayOf("$folderId%", "30000", "audio/mp3", "audio/mp4", "audio/x-m4a")
+//        } else {
+//            selection =
+//                "$DURATION >= ? AND ($MIME_TYPE != ? AND $MIME_TYPE != ? AND $MIME_TYPE != ?)"
+//            selectionArgs = arrayOf("30000", "audio/mp3", "audio/mp4", "audio/x-m4a")
+//        }
+
         if (isFolder) {
             selection =
-                "$BUCKET_ID like ? AND $DURATION >= ? AND ($MIME_TYPE != ? AND $MIME_TYPE != ? AND $MIME_TYPE != ?)"
-            selectionArgs = arrayOf(folderId, "30000", "audio/mp3", "audio/mp4", "audio/x-m4a")
+                "$DATA LIKE ? AND $DURATION >= ? AND $IS_MUSIC != 0"
+            selectionArgs = arrayOf("$folderId%", "30000")
         } else {
             selection =
-                "$DURATION >= ? AND ($MIME_TYPE != ? AND $MIME_TYPE != ? AND $MIME_TYPE != ?)"
-            selectionArgs = arrayOf("30000", "audio/mp3", "audio/mp4", "audio/x-m4a")
+                "$DURATION >= ? AND $IS_MUSIC != 0"
+            selectionArgs = arrayOf("30000")
         }
+
 
 
         val cursor = context.contentResolver.query(
@@ -74,7 +87,6 @@ suspend fun getAllSongs(
 
         cursor?.use {
             while (it.moveToNext()) {
-                Log.d("helperItemClass", "Cursor count: ${cursor.count}")
                 val idCursor = it.getString(it.getColumnIndexOrThrow(_ID))
                 val musicNameCursor =
                     it.getString(it.getColumnIndexOrThrow(DISPLAY_NAME))
@@ -97,7 +109,6 @@ suspend fun getAllSongs(
                 val fileCursor = File(data)
 
                 if (fileCursor.exists()) {
-                    Log.d("SongsItemClass", musicAlbumCursor)
                     val musicData = MusicDataClass(
                         idCursor,
                         musicNameCursor,
@@ -110,9 +121,8 @@ suspend fun getAllSongs(
                         dateModified
                     )
                     tempList.add(musicData)
-                    Log.d("SongsItemClass", tempList.size.toString())
                 } else {
-                    Log.d("SongsItemClass", tempList.size.toString())
+
                 }
 
             }
@@ -132,11 +142,15 @@ suspend fun getAllFolders(
         val tempFolderList = ArrayList<String>()
         val folderList = ArrayList<FolderDataClass>()
 
+        val selection =
+            "$DURATION >= ? AND $IS_MUSIC != 0"
+        val selectionArgs = arrayOf("30000")
+
         val projection = arrayOf(
-            _ID, TITLE, BUCKET_DISPLAY_NAME, BUCKET_ID, DURATION, DATA, SIZE, DATE_MODIFIED
+           BUCKET_DISPLAY_NAME, BUCKET_ID,DATA
         )
         val cursor = context.contentResolver.query(
-            EXTERNAL_CONTENT_URI, projection, null, null,
+            EXTERNAL_CONTENT_URI, projection, selection, selectionArgs,
             "DATE_ADDED DESC"
         )
         cursor?.use {
@@ -319,28 +333,16 @@ fun checkPlayListData(playList: ArrayList<MusicDataClass>): ArrayList<MusicDataC
     return playList
 }
 
-fun updateTextViewWithItemCount(adapter: RecyclerView.Adapter<*>, textView: TextView) {
-    val itemCount = adapter.itemCount
-
+fun updateTextViewWithItemCount(itemCount:Int): String {
     val itemCountText = if (itemCount == 1 || itemCount == 0) {
         "$itemCount song"
     } else {
         "$itemCount songs"
     }
-    textView.text = itemCountText
-    adapter.notifyDataSetChanged()
+
+    return itemCountText
 }
 
-fun updateTextViewWithFolderCount(adapter: RecyclerView.Adapter<*>, textView: TextView) {
-    val itemCount = adapter.itemCount
-
-    val itemCountText = if (itemCount == 1 || itemCount == 0) {
-        "$itemCount folder"
-    } else {
-        "$itemCount folders"
-    }
-    textView.text = itemCountText
-}
 
 
 fun notifyAdapterSongTextPosition() {
@@ -353,9 +355,6 @@ fun notifyAdapterSongTextPosition() {
     }
     if (FavouriteActivity.isInitialized) {
         FavouriteActivity.musicAdapter.notifyDataSetChanged()
-    }
-    if (FolderTracksActivity.isInitialized) {
-        FolderTracksActivity.musicAdapter.notifyDataSetChanged()
     }
 }
 

@@ -11,8 +11,8 @@
         android:id="@+id/topLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="5dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -20,39 +20,35 @@
             android:id="@+id/shuffleBtnSongFragment"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
+            android:background="@drawable/icon_circle"
+            android:backgroundTint="#E0FFFF"
             android:drawableStart="@drawable/icon_shuffle"
             android:paddingHorizontal="10dp"
             android:text="Shuffle"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="#000000" />
+
 
         <TextView
             android:id="@+id/MusicListTotalSongFragment"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
+            android:gravity="center_vertical"
             android:text="0 song"
             android:textColor="@color/ImageViewAndTextViewColour"
             android:textSize="13sp" />
 
-
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/sortingVideoFragment"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="30dp"
             android:padding="8dp"
             android:src="@drawable/icon_menu_home" />
 
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/topLayout"
-        android:layout_marginTop="10dp"
-        android:background="@color/ViewColor" />
 
 
     <ProgressBar
@@ -66,8 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/topLayout"
-        android:layout_marginTop="20dp"
-        android:scrollbarThumbVertical="@drawable/icon_scrollbar"
+        android:layout_marginTop="10dp"
         android:scrollbars="vertical" />
 
 
