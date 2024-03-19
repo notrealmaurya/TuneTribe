@@ -1,19 +1,14 @@
 package com.maurya.dtxloopplayer.activities
 
 import android.content.Intent
-import android.media.MediaMetadataRetriever
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.databinding.ActivityFolderTracksActiivityBinding
 import java.io.File
-import android.util.Base64
 import com.maurya.dtxloopplayer.database.MusicDataClass
-import com.maurya.dtxloopplayer.utils.getAllFolders
-import com.maurya.dtxloopplayer.utils.getSongsFromFolderPath
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
-import java.util.Locale
 
 
 class FolderTracksActivity : AppCompatActivity() {

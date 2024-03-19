@@ -2,6 +2,7 @@ package com.maurya.dtxloopplayer.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,7 @@ import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.databinding.FragmentSongsBinding
+import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.utils.sortMusicList
 import com.maurya.dtxloopplayer.viewModelsObserver.ModelResult
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
@@ -53,7 +55,6 @@ class SongsFragment : Fragment() {
         "DATE_ADDED DESC",
         "DATE_ADDED ASC"
     )
-
 
     companion object {
         var musicList: ArrayList<MusicDataClass> = arrayListOf()
@@ -94,9 +95,11 @@ class SongsFragment : Fragment() {
             adapter = adapterMusic
         }
 
+        fetchVideosUsingViewModel()
 
         listener()
 
+        Log.d("fragmentItemClass", musicList.size.toString())
 
     }
 
@@ -110,6 +113,7 @@ class SongsFragment : Fragment() {
                             fragmentSongsBinding.progressBar.visibility = View.GONE
                             musicList.clear()
                             musicList.addAll(it.data!!)
+                            Log.d("fragmentItemClass", musicList.size.toString())
                             fragmentSongsBinding.MusicListTotalSongFragment.text =
                                 "${musicList.size} songs"
                             sortMusicList(sortingOrder, musicList, adapterMusic)
@@ -117,12 +121,8 @@ class SongsFragment : Fragment() {
 
                         is ModelResult.Error -> {
                             fragmentSongsBinding.progressBar.visibility = View.GONE
-                            Toast.makeText(
-                                requireContext(),
-                                it.message.toString(),
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
+                            showToast(requireContext(),it.message.toString())
+                            Log.d("fragmentItemClass", it.message.toString())
                         }
 
                         is ModelResult.Loading -> {

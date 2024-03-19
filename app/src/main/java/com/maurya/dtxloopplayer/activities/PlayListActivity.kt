@@ -31,22 +31,22 @@ class PlayListActivity : AppCompatActivity() {
         currentPlayListPosition = intent.extras?.get("index") as Int
 
         try {
-            val currentPlayList = ListsFragment.musicPlayList.ref[currentPlayListPosition]
+//            val currentPlayList = ListsFragment.musicPlayList.ref[currentPlayListPosition]
 //            currentPlayList.playList = checkPlayListData(playList = currentPlayList.playList)
         }
         catch (e :Exception){
             showToast(this,"Playlist Error")
         }
 
-        binding.recyclerViewPlayListActivity.setItemViewCacheSize(10)
-        binding.recyclerViewPlayListActivity.setHasFixedSize(true)
-        binding.recyclerViewPlayListActivity.layoutManager = LinearLayoutManager(this)
-        musicAdapter = AdapterMusic(
-            this,
-            ListsFragment.musicPlayList.ref[currentPlayListPosition].playList,
-            playListActivity = true
-        )
-        binding.recyclerViewPlayListActivity.adapter = musicAdapter
+//        binding.recyclerViewPlayListActivity.setItemViewCacheSize(10)
+//        binding.recyclerViewPlayListActivity.setHasFixedSize(true)
+//        binding.recyclerViewPlayListActivity.layoutManager = LinearLayoutManager(this)
+//        musicAdapter = AdapterMusic(
+//            this,
+//            ListsFragment.musicPlayList.ref[currentPlayListPosition].playList,
+//            playListActivity = true
+//        )
+//        binding.recyclerViewPlayListActivity.adapter = musicAdapter
 
 
         listeners()
@@ -80,7 +80,7 @@ class PlayListActivity : AppCompatActivity() {
             alertDialog.setTitle("Remove all")
                 .setMessage("Are you sure you want to remove all songs from this playlist?")
                 .setPositiveButton("OK") { dialog, _ ->
-                    ListsFragment.musicPlayList.ref[currentPlayListPosition].playList.clear()
+//                    ListsFragment.musicPlayList.ref[currentPlayListPosition].playList.clear()
                     musicAdapter.refreshPlayList()
                     dialog.dismiss()
                 }
@@ -97,53 +97,6 @@ class PlayListActivity : AppCompatActivity() {
 
 
 
-    override fun onResume() {
-        super.onResume()
-        binding.playlistNamePlayListActivity.text =
-            ListsFragment.musicPlayList.ref[currentPlayListPosition].name
-        binding.totalSongsPlayListActivity.text = "${musicAdapter.itemCount} songs"
-
-
-        //for storing favourites data using shared preferences
-        val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
-        val jsonStringPlaylist = GsonBuilder().create().toJson(ListsFragment.musicPlayList)
-        editor.putString("MusicPlaylist", jsonStringPlaylist)
-        editor.apply()
-
-        musicAdapter.notifyDataSetChanged()
-    }
-
-    override fun onDestroy(){
-        super.onDestroy()
-        binding.playlistNamePlayListActivity.text =
-            ListsFragment.musicPlayList.ref[currentPlayListPosition].name
-        binding.totalSongsPlayListActivity.text = "${musicAdapter.itemCount} songs"
-
-
-        //for storing favourites data using shared preferences
-        val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
-        val jsonStringPlaylist = GsonBuilder().create().toJson(ListsFragment.musicPlayList)
-        editor.putString("MusicPlaylist", jsonStringPlaylist)
-        editor.apply()
-
-        musicAdapter.notifyDataSetChanged()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        binding.playlistNamePlayListActivity.text =
-            ListsFragment.musicPlayList.ref[currentPlayListPosition].name
-        binding.totalSongsPlayListActivity.text = "${musicAdapter.itemCount} songs"
-
-
-        //for storing favourites data using shared preferences
-        val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
-        val jsonStringPlaylist = GsonBuilder().create().toJson(ListsFragment.musicPlayList)
-        editor.putString("MusicPlaylist", jsonStringPlaylist)
-        editor.apply()
-
-        musicAdapter.notifyDataSetChanged()
-    }
 
 
 }

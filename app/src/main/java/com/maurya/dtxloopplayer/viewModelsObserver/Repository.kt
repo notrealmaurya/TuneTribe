@@ -5,7 +5,6 @@ import com.maurya.dtxloopplayer.database.FolderDataClass
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.utils.getAllFolders
 import com.maurya.dtxloopplayer.utils.getAllSongs
-import com.maurya.dtxloopplayer.utils.getSongsFromFolderPath
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
@@ -69,7 +68,7 @@ class Repository @Inject constructor() {
     suspend fun getVideosFromFolder(context: Context, folderId: String) {
         _songsFromFolderStateFlow.emit(ModelResult.Loading())
         try {
-            val videos = getSongsFromFolderPath(context, folderId)
+            val videos = getAllSongs(context, folderId,isFolder = true)
             _songsFromFolderStateFlow.emit(ModelResult.Success(videos))
         } catch (e: Exception) {
             _songsFromFolderStateFlow.emit(ModelResult.Error("Failed to fetch videos: ${e.message}"))

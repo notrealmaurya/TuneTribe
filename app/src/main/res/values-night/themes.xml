@@ -28,7 +28,7 @@
 
     <!--  StatusBarLayoutStyle-->
     <style name="StatusBarLayoutStyle">
-        <item name="android:background">@drawable/mode_night_bg_custom_appbar</item>
+        <item name="android:background">@drawable/bg_topbar</item>
     </style>
 
 

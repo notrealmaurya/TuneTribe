@@ -223,15 +223,15 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 shuffle = true
             )
 
-            "PlayListActivity" -> initServiceAndPlaylist(
-                ListsFragment.musicPlayList.ref[PlayListActivity.currentPlayListPosition].playList,
-                shuffle = false
-            )
-
-            "PlayListActivityShuffle" -> initServiceAndPlaylist(
-                ListsFragment.musicPlayList.ref[PlayListActivity.currentPlayListPosition].playList,
-                shuffle = true
-            )
+//            "PlayListActivity" -> initServiceAndPlaylist(
+//                ListsFragment.musicPlayList.ref[PlayListActivity.currentPlayListPosition].playList,
+//                shuffle = false
+//            )
+//
+//            "PlayListActivityShuffle" -> initServiceAndPlaylist(
+//                ListsFragment.musicPlayList.ref[PlayListActivity.currentPlayListPosition].playList,
+//                shuffle = true
+//            )
 
             "folderSongsActivity" -> initServiceAndPlaylist(
                 FolderTracksActivity.folderMusicFiles as ArrayList<MusicDataClass>, shuffle = false
@@ -295,7 +295,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 "Unknown",
                 "Unknown",
                  path.toString(),
-                Uri.EMPTY,
+                "Unknown",
                 dateModified
             )
         } finally {

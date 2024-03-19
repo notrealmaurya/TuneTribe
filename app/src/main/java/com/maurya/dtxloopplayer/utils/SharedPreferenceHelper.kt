@@ -3,34 +3,30 @@ package com.maurya.dtxloopplayer.utils
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class SharedPreferenceHelper(context: Context) {
+@Singleton
+class SharedPreferenceHelper @Inject constructor(@ApplicationContext context: Context) {
 
     private val sharedPreferences =
         context.getSharedPreferences(context.packageName, AppCompatActivity.MODE_PRIVATE)
 
-
     private val editor = sharedPreferences.edit()
-    private val keyTheme="theme"
-    var theme get() = sharedPreferences.getInt(keyTheme,2)
+    private val keyTheme = "theme"
+    var theme
+        get() = sharedPreferences.getInt(keyTheme, 2)
         set(value) {
-            editor.putInt(keyTheme,value)
-            editor.commit()
+            editor.putInt(keyTheme, value)
+            editor.apply()
         }
 
-    val themeFlag= arrayOf(
+    val themeFlag = arrayOf(
         AppCompatDelegate.MODE_NIGHT_NO,
         AppCompatDelegate.MODE_NIGHT_YES,
         AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
     )
-
-    fun savePlaylistData(data: String) {
-        sharedPreferences.edit().putString("MusicPlaylist", data).apply()
-    }
-
-    fun getPlaylistData(): String? {
-        return sharedPreferences.getString("MusicPlaylist", null)
-    }
 
 
     fun saveSortingOrder(sortingOrder: String) {
@@ -38,7 +34,7 @@ class SharedPreferenceHelper(context: Context) {
     }
 
     fun getSortingOrder(): String? {
-        return sharedPreferences.getString("sorting_order", null)
+        return sharedPreferences.getString("sorting_order",null)
     }
 
     fun getPlayerActivityTheme(): String? {
@@ -49,5 +45,5 @@ class SharedPreferenceHelper(context: Context) {
         sharedPreferences.edit().putString("playerActivity_theme", theme).apply()
     }
 
-
 }
+

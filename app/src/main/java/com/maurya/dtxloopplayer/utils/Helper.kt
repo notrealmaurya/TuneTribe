@@ -6,8 +6,7 @@ import android.content.res.ColorStateList
 import android.database.Cursor
 import android.media.MediaMetadataRetriever
 import android.net.Uri
-import android.provider.MediaStore
-import android.provider.MediaStore.Video.Media.*
+import android.provider.MediaStore.Audio.Media.*
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
@@ -21,7 +20,6 @@ import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.FolderDataClass
 import com.maurya.dtxloopplayer.database.MusicDataClass
-import com.maurya.dtxloopplayer.fragments.SongsFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -36,36 +34,52 @@ import kotlin.system.exitProcess
 
 //for retrieving songs
 suspend fun getAllSongs(
-    context: Context
+    context: Context,
+    folderId: String = "",
+    isFolder: Boolean = false
 ): ArrayList<MusicDataClass> =
     withContext(Dispatchers.IO) {
         val tempList = ArrayList<MusicDataClass>()
 
-        val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0"
-
         val projection = arrayOf(
             _ID,
             DISPLAY_NAME,
-            ALBUM_ARTIST,
+            ARTIST,
             BUCKET_DISPLAY_NAME,
             DURATION,
             DATA,
             SIZE,
+            ALBUM_ID,
             DATE_MODIFIED
         )
 
+        val selection: String?
+        val selectionArgs: Array<String>?
+
+        if (isFolder) {
+            selection =
+                "$BUCKET_ID like ? AND $DURATION >= ? AND ($MIME_TYPE != ? AND $MIME_TYPE != ? AND $MIME_TYPE != ?)"
+            selectionArgs = arrayOf(folderId, "30000", "audio/mp3", "audio/mp4", "audio/x-m4a")
+        } else {
+            selection =
+                "$DURATION >= ? AND ($MIME_TYPE != ? AND $MIME_TYPE != ? AND $MIME_TYPE != ?)"
+            selectionArgs = arrayOf("30000", "audio/mp3", "audio/mp4", "audio/x-m4a")
+        }
+
+
         val cursor = context.contentResolver.query(
-            EXTERNAL_CONTENT_URI, projection, selection, null,
+            EXTERNAL_CONTENT_URI, projection, selection, selectionArgs,
             "DATE_ADDED DESC"
         )
 
         cursor?.use {
             while (it.moveToNext()) {
+                Log.d("helperItemClass", "Cursor count: ${cursor.count}")
                 val idCursor = it.getString(it.getColumnIndexOrThrow(_ID))
                 val musicNameCursor =
                     it.getString(it.getColumnIndexOrThrow(DISPLAY_NAME))
                 val musicAlbumCursor =
-                    it.getString(it.getColumnIndexOrThrow(ALBUM_ARTIST))
+                    it.getString(it.getColumnIndexOrThrow(ARTIST))
                 val folderNameCursor =
                     it.getString(it.getColumnIndexOrThrow(BUCKET_DISPLAY_NAME))
                 val durationCursor =
@@ -75,29 +89,32 @@ suspend fun getAllSongs(
                     it.getString(it.getColumnIndexOrThrow(SIZE))
                 val dateModified =
                     it.getLong(it.getColumnIndexOrThrow(DATE_MODIFIED))
+                val albumIdC = it.getLong(it.getColumnIndexOrThrow(ALBUM_ID)).toString()
+
+                val uri = Uri.parse("content://media/external/audio/albumart")
+                val artUriC = Uri.withAppendedPath(uri, albumIdC).toString()
 
                 val fileCursor = File(data)
 
                 if (fileCursor.exists()) {
-                    val imageUri = Uri.fromFile(fileCursor)
-                    if (durationCursor >= 20000) { // 20 seconds in milliseconds
-                        val musicData = MusicDataClass(
-                            idCursor,
-                            musicNameCursor,
-                            folderNameCursor,
-                            durationCursor,
-                            musicSizeCursor,
-                            musicAlbumCursor,
-                            data,
-                            imageUri,
-                            dateModified
-                        )
-                        tempList.add(musicData)
-                    } else {
-                        Log.w("getAllSongs", "File does not exist: $data")
-
-                    }
+                    Log.d("SongsItemClass", musicAlbumCursor)
+                    val musicData = MusicDataClass(
+                        idCursor,
+                        musicNameCursor,
+                        folderNameCursor,
+                        durationCursor,
+                        musicSizeCursor,
+                        musicAlbumCursor,
+                        data,
+                        artUriC,
+                        dateModified
+                    )
+                    tempList.add(musicData)
+                    Log.d("SongsItemClass", tempList.size.toString())
+                } else {
+                    Log.d("SongsItemClass", tempList.size.toString())
                 }
+
             }
 
         }
@@ -136,73 +153,6 @@ suspend fun getAllFolders(
             }
         }
         return@withContext folderList
-    }
-
-
-//using in Folder Activity to retrieve video files from path
-suspend fun getSongsFromFolderPath(
-    context: Context,
-    folderId: String
-): ArrayList<MusicDataClass> =
-    withContext(Dispatchers.IO) {
-        val tempList = ArrayList<MusicDataClass>()
-
-        val selection = "$BUCKET_ID like? "
-
-        val projection = arrayOf(
-            _ID, TITLE, BUCKET_DISPLAY_NAME, BUCKET_ID, DURATION, DATA, SIZE, DATE_MODIFIED
-        )
-
-        val cursor = context.contentResolver.query(
-            EXTERNAL_CONTENT_URI, projection, selection, arrayOf(folderId), "$DATE_ADDED DESC"
-        )
-
-
-        cursor?.use {
-            while (it.moveToNext()) {
-                val idCursor = it.getString(it.getColumnIndexOrThrow(_ID))
-                val musicNameCursor =
-                    it.getString(it.getColumnIndexOrThrow(DISPLAY_NAME))
-                val musicAlbumCursor =
-                    it.getString(it.getColumnIndexOrThrow(ALBUM_ARTIST))
-                val folderNameCursor =
-                    it.getString(it.getColumnIndexOrThrow(BUCKET_DISPLAY_NAME))
-                val durationCursor =
-                    it.getLong(it.getColumnIndexOrThrow(DURATION))
-                val data = it.getString(it.getColumnIndexOrThrow(DATA))
-                val musicSizeCursor =
-                    it.getString(it.getColumnIndexOrThrow(SIZE))
-                val dateModified =
-                    it.getLong(it.getColumnIndexOrThrow(DATE_MODIFIED))
-
-                val fileCursor = File(data)
-
-                if (fileCursor.exists()) {
-                    val imageUri = Uri.fromFile(fileCursor)
-                    if (durationCursor >= 20000) { // 20 seconds in milliseconds
-                        val musicData = MusicDataClass(
-                            idCursor,
-                            musicNameCursor,
-                            folderNameCursor,
-                            durationCursor,
-                            musicSizeCursor,
-                            musicAlbumCursor,
-                            data,
-                            imageUri,
-                            dateModified
-                        )
-                        tempList.add(musicData)
-                    } else {
-                        Log.w("getAllSongs", "File does not exist: $data")
-
-                    }
-                }
-            }
-
-        }
-
-
-        return@withContext tempList
     }
 
 
@@ -304,6 +254,18 @@ fun getMusicArt(path: String): ByteArray? {
     return retriever.embeddedPicture
 }
 
+private fun getAlbumArtThumbnail(context: Context, musicFilePath: String): Uri? {
+    val retriever = MediaMetadataRetriever()
+    retriever.setDataSource(musicFilePath)
+    val albumArtBytes = retriever.embeddedPicture
+    return if (albumArtBytes != null) {
+        val file = File.createTempFile("album_art", null, context.cacheDir)
+        file.writeBytes(albumArtBytes)
+        Uri.fromFile(file)
+    } else {
+        null
+    }
+}
 
 fun setSongPosition(increment: Boolean) {
     if (!PlayerActivity.repeat) {

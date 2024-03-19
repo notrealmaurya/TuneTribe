@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -14,16 +13,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.maurya.dtxloopplayer.activities.PlayListActivity
-import com.maurya.dtxloopplayer.fragments.ListsFragment
-import com.maurya.dtxloopplayer.database.PlayList
 import com.maurya.dtxloopplayer.R
+import com.maurya.dtxloopplayer.database.PlayListDataClass
 import com.maurya.dtxloopplayer.databinding.ItemPlaylistBinding
 
-class PlayListViewAdapter(
+class AdapterPlayList(
     private val context: Context,
-    private var playListList: ArrayList<PlayList>,
+    private var playListList: ArrayList<PlayListDataClass>,
 ) :
-    RecyclerView.Adapter<PlayListViewAdapter.PlayListHolder>() {
+    RecyclerView.Adapter<AdapterPlayList.PlayListHolder>() {
 
 
 
@@ -42,7 +40,7 @@ class PlayListViewAdapter(
         holder.PlayListSize.isSelected = true
         holder.PlayListName.isSelected = true
 
-        holder.PlayListName.text = playListList[position].name
+        holder.PlayListName.text = playListList[position].playListName
        // holder.PlayListSize.text = "${adapter.itemCount} songs"
 
 
@@ -55,7 +53,7 @@ class PlayListViewAdapter(
         }
 
         holder.root.setOnLongClickListener {
-            showBottomSheetDialog(playListList[position], position)
+            showBottomSheetDialog(position)
             true
         }
 
@@ -69,7 +67,7 @@ class PlayListViewAdapter(
     }
 
 
-    private fun showBottomSheetDialog(playlist: PlayList, position: Int) {
+    private fun showBottomSheetDialog(position: Int) {
         val bottomSheetDialog = BottomSheetDialog(context)
         val sheetView = LayoutInflater.from(context)
             .inflate(R.layout.popup_dialog_playlist_edit, null)
@@ -95,18 +93,18 @@ class PlayListViewAdapter(
 
             if (renameEditText != null) {
                 renameEditText.requestFocus() // Set focus on the EditText
-                renameEditText.setText(ListsFragment.musicPlayList.ref.get(position).name)
-                renameEditText.setSelection(
-                    0,
-                    ListsFragment.musicPlayList.ref.get(position).name.length
-                )
-                renameSheetDialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+//                renameEditText.setText(ListsFragment.musicPlayList.ref.get(position).name)
+//                renameEditText.setSelection(
+//                    0,
+//                    ListsFragment.musicPlayList.ref.get(position).name.length
+//                )
+//                renameSheetDialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             }
 
             rename_OKText.setOnClickListener {
                 val newName = renameEditText.text.toString().trim()
                 if (newName.isNotEmpty()) {
-                    ListsFragment.musicPlayList.ref.get(position).name = newName
+//                    ListsFragment.musicPlayList.ref.get(position).name = newName
                     refreshPlayList()
                     renameSheetDialog.dismiss()
                 } else {
@@ -127,10 +125,10 @@ class PlayListViewAdapter(
             bottomSheetDialog.dismiss()
 
             val alertDialog = MaterialAlertDialogBuilder(context)
-            alertDialog.setTitle(playListList[position].name)
+            alertDialog.setTitle(playListList[position].playListName)
                 .setMessage("Are you sure you want to delete this playlist?")
                 .setPositiveButton("Delete") { dialog, _ ->
-                    ListsFragment.musicPlayList.ref.removeAt(position)
+//                    ListsFragment.musicPlayList.ref.removeAt(position)
                     refreshPlayList()
                     dialog.dismiss()
                 }
@@ -149,7 +147,7 @@ class PlayListViewAdapter(
 
     fun refreshPlayList() {
         playListList = ArrayList()
-        playListList.addAll(ListsFragment.musicPlayList.ref)
+//        playListList.addAll(ListsFragment.musicPlayList.ref)
         notifyDataSetChanged()
     }
 

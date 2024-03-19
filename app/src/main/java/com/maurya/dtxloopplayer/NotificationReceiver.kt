@@ -55,23 +55,23 @@ class NotificationReceiver : BroadcastReceiver() {
         setSongPosition(increment = increment)
         PlayerActivity.musicService!!.createMediaPlayer()
         Glide.with(context)
-            .load(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].artUri)
+            .load(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].image)
             .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
             .into(PlayerActivity.binding.songImagePlayerActivity)
 
         PlayerActivity.binding.songNAME.text =
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].title
+            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].musicName
         PlayerActivity.binding.songARTIST.text =
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].artist
+            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].albumArtist
         Glide.with(context)
-            .load(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].artUri)
+            .load(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].image)
             .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
             .into(NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.AlbumArtMiniPlayer)
 
         NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.songNameMiniPlayer.text =
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].title
+            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].folderName
         NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.songArtistMiniPlayer.text =
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].artist
+            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].albumArtist
 
         playMusic(context)
         PlayerActivity.favouriteIndex = favouriteChecker(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].id)

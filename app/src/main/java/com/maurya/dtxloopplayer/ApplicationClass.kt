@@ -7,7 +7,11 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
+import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
+
+@HiltAndroidApp
 class ApplicationClass:Application() {
 
     companion object{
@@ -18,13 +22,13 @@ class ApplicationClass:Application() {
         const val PREVIOUS  = "previous"
     }
 
+    @Inject
+    lateinit var sharedPreferencesHelper: SharedPreferenceHelper
+
     override fun onCreate() {
         super.onCreate()
 
-        val sharedPreferenceHelper = SharedPreferenceHelper(this)
-        AppCompatDelegate.setDefaultNightMode(sharedPreferenceHelper.themeFlag[sharedPreferenceHelper.theme])
-
-
+        AppCompatDelegate.setDefaultNightMode(sharedPreferencesHelper.themeFlag[sharedPreferencesHelper.theme])
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(CHANNEL_ID,"Now Playing Song",NotificationManager.IMPORTANCE_HIGH)

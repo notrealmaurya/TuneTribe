@@ -13,7 +13,7 @@ data class MusicDataClass(
     val size: String,
     val albumArtist: String,
     val path: String,
-    var image: Uri,
+    var image: String,
     val dateModified: Long,
     var isChecked: Boolean = false
 )
@@ -27,6 +27,13 @@ data class FolderDataClass(
     var isChecked: Boolean = false
 )
 
+data class PlayListDataClass(
+    val id: String,
+    val playListName: String,
+    val dateModified: Long,
+    val itemCount: Int,
+    var isChecked: Boolean = false
+)
 
 
 

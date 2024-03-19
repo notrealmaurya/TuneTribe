@@ -119,19 +119,19 @@ class NowPlayingBottomFragment : Fragment() {
             setSongPosition(increment = true)
             PlayerActivity.musicService!!.createMediaPlayer()
             Glide.with(this)
-                .load(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].artUri)
+                .load(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].image)
                 .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
                 .into(fragmentNowPlayingBottomBinding.AlbumArtMiniPlayer)
 
             PlayerActivity.binding.songNAME.text =
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].title
+                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].musicName
             PlayerActivity.binding.songARTIST.text =
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].artist
+                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].albumArtist
 
             fragmentNowPlayingBottomBinding.songNameMiniPlayer.text =
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].title
+                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].musicName
             fragmentNowPlayingBottomBinding.songArtistMiniPlayer.text =
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].artist
+                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].albumArtist
 
             PlayerActivity.musicService!!.showNotification(R.drawable.icon_pause, "Play")
             playMusic()
@@ -145,15 +145,15 @@ class NowPlayingBottomFragment : Fragment() {
             fragmentNowPlayingBottomBinding.root.visibility = View.VISIBLE
 
             Glide.with(this)
-                .load(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].artUri)
+                .load(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].image)
                 .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
                 .into(fragmentNowPlayingBottomBinding.AlbumArtMiniPlayer)
 
 
             fragmentNowPlayingBottomBinding.songNameMiniPlayer.text =
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].title
+                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].musicName
             fragmentNowPlayingBottomBinding.songArtistMiniPlayer.text =
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].artist
+                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].albumArtist
             if (PlayerActivity.isPlaying) fragmentNowPlayingBottomBinding.playPauseMiniPlayer.setImageResource(
                 R.drawable.icon_pause
             )

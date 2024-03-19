@@ -123,8 +123,8 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
                     ApplicationClass.CHANNEL_ID
                 )
                     .setSmallIcon(R.drawable.icon_notification_music)
-                    .setContentTitle(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].title)
-                    .setContentText(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].artist)
+                    .setContentTitle(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].musicName)
+                    .setContentText(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].albumArtist)
                     .setLargeIcon(image)
                     .setChannelId(ApplicationClass.CHANNEL_ID)
                     .setCategory(Notification.CATEGORY_SERVICE)

@@ -137,8 +137,8 @@ class AdapterMusic(
 
     fun refreshPlayList() {
         musicList = ArrayList()
-        musicList =
-            ListsFragment.musicPlayList.ref[PlayListActivity.currentPlayListPosition].playList
+//        musicList =
+//            ListsFragment.musicPlayList.ref[PlayListActivity.currentPlayListPosition].playList
         notifyDataSetChanged()
     }
 

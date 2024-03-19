@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.jetbrainsKotlinAndroid)
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp")
@@ -13,7 +13,7 @@ android {
     defaultConfig {
         applicationId = "com.maurya.dtxloopplayer"
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -58,6 +58,7 @@ dependencies {
     //hilt injection
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+    annotationProcessor(libs.dagger.compiler)
 
 
     //lifecycle ViewModel LiveData
@@ -88,14 +89,13 @@ dependencies {
     implementation(libs.minavdrawer)
 
 
-    //room
-    implementation(libs.androidx.room.runtime)
-    annotationProcessor(libs.androidx.room.compiler)
-    // To use Kotlin Symbol Processing (KSP)
-    ksp(libs.androidx.room.room.compiler)
-    // optional - Kotlin Extensions and Coroutines support for Room
-    implementation(libs.androidx.room.ktx)
-
+//    //room
+//    implementation(libs.androidx.room.runtime)
+//    annotationProcessor(libs.androidx.room.compiler)
+//    // To use Kotlin Symbol Processing (KSP)
+//    ksp(libs.androidx.room.room.compiler)
+//    // optional - Kotlin Extensions and Coroutines support for Room
+//    implementation(libs.androidx.room.ktx)
 
 
 }

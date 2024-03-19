@@ -17,20 +17,21 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.maurya.dtxloopplayer.activities.FavouriteActivity
 import com.maurya.dtxloopplayer.activities.FolderActivity
-import com.maurya.dtxloopplayer.adapter.FolderAdapter
+import com.maurya.dtxloopplayer.adapter.AdapterFolder
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
-import com.maurya.dtxloopplayer.adapter.PlayListViewAdapter
+import com.maurya.dtxloopplayer.adapter.AdapterPlayList
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.FragmentListsBinding
 import com.maurya.dtxloopplayer.utils.showToast
-import com.maurya.dtxloopplayer.utils.updateTextViewWithFolderCount
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class ListsFragment : Fragment() {
 
-    private lateinit var folderAdapter: FolderAdapter
+    private lateinit var folderAdapter: AdapterFolder
 
     companion object {
 //        var musicPlayList: MusicPlayList = MusicPlayList()
@@ -39,7 +40,7 @@ class ListsFragment : Fragment() {
         lateinit var fragmentListsBinding: FragmentListsBinding
 
         @SuppressLint("StaticFieldLeak")
-        lateinit var playListAdapter: PlayListViewAdapter
+        lateinit var playListAdapter: AdapterPlayList
 
         @SuppressLint("StaticFieldLeak")
         lateinit var musicAdapter: AdapterMusic
@@ -57,7 +58,7 @@ class ListsFragment : Fragment() {
         fragmentListsBinding.recyclerViewListFragmentForMyPlayList.setItemViewCacheSize(13)
         fragmentListsBinding.recyclerViewListFragmentForMyPlayList.layoutManager =
             LinearLayoutManager(context)
-//        playListAdapter = PlayListViewAdapter(requireContext(), playListList = musicPlayList.ref)
+        playListAdapter = AdapterPlayList(requireContext(), arrayListOf())
         fragmentListsBinding.recyclerViewListFragmentForMyPlayList.adapter = playListAdapter
 
 
@@ -78,7 +79,8 @@ class ListsFragment : Fragment() {
         val jsonString = requireActivity().getSharedPreferences("FAVOURITES", MODE_PRIVATE)
             .getString("FavouriteSongs", null)
         if (jsonString != null) {
-            val data: ArrayList<MusicDataClass> = GsonBuilder().create().fromJson(jsonString, typeToken)
+            val data: ArrayList<MusicDataClass> =
+                GsonBuilder().create().fromJson(jsonString, typeToken)
             FavouriteActivity.favouriteSongs.addAll(data)
         }
 

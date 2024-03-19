@@ -41,13 +41,19 @@ import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivityMainBinding
 import com.maurya.dtxloopplayer.databinding.PopupDialogAboutBinding
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.system.exitProcess
 
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val themeList = arrayOf("Light Mode", "Night Mode", "Auto (System Defaults)")
-    private lateinit var sharedPreferencesHelper: SharedPreferenceHelper
+
+    @Inject
+    lateinit var sharedPreferencesHelper: SharedPreferenceHelper
+
 
     companion object {
         var musicList: ArrayList<MusicDataClass> = ArrayList()
@@ -74,33 +80,31 @@ class MainActivity : AppCompatActivity() {
 //            ListsFragment.musicPlayList = dataPlaylist
 //        }
 
-        binding.navView.visibility = View.VISIBLE
-
         //NightMode
         var checkedTheme = sharedPreferencesHelper.theme
-        binding.darkModeText.text = "Theme: ${themeList[sharedPreferencesHelper.theme]}"
-
-        binding.darkModeText.setOnClickListener {
-            val dialog = MaterialAlertDialogBuilder(this)
-                .setTitle("Change theme")
-                .setPositiveButton("Ok") { _, _ ->
-                    sharedPreferencesHelper.theme = checkedTheme
-                    AppCompatDelegate.setDefaultNightMode(sharedPreferencesHelper.themeFlag[checkedTheme])
-                    binding.darkModeText.text = "Theme: ${themeList[sharedPreferencesHelper.theme]}"
-                }
-                .setSingleChoiceItems(themeList, checkedTheme) { _, which ->
-                    checkedTheme = which
-                }
-                .setNegativeButton("Cancel") { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .setCancelable(false)
-                .show()
-
-            dialog.setOnDismissListener {
-                dialog.dismiss()
-            }
-        }
+//        binding.darkModeText.text = "Theme: ${themeList[sharedPreferencesHelper.theme]}"
+//
+//        binding.darkModeText.setOnClickListener {
+//            val dialog = MaterialAlertDialogBuilder(this)
+//                .setTitle("Change theme")
+//                .setPositiveButton("Ok") { _, _ ->
+//                    sharedPreferencesHelper.theme = checkedTheme
+//                    AppCompatDelegate.setDefaultNightMode(sharedPreferencesHelper.themeFlag[checkedTheme])
+//                    binding.darkModeText.text = "Theme: ${themeList[sharedPreferencesHelper.theme]}"
+//                }
+//                .setSingleChoiceItems(themeList, checkedTheme) { _, which ->
+//                    checkedTheme = which
+//                }
+//                .setNegativeButton("Cancel") { dialog, _ ->
+//                    dialog.dismiss()
+//                }
+//                .setCancelable(false)
+//                .show()
+//
+//            dialog.setOnDismissListener {
+//                dialog.dismiss()
+//            }
+//        }
 
 
         permission()
@@ -117,80 +121,10 @@ class MainActivity : AppCompatActivity() {
     private fun listeners() {
 
         //top toolbar
-        binding.menuImageView.setOnClickListener(View.OnClickListener {
-            binding.MainDrawerLayout.openDrawer(GravityCompat.START)
-
-        })
 
         binding.SearchMusicViewMainActivity.setOnClickListener {
             val intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
-        }
-
-
-        binding.navView.setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.nav_feedback -> {
-                    val websiteUrl =
-                        "https://docs.google.com/forms/d/e/1FAIpQLSfRsCpO9jc0t61V6E5IkjH6L0HSoWmk2LQdy0EPJ1SmBL7_hQ/viewform"
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl))
-                    startActivity(intent)
-                }
-
-                R.id.nav_Settings -> {
-
-                }
-
-                R.id.nav_about -> {
-                    val popUpDialog = LayoutInflater.from(this)
-                        .inflate(R.layout.popup_dialog_about, binding.root, false)
-                    val bindingPopUp = PopupDialogAboutBinding.bind(popUpDialog)
-                    val dialog =
-                        MaterialAlertDialogBuilder(this).setView(popUpDialog)
-                            .setOnCancelListener {
-
-                            }
-                            .create()
-
-                    bindingPopUp.aboutDialogThankyouButton.setOnClickListener {
-                        dialog.dismiss()
-                    }
-
-                    val textView = bindingPopUp.spannableTextViewDialog
-                    val spannableString =
-                        SpannableString("If you'd like to share your thoughts or provide Feedback , please feel free to do so. Your input is valuable, and I'd appreciate hearing from you.❤\uFE0F\"\n ")
-
-                    val clickableSpan = object : ClickableSpan() {
-                        override fun onClick(widget: View) {
-                            val websiteUrl =
-                                "https://forms.gle/4gC2XzHDCaio7hUh8"
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl))
-                            startActivity(intent)
-                        }
-                    }
-
-                    spannableString.setSpan(
-                        clickableSpan,
-                        48, 56,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    val blueColor = Color.BLUE
-                    spannableString.setSpan(
-                        ForegroundColorSpan(blueColor),
-                        48, 56,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-
-                    textView.text = spannableString
-                    textView.movementMethod = LinkMovementMethod.getInstance()
-
-                    dialog.show()
-                }
-
-            }
-            menuItem.isChecked = false
-            binding.MainDrawerLayout.closeDrawer(GravityCompat.START)
-            true // Return true to indicate that the click was handled
         }
 
 
@@ -200,8 +134,8 @@ class MainActivity : AppCompatActivity() {
     private fun initViewPager() {
 
         val myAdapter = ViewPagerAdapter(this)
-        myAdapter.addFragment(ListsFragment(), "Lists")
         myAdapter.addFragment(SongsFragment(), "Songs")
+        myAdapter.addFragment(ListsFragment(), "Lists")
 
 
         val viewPager = binding.viewPAGER
@@ -216,44 +150,10 @@ class MainActivity : AppCompatActivity() {
         }.attach()
 
 
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                val position = tab.position
-                // Depending on the tab position, enable or disable scrolling
-                when (position) {
-                    0 -> disableCollapsingToolbarScrolling()
-                    1 -> enableCollapsingToolbarScrolling()
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-
-            override fun onTabReselected(tab: TabLayout.Tab) {}
-        })
-
 
     }
 
-    private fun disableCollapsingToolbarScrolling() {
-        val toolbarLayoutParams =
-            binding.collapsingtoolbarlayout.layoutParams as AppBarLayout.LayoutParams
-        toolbarLayoutParams.scrollFlags = 0
-        binding.collapsingtoolbarlayout.layoutParams = toolbarLayoutParams
-        val appBarLayoutParams = binding.appbar.layoutParams as CoordinatorLayout.LayoutParams
-        appBarLayoutParams.behavior = null
-        binding.appbar.layoutParams = appBarLayoutParams
-    }
 
-    private fun enableCollapsingToolbarScrolling() {
-        val toolbarLayoutParams =
-            binding.collapsingtoolbarlayout.layoutParams as AppBarLayout.LayoutParams
-        toolbarLayoutParams.scrollFlags =
-            AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
-        binding.collapsingtoolbarlayout.layoutParams = toolbarLayoutParams
-        val appBarLayoutParams = binding.appbar.layoutParams as CoordinatorLayout.LayoutParams
-        appBarLayoutParams.behavior = AppBarLayout.Behavior()
-        binding.appbar.layoutParams = appBarLayoutParams
-    }
 
     private fun permission() {
         if (ContextCompat.checkSelfPermission(
@@ -356,20 +256,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Save Playlist data using shared preferences using the helper
-        val jsonStringPlaylist = GsonBuilder().create().toJson(ListsFragment.musicPlayList)
-        sharedPreferencesHelper.savePlaylistData(jsonStringPlaylist)
+//        val jsonStringPlaylist = GsonBuilder().create().toJson(ListsFragment.musicPlayList)
+//        sharedPreferencesHelper.savePlaylistData(jsonStringPlaylist)
 
         ListsFragment.playListAdapter.notifyDataSetChanged()
-    }
-
-
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        if (binding.MainDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.MainDrawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
     }
 
 
