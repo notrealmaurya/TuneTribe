@@ -16,6 +16,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.SeekBar
@@ -27,6 +28,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
 import com.maurya.dtxloopplayer.MainActivity
@@ -36,6 +39,8 @@ import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.databinding.ActivityPlayerBinding
+import com.maurya.dtxloopplayer.databinding.PopupDialogPlayeractivityMenuBinding
+import com.maurya.dtxloopplayer.databinding.PopupVideoSpeedBinding
 import com.maurya.dtxloopplayer.fragments.SongsFragment
 import com.maurya.dtxloopplayer.utils.exitApplication
 import com.maurya.dtxloopplayer.utils.favouriteChecker
@@ -43,14 +48,27 @@ import com.maurya.dtxloopplayer.utils.formatDuration
 import com.maurya.dtxloopplayer.utils.getMusicArt
 import com.maurya.dtxloopplayer.utils.notifyAdapterSongTextPosition
 import com.maurya.dtxloopplayer.utils.setSongPosition
+import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
+import dagger.hilt.android.AndroidEntryPoint
+import java.util.Timer
+import java.util.TimerTask
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import kotlin.system.exitProcess
 
 
+@AndroidEntryPoint
 class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
 
     private lateinit var musicAdapter: AdapterMusic
     private var shuffle: Boolean = false
 
+    private var timer: Timer? = null
+
+
+    @Inject
+    lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     companion object {
         lateinit var musicListPlayerActivity: ArrayList<MusicDataClass>
@@ -61,10 +79,14 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
         @SuppressLint("StaticFieldLeak")
         lateinit var binding: ActivityPlayerBinding
+
+
+        //timer
+        var isTimerOn: Boolean = false
+        var timerText: String = ""
+
         var repeat: Boolean = false
-        var min15: Boolean = false
-        var min30: Boolean = false
-        var min60: Boolean = false
+
         var nowPlayingId: String = ""
         var isFavourite: Boolean = false
         var favouriteIndex: Int = -1
@@ -90,7 +112,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         binding.songARTIST.isSelected = true
 
         // Retrieve the saved Lottie animation theme from SharedPreferences
-        val sharedPreferenceHelper = SharedPreferenceHelper(this)
+        sharedPreferenceHelper = SharedPreferenceHelper(this)
         val savedTheme = sharedPreferenceHelper.getPlayerActivityTheme()
 
         // Set the Lottie animation based on the saved theme
@@ -141,8 +163,8 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             musicService!!.mediaPlayer!!.setOnCompletionListener(this)
             nowPlayingId = musicListPlayerActivity[musicPosition].id
             playMusic()
-//            loudnessEnhancer = LoudnessEnhancer(musicService!!.mediaPlayer!!.audioSessionId)
-//            loudnessEnhancer.enabled = true
+            loudnessEnhancer = LoudnessEnhancer(musicService!!.mediaPlayer!!.audioSessionId)
+            loudnessEnhancer.enabled = true
 
         } catch (e: Exception) {
             Log.e("MusicService", "Error in CreateMediaPlayerPlayerActivity", e)
@@ -170,7 +192,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         binding.songNAME.text = musicListPlayerActivity[musicPosition].musicName
         binding.songARTIST.text = musicListPlayerActivity[musicPosition].albumArtist
         if (repeat) binding.repeatBtnPlayerActivity.setImageResource(R.drawable.icon_repeat_one)
-        if (min15 || min30 || min60) bottomMenuSleepModeOption.text = "Stop timer"
         if (isFavourite) binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_added)
         else binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_empty)
     }
@@ -235,12 +256,12 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 //            )
 
             "folderSongsActivity" -> initServiceAndPlaylist(
-                FolderTracksActivity.folderMusicList , shuffle = false
+                FolderTracksActivity.folderMusicList, shuffle = false
 
             )
 
             "folderSongsActivityShuffle" -> initServiceAndPlaylist(
-                FolderTracksActivity.folderMusicList , shuffle = true
+                FolderTracksActivity.folderMusicList, shuffle = true
             )
 
             "queueActivity" -> {
@@ -290,12 +311,12 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
             return MusicDataClass(
                 id = "Unknown",
-                 path.toString(),
-                 "Unknown",
+                path.toString(),
+                "Unknown",
                 duration,
                 "Unknown",
                 "Unknown",
-                 path.toString(),
+                path.toString(),
                 "Unknown",
                 dateModified
             )
@@ -350,7 +371,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
         })
 
-
+        //repeat
         binding.repeatBtnPlayerActivity.setOnClickListener {
             if (!repeat) {
                 repeat = true
@@ -364,121 +385,9 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
         }
 
+        //queue
         binding.queuePlayerActivity.setOnClickListener {
             Toast.makeText(this, "Feature Coming Soon", Toast.LENGTH_SHORT).show()
-        }
-
-
-        //BottomSheetDialog
-        val bottomSheetDialog =
-            BottomSheetDialog(this, R.style.ThemeOverlay_App_BottomSheetDialog)
-        val bottomSheetView: View =
-            layoutInflater.inflate(R.layout.popup_dialog_playeractivity_menu, null)
-        val bottomMenuAudioBoostOption =
-            bottomSheetView.findViewById<TextView>(R.id.bottomMenuAudioBoostOption)
-        val bottomMenuSleepModeOption =
-            bottomSheetView.findViewById<TextView>(R.id.bottomMenuSleepModeOption)
-        val bottomMenuEqualizerOption =
-            bottomSheetView.findViewById<TextView>(R.id.bottomMenuEqualizerOption)
-        bottomSheetDialog.setContentView(bottomSheetView)
-        bottomSheetDialog.setCanceledOnTouchOutside(true)
-
-        binding.menuPlayerActivity.setOnClickListener {
-            bottomSheetDialog.show()
-        }
-
-        bottomMenuEqualizerOption.setOnClickListener {
-            val equalizerIntent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL)
-            equalizerIntent.putExtra(
-                AudioEffect.EXTRA_AUDIO_SESSION,
-                musicService!!.mediaPlayer!!.audioSessionId
-            )
-
-            equalizerIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, baseContext.packageName)
-            equalizerIntent.putExtra(
-                AudioEffect.EXTRA_CONTENT_TYPE,
-                AudioEffect.CONTENT_TYPE_MUSIC
-            )
-            try {
-                startActivityForResult(equalizerIntent, 13)
-            } catch (e: Exception) {
-                Toast.makeText(this, "Equalizer feature not Supported", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
-
-
-        val sleepModeDialog =
-            BottomSheetDialog(this, R.style.ThemeOverlay_App_BottomSheetDialog)
-        val sleepModeSheetView: View =
-            layoutInflater.inflate(R.layout.popup_dialog_sleepmode, null)
-        sleepModeDialog.setContentView(sleepModeSheetView)
-        sleepModeDialog.setCanceledOnTouchOutside(true)
-
-        bottomMenuSleepModeOption.setOnClickListener {
-            bottomSheetDialog.dismiss()
-            val timer = min15 || min30 || min60
-            if (!timer) {
-                sleepModeDialog.show()
-            } else {
-                val builder = MaterialAlertDialogBuilder(this)
-                builder.setTitle("Stop Timer")
-                    .setMessage("Do you want to Stop Timer?")
-                    .setPositiveButton("Yes") { _, _ ->
-                        min15 = false
-                        min30 = false
-                        min60 = false
-                        bottomMenuSleepModeOption.text = "Sleep Mode"
-                    }
-                    .setNegativeButton("No") { sleepModeDialog, _ ->
-                        sleepModeDialog.dismiss()
-                    }
-
-                val customDialog = builder.create()
-                customDialog.show()
-                customDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
-                customDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED)
-            }
-        }
-
-        val sleepMode15Min =
-            sleepModeSheetView.findViewById<TextView>(R.id.TimerMenu15min)
-        val sleepMode30Min =
-            sleepModeSheetView.findViewById<TextView>(R.id.TimerMenu30min)
-        val sleepMode60Min =
-            sleepModeSheetView.findViewById<TextView>(R.id.TimerMenu60min)
-
-        sleepMode15Min.setOnClickListener {
-            bottomMenuSleepModeOption.text = "Stop timer"
-            min15 = true
-            Thread {
-                Thread.sleep((15 * 60000).toLong())
-                if (min15) exitApplication()
-            }.start()
-            Toast.makeText(this, "Music will stop after 15 minutes", Toast.LENGTH_SHORT).show()
-            sleepModeDialog.dismiss()
-        }
-
-        sleepMode30Min.setOnClickListener {
-            bottomMenuSleepModeOption.text = "Stop timer"
-            min30 = true
-            Thread {
-                Thread.sleep((30 * 60000).toLong())
-                if (min30) exitApplication()
-            }.start()
-            Toast.makeText(this, "Music will stop after 30 minutes", Toast.LENGTH_SHORT).show()
-            sleepModeDialog.dismiss()
-        }
-
-        sleepMode60Min.setOnClickListener {
-            bottomMenuSleepModeOption.text = "Stop timer"
-            min60 = true
-            Thread {
-                Thread.sleep((60 * 60000).toLong())
-                if (min60) exitApplication()
-            }.start()
-            Toast.makeText(this, "Music will stop after 60 minutes", Toast.LENGTH_SHORT).show()
-            sleepModeDialog.dismiss()
         }
 
         //share music
@@ -569,6 +478,193 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
         }
 
+        //Player activity menu
+        val bottomSheetDialog = BottomSheetDialog(this)
+        val bottomSheetView =
+            LayoutInflater.from(this)
+                .inflate(R.layout.popup_dialog_playeractivity_menu, binding.root, false)
+        val bindingPopUp = PopupDialogPlayeractivityMenuBinding.bind(bottomSheetView)
+        bottomSheetDialog.setContentView(bottomSheetView)
+        bottomSheetDialog.setCanceledOnTouchOutside(true)
+
+        binding.menuPlayerActivity.setOnClickListener {
+            bottomSheetDialog.show()
+        }
+
+        //for equalizer
+        bindingPopUp.bottomMenuEqualizerOption.setOnClickListener {
+            val equalizerIntent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL)
+            equalizerIntent.putExtra(
+                AudioEffect.EXTRA_AUDIO_SESSION,
+                musicService!!.mediaPlayer!!.audioSessionId
+            )
+
+            equalizerIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, baseContext.packageName)
+            equalizerIntent.putExtra(
+                AudioEffect.EXTRA_CONTENT_TYPE,
+                AudioEffect.CONTENT_TYPE_MUSIC
+            )
+            try {
+                startActivityForResult(equalizerIntent, 13)
+            } catch (e: Exception) {
+                Toast.makeText(this, "Equalizer feature not Supported", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+
+        //for audio boost
+        bindingPopUp.bottomMenuAudioBoostOption.setOnClickListener {
+            bottomSheetDialog.dismiss()
+
+            val popUpDialogBooster = LayoutInflater.from(this)
+                .inflate(R.layout.popup_video_speed, binding.root, false)
+            val bindingPopUpBooster = PopupVideoSpeedBinding.bind(popUpDialogBooster)
+
+            bindingPopUpBooster.speedSlider.valueFrom = 0f
+            bindingPopUpBooster.speedSlider.valueTo = 100f
+
+
+            MaterialAlertDialogBuilder(this, R.style.PopUpWindowStyle)
+                .setView(popUpDialogBooster)
+                .create()
+                .show()
+
+            bindingPopUpBooster.speedSlider.addOnChangeListener { _, value, fromUser ->
+                if (fromUser) {
+                    loudnessEnhancer.setTargetGain((value * 100).toInt())
+                    showToast(this, "Audio boosted to ${value.toInt()}%")
+                }
+            }
+
+        }
+
+        //for sleep using same slider as in speed
+        bindingPopUp.bottomMenuSleepModeOption.setOnClickListener {
+            bottomSheetDialog.dismiss()
+            if (!isTimerOn) {
+                timerMainDialog()
+            } else {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("Reset Time")
+                    .setMessage("Do you want to reset time? $timerText min")
+                    .setPositiveButton("Yes") { _, _ ->
+                        timer?.cancel()
+                        isTimerOn = false
+                    }
+                    .setNeutralButton("Modify Timer") { _, _ ->
+                        timerMainDialog()
+                    }
+                    .setNegativeButton("No") { dialog, _ ->
+                        dialog.dismiss()
+                        showToast(this, "Sleep timer is reset.")
+                        isTimerOn = false
+                        timer?.cancel()
+                    }
+                    .setCancelable(false)
+                    .create()
+                    .show()
+
+            }
+
+        }
+
+    }
+
+
+    private fun timerMainDialog() {
+
+        val presetDurations = arrayOf("15 min", "30 min", "45 min", "1 hr")
+        val timeIntervals = intArrayOf(15, 30, 45, 60)
+
+        val customDuration = "Set Custom Time"
+
+        val customView = LayoutInflater.from(this)
+            .inflate(R.layout.popup_video_speed, binding.root, false)
+        val bindingSlider = PopupVideoSpeedBinding.bind(customView)
+
+        bindingSlider.speedSlider.valueFrom = 0f
+        bindingSlider.speedSlider.valueTo = presetDurations.size - 1.toFloat()
+        bindingSlider.speedSlider.setLabelFormatter { value ->
+            presetDurations[value.toInt()]
+        }
+
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Select Sleep Timer")
+            .setView(customView)
+            .setNeutralButton(customDuration) { _, _ ->
+                timer?.cancel()
+                showCustomTimePicker()
+            }
+            .setPositiveButton("Set") { _, _ ->
+                timer?.cancel()
+                val selectedDurationIndex = bindingSlider.speedSlider.value.toInt()
+                startCountdownTimer(timeIntervals[selectedDurationIndex] * 60 * 1000L)
+            }
+            .setNegativeButton("Cancel") { self, _ ->
+                self.dismiss()
+            }
+            .create()
+            .show()
+    }
+
+    private fun showCustomTimePicker() {
+        val timePicker = MaterialTimePicker.Builder()
+            .setTimeFormat(TimeFormat.CLOCK_24H)
+            .setHour(0)
+            .setMinute(0)
+            .setTitleText("Set Custom Time")
+            .build()
+
+        timePicker.addOnPositiveButtonClickListener { _ ->
+            val selectedHour = timePicker.hour
+            val selectedMinute = timePicker.minute
+
+            val selectedTimeMillis = (selectedHour * 60 + selectedMinute) * 60 * 1000L
+
+            startCountdownTimer(selectedTimeMillis)
+        }
+
+        timePicker.show(supportFragmentManager, "CustomTimePicker")
+    }
+
+    private fun startCountdownTimer(durationMillis: Long) {
+        timer = Timer()
+        val task = object : TimerTask() {
+            override fun run() {
+                timerExpired()
+            }
+        }
+        timer!!.schedule(task, durationMillis)
+
+        val durationMinutes =
+            TimeUnit.MILLISECONDS.toMinutes(durationMillis)
+        showToast(this, "Sleep timer set for $durationMinutes min")
+        timerText = durationMinutes.toString()
+
+        isTimerOn = true
+    }
+
+    private fun timerExpired() {
+        runOnUiThread {
+            pauseMusic()
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Timer Expired")
+                .setMessage("Do you want to exit the application?")
+                .setPositiveButton("Yes") { _, _ ->
+                    moveTaskToBack(true)
+                    exitProcess(1)
+                }
+                .setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                    showToast(this, "Sleep timer is reset.")
+                    isTimerOn = false
+                    timer?.cancel()
+                }
+                .setCancelable(false)
+                .create()
+                .show()
+        }
     }
 
     override fun onCompletion(mp: MediaPlayer?) {

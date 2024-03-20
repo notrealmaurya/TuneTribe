@@ -25,6 +25,7 @@ import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.databinding.FragmentSongsBinding
+import com.maurya.dtxloopplayer.utils.sendIntent
 import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.utils.sortMusicList
 import com.maurya.dtxloopplayer.viewModelsObserver.ModelResult
@@ -135,10 +136,7 @@ class SongsFragment : Fragment() {
     private fun listener() {
 
         fragmentSongsBinding.shuffleBtnSongFragment.setOnClickListener {
-            val intent = Intent(context, PlayerActivity::class.java)
-            intent.putExtra("index", 0)
-            intent.putExtra("class", "SongsFragmentShuffle")
-            startActivity(intent)
+            sendIntent(requireContext(), reference = "SongsFragmentShuffle", position = 0)
         }
 
         fragmentSongsBinding.sortingVideoFragment.setOnClickListener {

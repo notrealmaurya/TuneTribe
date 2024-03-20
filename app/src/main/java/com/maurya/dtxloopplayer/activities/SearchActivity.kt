@@ -9,17 +9,18 @@ import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivitySearchBinding
 import com.maurya.dtxloopplayer.fragments.SongsFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
 
+    private lateinit var adapterMusic: AdapterMusic
 
     companion object {
         lateinit var musicListSearch: ArrayList<MusicDataClass>
         var search: Boolean = false
-        var isInitialized = false
-        lateinit var musicAdapter: AdapterMusic
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +28,6 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        isInitialized=true
 
         binding.SearchMusicViewSearchActivity.onActionViewExpanded()
 
@@ -35,13 +35,20 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
+        binding.recyclerViewSearchActivity.apply {
+            setHasFixedSize(true)
+            setItemViewCacheSize(13)
+            layoutManager =
+                LinearLayoutManager(this@SearchActivity, LinearLayoutManager.VERTICAL, false)
+            adapterMusic = AdapterMusic(
+                this@SearchActivity,
+                SongsFragment.musicList, searchActivity = true
+            )
+            adapter = adapterMusic
+        }
 
-        binding.recyclerViewSearchActivity.setHasFixedSize(true)
-        binding.recyclerViewSearchActivity.setItemViewCacheSize(13)
-        binding.recyclerViewSearchActivity.layoutManager = LinearLayoutManager(this)
-        musicAdapter = AdapterMusic(this, SongsFragment.musicList, searchActivity = true)
-        binding.recyclerViewSearchActivity.adapter = musicAdapter
 
+        binding.MusicListTotalSongFragment.text = "${SongsFragment.musicList} songs"
 
 
         binding.SearchMusicViewSearchActivity.setOnQueryTextListener(object :
@@ -56,8 +63,8 @@ class SearchActivity : AppCompatActivity() {
                             musicListSearch.add(song)
                     }
                     search = true
-                    musicAdapter.updateSearchList(searchList = musicListSearch)
-                    binding.MusicListTotalSongFragment.text = "${musicAdapter.itemCount} songs"
+                    adapterMusic.updateSearchList(searchList = musicListSearch)
+                    binding.MusicListTotalSongFragment.text = "${adapterMusic.itemCount} songs"
                 }
                 return true
             }

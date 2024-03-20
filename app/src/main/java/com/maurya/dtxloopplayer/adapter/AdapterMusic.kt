@@ -4,12 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.maurya.dtxloopplayer.activities.PlayListActivity
 import com.maurya.dtxloopplayer.activities.PlayerActivity
@@ -20,6 +22,7 @@ import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ItemMusicBinding
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.utils.formatDuration
+import com.maurya.dtxloopplayer.utils.sendIntent
 
 class AdapterMusic(
     private val context: Context,
@@ -39,21 +42,29 @@ class AdapterMusic(
 
     override fun onBindViewHolder(holder: MusicHolder, position: Int) {
 
-        holder.MusicName.text = musicList[position].musicName
-        holder.MusicName.isSelected = true
-        holder.MusicArist.text = musicList[position].albumArtist
-        holder.MusicArist.isSelected = true
-        holder.MusicDuration.text = formatDuration(musicList[position].durationText)
-        Glide.with(context)
-            .load(musicList[position].image)
-            .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
-            .into(holder.MusicArt)
+        val currentItem = musicList[position]
 
+        with(holder) {
+            musicName.isSelected = true
+            musicArist.isSelected = true
+            musicName.text = currentItem.musicName
+            musicArist.text = currentItem.albumArtist
+            musicDuration.text = DateUtils.formatElapsedTime(currentItem.durationText / 1000)
+
+            Glide.with(context)
+                .asBitmap()
+                .load(currentItem.image)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .centerCrop()
+                .error(R.drawable.icon_music)
+                .into(musicArt)
+
+        }
 
         when {
             playListActivity -> {
                 holder.root.setOnClickListener {
-                    sendIntent(ref = "PlayListActivity", position = position)
+                    sendIntent(context, reference = "PlayListActivity", position = position)
                 }
             }
 
@@ -71,13 +82,13 @@ class AdapterMusic(
 
             queueActivity -> {
                 holder.root.setOnClickListener {
-                    sendIntent(ref = "queueActivity", position = position)
+                    sendIntent(context, reference = "queueActivity", position = position)
                 }
             }
 
             folderSongsActivity -> {
                 holder.root.setOnClickListener {
-                    sendIntent(ref = "folderSongsActivity", position = position)
+                    sendIntent(context, reference = "folderSongsActivity", position = position)
                 }
             }
 
@@ -85,7 +96,7 @@ class AdapterMusic(
                 holder.root.setOnClickListener {
                     if (SearchActivity.search) {
                         sendIntent(
-                            ref = "MusicAdapterSearch",
+                            context, reference = "MusicAdapterSearch",
                             position = position
                         )
                     }
@@ -94,7 +105,7 @@ class AdapterMusic(
 
             favouriteActivity -> {
                 holder.root.setOnClickListener {
-                    sendIntent(ref = "FavouriteAdapter", position = position)
+                    sendIntent(context, reference = "FavouriteAdapter", position = position)
                 }
 
             }
@@ -104,10 +115,14 @@ class AdapterMusic(
                 holder.root.setOnClickListener {
                     when {
                         musicList[position].id == PlayerActivity.nowPlayingId ->
-                            sendIntent(ref = "NowPlaying", position = PlayerActivity.musicPosition)
+                            sendIntent(
+                                context,
+                                reference = "NowPlaying",
+                                position = PlayerActivity.musicPosition
+                            )
 
                         else -> {
-                            sendIntent(ref = "SongsFragment", position = position)
+                            sendIntent(context, reference = "SongsFragment", position = position)
                         }
 
 
@@ -119,20 +134,12 @@ class AdapterMusic(
         }
     }
 
-    private fun sendIntent(ref: String, position: Int) {
-        val intent = Intent(context, PlayerActivity::class.java)
-        intent.putExtra("class", ref)
-        intent.putExtra("index", position)
-        ContextCompat.startActivity(context, intent, null)
-    }
-
 
     fun updateFavourites(newList: ArrayList<MusicDataClass>) {
         musicList = ArrayList()
         musicList.addAll(newList)
         notifyDataSetChanged()
     }
-
 
 
     fun refreshPlayList() {
@@ -154,12 +161,12 @@ class AdapterMusic(
     }
 
     class MusicHolder(binding: ItemMusicBinding) : RecyclerView.ViewHolder(binding.root) {
-        val MusicName = binding.MusicName
-        val MusicArist = binding.MusicArtist
-        val MusicDuration = binding.MusicDuration
-        val MusicArt = binding.MusicArt
+        val musicName = binding.musicNameMusicItem
+        val musicArist = binding.artistNameMusicItem
+        val musicDuration = binding.musicDurationMusicItem
+        val musicArt = binding.musicImageMusicItem
         val root = binding.root
-        val chekbox = binding.checkboxMusicItem
+        val chekbox = binding.checkBoxMusicItem
 
 
     }

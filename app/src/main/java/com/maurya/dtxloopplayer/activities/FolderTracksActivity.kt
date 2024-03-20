@@ -33,7 +33,6 @@ class FolderTracksActivity : AppCompatActivity() {
 
     companion object {
         var folderMusicList = ArrayList<MusicDataClass>()
-        var isInitialized = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +40,6 @@ class FolderTracksActivity : AppCompatActivity() {
         binding = ActivityFolderTracksActiivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        isInitialized = true
         val folderPath = intent.getStringExtra("folderPath") ?: ""
 
         lifecycle.addObserver(viewModel)

@@ -2,6 +2,7 @@ package com.maurya.dtxloopplayer.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.database.Cursor
 import android.media.MediaMetadataRetriever
@@ -333,29 +334,32 @@ fun checkPlayListData(playList: ArrayList<MusicDataClass>): ArrayList<MusicDataC
     return playList
 }
 
+
+//song or songs count
 fun updateTextViewWithItemCount(itemCount:Int): String {
     val itemCountText = if (itemCount == 1 || itemCount == 0) {
         "$itemCount song"
     } else {
         "$itemCount songs"
     }
-
     return itemCountText
 }
 
 
+//for sending intent from activity/fragment/ adapter to player activity
+fun sendIntent(context: Context, position: Int, reference: String) {
+    val intent = Intent(context, PlayerActivity::class.java)
+    intent.putExtra("class", reference)
+    intent.putExtra("index", position)
+    ContextCompat.startActivity(context, intent, null)
+}
 
 fun notifyAdapterSongTextPosition() {
 
-    if (SearchActivity.isInitialized) {
-        SearchActivity.musicAdapter.notifyDataSetChanged()
-    }
     if (PlayListActivity.isInitialized) {
         PlayListActivity.musicAdapter.notifyDataSetChanged()
     }
-    if (FavouriteActivity.isInitialized) {
-        FavouriteActivity.musicAdapter.notifyDataSetChanged()
-    }
+
 }
 
 
