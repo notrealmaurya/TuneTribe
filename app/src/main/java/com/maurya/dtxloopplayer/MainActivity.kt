@@ -1,49 +1,50 @@
 package com.maurya.dtxloopplayer
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
+import android.database.ContentObserver
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.provider.Settings
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
+import androidx.room.Room
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.tabs.TabLayout
+import androidx.work.WorkManager
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.gson.GsonBuilder
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.activities.SearchActivity
+import com.maurya.dtxloopplayer.database.MusicDataClass
+import com.maurya.dtxloopplayer.database.PathDataClass
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.fragments.SongsFragment
-import com.maurya.dtxloopplayer.database.MusicDataClass
+import com.maurya.dtxloopplayer.database.tuneTribeDatabase
 import com.maurya.dtxloopplayer.databinding.ActivityMainBinding
-import com.maurya.dtxloopplayer.databinding.PopupDialogAboutBinding
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
+import com.maurya.dtxloopplayer.utils.getAllPath
+import com.maurya.dtxloopplayer.utils.getAllSongs
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.system.exitProcess
+import kotlin.collections.filter
 
 
 @AndroidEntryPoint
@@ -55,6 +56,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var sharedPreferencesHelper: SharedPreferenceHelper
 
 
+    private lateinit var db: tuneTribeDatabase
+
+
+    private lateinit var contentObserver: ContentObserver
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -62,47 +67,69 @@ class MainActivity : AppCompatActivity() {
 
         sharedPreferencesHelper = SharedPreferenceHelper(this)
 
-//        ListsFragment.musicPlayList = MusicPlayList()
-//        // Retrieve Playlist data using shared preferences
-//        val jsonStringPlaylist = sharedPreferencesHelper.getPlaylistData()
-//        if (jsonStringPlaylist != null) {
-//            val dataPlaylist: MusicPlayList =
-//                GsonBuilder().create().fromJson(jsonStringPlaylist, MusicPlayList::class.java)
-//            ListsFragment.musicPlayList = dataPlaylist
+        db = Room.databaseBuilder(
+            this, tuneTribeDatabase::class.java, "musicRecords"
+        ).build()
+
+
+//        lifecycleScope.launch {
+//            db.tuneTribeDao().insertMusicData(getAllSongs(this@MainActivity))
 //        }
 
-        //NightMode
-        var checkedTheme = sharedPreferencesHelper.theme
-//        binding.darkModeText.text = "Theme: ${themeList[sharedPreferencesHelper.theme]}"
-//
-//        binding.darkModeText.setOnClickListener {
-//            val dialog = MaterialAlertDialogBuilder(this)
-//                .setTitle("Change theme")
-//                .setPositiveButton("Ok") { _, _ ->
-//                    sharedPreferencesHelper.theme = checkedTheme
-//                    AppCompatDelegate.setDefaultNightMode(sharedPreferencesHelper.themeFlag[checkedTheme])
-//                    binding.darkModeText.text = "Theme: ${themeList[sharedPreferencesHelper.theme]}"
-//                }
-//                .setSingleChoiceItems(themeList, checkedTheme) { _, which ->
-//                    checkedTheme = which
-//                }
-//                .setNegativeButton("Cancel") { dialog, _ ->
-//                    dialog.dismiss()
-//                }
-//                .setCancelable(false)
-//                .show()
-//
-//            dialog.setOnDismissListener {
-//                dialog.dismiss()
-//            }
-//        }
+        contentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
+            override fun onChange(selfChange: Boolean, uri: Uri?) {
+                super.onChange(selfChange, uri)
+                lifecycleScope.launch {
+                    updateDatabase()
+                }
+            }
+        }
 
+        val resolver: ContentResolver = contentResolver
+        resolver.registerContentObserver(
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+            true,
+            contentObserver
+        )
 
         permission()
         initViewPager()
         listeners()
 
 
+    }
+
+
+    private suspend fun updateDatabase() {
+        val musicFilesFromStorage = getAllSongs(this@MainActivity)
+        val tempList: ArrayList<MusicDataClass> = arrayListOf()
+
+        Log.d("Observer", "Initialized")
+
+        db.tuneTribeDao().getAllMusicData().observe(this@MainActivity) { retrievedData ->
+            Log.d("Observer", "Size of retrievedData: ${retrievedData.size}")
+            tempList.clear()
+            tempList.addAll(retrievedData)
+        }
+
+        val deletedFiles = tempList.filter { musicData ->
+            musicFilesFromStorage.none { it.path == musicData.path }
+        }
+
+        if (deletedFiles.isNotEmpty()) {
+            for (deletedFile in deletedFiles) {
+                Log.d("Observer", "Deleted file: $deletedFile")
+                db.tuneTribeDao().deleteMusicDataSingle(deletedFile)
+            }
+        }
+
+        // Insert new files into the database
+        for (musicFile in musicFilesFromStorage) {
+            if (tempList.none { it.path == musicFile.path }) {
+                db.tuneTribeDao().insertMusicDataSingle(musicFile)
+                Log.d("Observer", "Inserted new music data: $musicFile")
+            }
+        }
 
     }
 
@@ -139,9 +166,7 @@ class MainActivity : AppCompatActivity() {
         }.attach()
 
 
-
     }
-
 
 
     private fun permission() {
@@ -211,6 +236,15 @@ class MainActivity : AppCompatActivity() {
             if (!allPermissionsGranted) {
                 showPermissionRequiredDialog()
             } else {
+                val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                val songsFetched = sharedPreferences.getBoolean("songsFetched", false)
+
+                if (!songsFetched) {
+                    lifecycleScope.launch {
+                        db.tuneTribeDao().insertMusicData(getAllSongs(this@MainActivity))
+                    }
+                    sharedPreferences.edit().putBoolean("songsFetched", true).apply()
+                }
             }
         }
     }
@@ -244,9 +278,7 @@ class MainActivity : AppCompatActivity() {
             exitProcess(1)
         }
 
-        // Save Playlist data using shared preferences using the helper
-//        val jsonStringPlaylist = GsonBuilder().create().toJson(ListsFragment.musicPlayList)
-//        sharedPreferencesHelper.savePlaylistData(jsonStringPlaylist)
+        contentResolver.unregisterContentObserver(contentObserver)
 
         ListsFragment.playListAdapter.notifyDataSetChanged()
     }

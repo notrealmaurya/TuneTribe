@@ -1,6 +1,5 @@
 package com.maurya.dtxloopplayer.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -8,9 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.PopupMenu
 import android.widget.PopupWindow
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,13 +15,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maurya.dtxloopplayer.activities.PlayerActivity
-import com.maurya.dtxloopplayer.adapter.AdapterMusic
-import com.maurya.dtxloopplayer.MainActivity
+import androidx.room.Room
 import com.maurya.dtxloopplayer.R
+import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
-import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
+import com.maurya.dtxloopplayer.database.tuneTribeDatabase
 import com.maurya.dtxloopplayer.databinding.FragmentSongsBinding
+import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.sendIntent
 import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.utils.sortMusicList
@@ -61,6 +58,7 @@ class SongsFragment : Fragment() {
         var musicList: ArrayList<MusicDataClass> = arrayListOf()
     }
 
+    private lateinit var db: tuneTribeDatabase
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -95,14 +93,38 @@ class SongsFragment : Fragment() {
             adapter = adapterMusic
         }
 
-        fetchVideosUsingViewModel()
+//        fetchMusicUsingViewModel()
+        fetchMusicUsingRoomDatabase()
 
         listener()
 
 
     }
 
-    private fun fetchVideosUsingViewModel() {
+    private fun fetchMusicUsingRoomDatabase() {
+        fragmentSongsBinding.progressBar.visibility = View.GONE
+
+        db = Room.databaseBuilder(requireContext(), tuneTribeDatabase::class.java, "musicRecords")
+            .build()
+
+        fragmentSongsBinding.progressBar.visibility = View.VISIBLE
+
+
+        db.tuneTribeDao().getAllMusicData().observe(viewLifecycleOwner) { retrievedData ->
+            Log.d("FragmentItemClass", "Size of retrievedData: ${retrievedData.size}")
+            fragmentSongsBinding.progressBar.visibility = View.GONE
+            musicList.clear()
+            musicList.addAll(retrievedData)
+            adapterMusic.notifyDataSetChanged()
+            fragmentSongsBinding.MusicListTotalSongFragment.text =
+                "Recording Files : ${adapterMusic.itemCount}"
+        }
+
+
+    }
+
+
+    private fun fetchMusicUsingViewModel() {
         viewModel.fetchSongs(requireContext())
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

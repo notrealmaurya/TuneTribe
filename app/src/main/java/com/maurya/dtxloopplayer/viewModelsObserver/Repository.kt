@@ -43,7 +43,7 @@ class Repository @Inject constructor() {
                 songs = fetchedSongs
                 _songsStateFlow.emit(ModelResult.Success(fetchedSongs))
             } catch (e: Exception) {
-                _songsStateFlow.emit(ModelResult.Error("Failed to fetch songs: ${e.message}"))
+                _songsStateFlow.emit(ModelResult.Error("Failed to fetch videos: ${e.message}"))
             }
         } else {
             _songsStateFlow.emit(ModelResult.Success(songs!!))
@@ -58,7 +58,7 @@ class Repository @Inject constructor() {
                 folders = fetchedFolders
                 _foldersStateFlow.emit(ModelResult.Success(fetchedFolders))
             } catch (e: Exception) {
-                _foldersStateFlow.emit(ModelResult.Error("Failed to fetch songs: ${e.message}"))
+                _foldersStateFlow.emit(ModelResult.Error("Failed to fetch folders: ${e.message}"))
             }
         } else {
             _foldersStateFlow.emit(ModelResult.Success(folders!!))
@@ -71,10 +71,12 @@ class Repository @Inject constructor() {
             val videos = getAllSongs(context, folderId,isFolder = true)
             _songsFromFolderStateFlow.emit(ModelResult.Success(videos))
         } catch (e: Exception) {
-            _songsFromFolderStateFlow.emit(ModelResult.Error("Failed to fetch songs: ${e.message}"))
+            _songsFromFolderStateFlow.emit(ModelResult.Error("Failed to fetch z: ${e.message}"))
         }
 
     }
+
+
 
 
 }

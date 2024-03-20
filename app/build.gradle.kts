@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.work.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -89,13 +90,12 @@ dependencies {
     implementation(libs.minavdrawer)
 
 
-//    //room
-//    implementation(libs.androidx.room.runtime)
-//    annotationProcessor(libs.androidx.room.compiler)
-//    // To use Kotlin Symbol Processing (KSP)
-//    ksp(libs.androidx.room.room.compiler)
-//    // optional - Kotlin Extensions and Coroutines support for Room
-//    implementation(libs.androidx.room.ktx)
+    //room
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx.v240)
+    // To use Kotlin Symbol Processing (KSP)
+    ksp(libs.androidx.room.room.compiler)
 
 
 }

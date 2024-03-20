@@ -171,31 +171,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
     }
 
-    private fun setLayout() {
-
-        favouriteIndex = favouriteChecker(musicListPlayerActivity[musicPosition].id)
-
-        val bottomSheetDialog =
-            BottomSheetDialog(this, R.style.ThemeOverlay_App_BottomSheetDialog)
-        val bottomSheetView: View =
-            layoutInflater.inflate(R.layout.popup_dialog_playeractivity_menu, null)
-        val bottomMenuSleepModeOption =
-            bottomSheetView.findViewById<TextView>(R.id.bottomMenuSleepModeOption)
-
-        if (!isFinishing && !isDestroyed) {
-            Glide.with(this)
-                .load(musicListPlayerActivity[musicPosition].image)
-                .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
-                .into(binding.songImagePlayerActivity)
-        }
-
-        binding.songNAME.text = musicListPlayerActivity[musicPosition].musicName
-        binding.songARTIST.text = musicListPlayerActivity[musicPosition].albumArtist
-        if (repeat) binding.repeatBtnPlayerActivity.setImageResource(R.drawable.icon_repeat_one)
-        if (isFavourite) binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_added)
-        else binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_empty)
-    }
-
     private fun initializeLayout() {
         musicPosition = intent.getIntExtra("index", 0)
 
@@ -272,6 +247,23 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
         }
         if (musicService != null && !isPlaying) playMusic()
+    }
+
+    private fun setLayout() {
+        favouriteIndex = favouriteChecker(musicListPlayerActivity[musicPosition].id)
+
+        if (!isFinishing && !isDestroyed) {
+            Glide.with(this)
+                .load(musicListPlayerActivity[musicPosition].image)
+                .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
+                .into(binding.songImagePlayerActivity)
+        }
+
+        binding.songNAME.text = musicListPlayerActivity[musicPosition].musicName
+        binding.songARTIST.text = musicListPlayerActivity[musicPosition].albumArtist
+        if (repeat) binding.repeatBtnPlayerActivity.setImageResource(R.drawable.icon_repeat_one)
+        if (isFavourite) binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_added)
+        else binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_empty)
     }
 
     private fun initServiceAndPlaylist(
@@ -570,7 +562,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     }
 
-
     private fun timerMainDialog() {
 
         val presetDurations = arrayOf("15 min", "30 min", "45 min", "1 hr")
@@ -764,4 +755,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         super.onDestroy()
         if (musicListPlayerActivity[musicPosition].id == "Unknown" && !isPlaying) exitApplication()
     }
+
+
 }

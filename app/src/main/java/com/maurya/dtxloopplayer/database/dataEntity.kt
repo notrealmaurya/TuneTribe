@@ -4,31 +4,41 @@ import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity(tableName = "musicRecords")
 data class MusicDataClass(
-    val id: String,
-    val musicName: String,
+    var id: String,
+    var musicName: String,
     var folderName: String,
-    val durationText: Long,
-    val size: String,
-    val albumArtist: String,
-    val path: String,
+    var durationText: Long,
+    var size: String,
+    var albumArtist: String,
+    var path: String,
     var image: String,
-    val dateModified: Long,
-    var isChecked: Boolean = false
-)
+    var dateModified: Long,
+    var isChecked: Boolean = false,
+    var isFavourite: Boolean = false
+) {
+    @PrimaryKey(autoGenerate = true)
+    var ids: Long = 0
+}
 
 
+@Entity(tableName = "folderRecords")
 data class FolderDataClass(
-    val id: String,
+    @PrimaryKey val id: String,
     val folderName: String,
     val folderPath: String,
     val folderItemCount: Int,
     var isChecked: Boolean = false
 )
 
+
+@Entity(tableName = "playListRecords")
 data class PlayListDataClass(
-    val id: String,
+    @PrimaryKey val id: String,
     val playListName: String,
     val dateModified: Long,
     val itemCount: Int,
@@ -36,5 +46,7 @@ data class PlayListDataClass(
 )
 
 
-
+data class PathDataClass(
+    var path: String
+)
 

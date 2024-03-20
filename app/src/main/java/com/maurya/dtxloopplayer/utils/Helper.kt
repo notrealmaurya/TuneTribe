@@ -7,6 +7,7 @@ import android.content.res.ColorStateList
 import android.database.Cursor
 import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.provider.MediaStore
 import android.provider.MediaStore.Audio.Media.*
 import android.util.Log
 import android.widget.TextView
@@ -21,6 +22,7 @@ import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.FolderDataClass
 import com.maurya.dtxloopplayer.database.MusicDataClass
+import com.maurya.dtxloopplayer.database.PathDataClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -58,16 +60,6 @@ suspend fun getAllSongs(
 
         val selection: String?
         val selectionArgs: Array<String>?
-
-//        if (isFolder) {
-//            selection =
-//                "$DATA LIKE ? AND $DURATION >= ? AND $IS_MUSIC != 0 AND ($MIME_TYPE != ? AND $MIME_TYPE != ? AND $MIME_TYPE != ?)"
-//            selectionArgs = arrayOf("$folderId%", "30000", "audio/mp3", "audio/mp4", "audio/x-m4a")
-//        } else {
-//            selection =
-//                "$DURATION >= ? AND ($MIME_TYPE != ? AND $MIME_TYPE != ? AND $MIME_TYPE != ?)"
-//            selectionArgs = arrayOf("30000", "audio/mp3", "audio/mp4", "audio/x-m4a")
-//        }
 
         if (isFolder) {
             selection =
@@ -190,6 +182,51 @@ fun sortMusicList(
     }
     adapterMusic.notifyDataSetChanged()
 }
+
+
+//get path
+
+suspend fun getAllPath(
+    context: Context
+): ArrayList<PathDataClass> =
+    withContext(Dispatchers.IO) {
+        val tempList = ArrayList<PathDataClass>()
+
+        val projection = arrayOf(
+            DATA
+        )
+
+        val selection: String?
+        val selectionArgs: Array<String>?
+
+        selection =
+            "$DURATION >= ? AND $IS_MUSIC != 0"
+        selectionArgs = arrayOf("30000")
+
+        val cursor = context.contentResolver.query(
+            EXTERNAL_CONTENT_URI, projection, selection, selectionArgs,
+            "DATE_ADDED DESC"
+        )
+
+        cursor?.use {
+            while (it.moveToNext()) {
+                val data = it.getString(it.getColumnIndexOrThrow(DATA))
+
+                val fileCursor = File(data)
+
+                if (fileCursor.exists()) {
+                    val musicData = PathDataClass(
+                        data
+                    )
+                    tempList.add(musicData)
+                }
+
+            }
+
+        }
+
+        return@withContext tempList
+    }
 
 
 //counting files in folder
