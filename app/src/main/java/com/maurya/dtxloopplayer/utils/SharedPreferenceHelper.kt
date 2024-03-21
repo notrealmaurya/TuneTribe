@@ -3,6 +3,9 @@ package com.maurya.dtxloopplayer.utils
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.maurya.dtxloopplayer.database.PlayListDataClass
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,7 +37,7 @@ class SharedPreferenceHelper @Inject constructor(@ApplicationContext context: Co
     }
 
     fun getSortingOrder(): String? {
-        return sharedPreferences.getString("sorting_order",null)
+        return sharedPreferences.getString("sorting_order", null)
     }
 
     fun getPlayerActivityTheme(): String? {
@@ -46,6 +49,23 @@ class SharedPreferenceHelper @Inject constructor(@ApplicationContext context: Co
     }
 
 
+    fun savePlayList(playlist: ArrayList<PlayListDataClass>) {
+        val gson = Gson()
+        val newPlaylistJson = gson.toJson(playlist)
+
+        sharedPreferences.edit().putString("playListData", newPlaylistJson).apply()
+    }
+
+    fun getPlayList(): ArrayList<PlayListDataClass> {
+        val gson = Gson()
+        val playlistsJson = sharedPreferences.getString("playListData", null)
+        return if (playlistsJson != null) {
+            val playlistType = object : TypeToken<ArrayList<PlayListDataClass>>() {}.type
+            gson.fromJson(playlistsJson, playlistType)
+        } else {
+            arrayListOf()
+        }
+    }
 
 
 }

@@ -29,7 +29,7 @@
 
 
         <LinearLayout
-            android:id="@+id/PlayListListFragmentPopUpDelete"
+            android:id="@+id/popUpDelete"
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:clickable="true"
@@ -58,7 +58,7 @@
 
 
         <LinearLayout
-            android:id="@+id/PlayListListFragmentPopUpRename"
+            android:id="@+id/popUpRename"
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:clickable="true"

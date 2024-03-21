@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -14,15 +15,24 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.maurya.dtxloopplayer.activities.PlayListActivity
 import com.maurya.dtxloopplayer.R
+import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.database.PlayListDataClass
 import com.maurya.dtxloopplayer.databinding.ItemPlaylistBinding
+import com.maurya.dtxloopplayer.databinding.PopupDialogPlayeractivityMenuBinding
+import com.maurya.dtxloopplayer.databinding.PopupDialogPlaylistEditBinding
+import com.maurya.dtxloopplayer.databinding.PopupDialogRenameBinding
+import com.maurya.dtxloopplayer.fragments.ListsFragment
+import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
+import com.maurya.dtxloopplayer.utils.sendIntent
+import com.maurya.dtxloopplayer.utils.showToast
+import java.util.UUID
 
 class AdapterPlayList(
     private val context: Context,
     private var playListList: ArrayList<PlayListDataClass>,
+    private var sharedPreferenceHelper: SharedPreferenceHelper
 ) :
     RecyclerView.Adapter<AdapterPlayList.PlayListHolder>() {
-
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayListHolder {
@@ -37,29 +47,26 @@ class AdapterPlayList(
 
     override fun onBindViewHolder(holder: PlayListHolder, position: Int) {
 
-        holder.PlayListSize.isSelected = true
-        holder.PlayListName.isSelected = true
+        val currentItem = playListList[position]
 
-        holder.PlayListName.text = playListList[position].playListName
-       // holder.PlayListSize.text = "${adapter.itemCount} songs"
+        with(holder) {
+            playListSize.isSelected = true
+            playListName.isSelected = true
+            playListName.text = currentItem.playListName
+            // playListSize.text = "${adapter.itemCount} songs"
 
 
+            root.setOnClickListener {
+                sendIntent(context, position, "adapterPlayList")
+            }
 
-
-        holder.root.setOnClickListener {
-            val intent = Intent(context, PlayListActivity::class.java)
-            intent.putExtra("index", position)
-            ContextCompat.startActivity(context, intent, null)
-        }
-
-        holder.root.setOnLongClickListener {
-            showBottomSheetDialog(position)
-            true
+            root.setOnLongClickListener {
+                showBottomSheetDialog(position)
+                true
+            }
         }
 
     }
-
-
 
 
     override fun getItemCount(): Int {
@@ -69,67 +76,67 @@ class AdapterPlayList(
 
     private fun showBottomSheetDialog(position: Int) {
         val bottomSheetDialog = BottomSheetDialog(context)
-        val sheetView = LayoutInflater.from(context)
-            .inflate(R.layout.popup_dialog_playlist_edit, null)
-
-        val renameOption =
-            sheetView.findViewById<LinearLayout>(R.id.PlayListListFragmentPopUpRename)
-        val deleteOption =
-            sheetView.findViewById<LinearLayout>(R.id.PlayListListFragmentPopUpDelete)
+        val bottomSheetView =
+            LayoutInflater.from(context)
+                .inflate(R.layout.popup_dialog_playlist_edit, null)
+        val bindingPopUp = PopupDialogPlaylistEditBinding.bind(bottomSheetView)
+        bottomSheetDialog.setContentView(bottomSheetView)
+        bottomSheetDialog.setCanceledOnTouchOutside(true)
 
         //rename option
-        renameOption.setOnClickListener {
+        bindingPopUp.popUpRename.setOnClickListener {
+            bottomSheetDialog.dismiss()
             val renameSheetDialog =
-                BottomSheetDialog(context, R.style.ThemeOverlay_App_BottomSheetDialog)
+                BottomSheetDialog(context)
             val renameSheetView =
                 LayoutInflater.from(context).inflate(R.layout.popup_dialog_rename, null)
-
+            val bindingRenamePopUp = PopupDialogRenameBinding.bind(renameSheetView)
             renameSheetDialog.setContentView(renameSheetView)
             renameSheetDialog.setCanceledOnTouchOutside(true)
+            renameSheetDialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
-            val renameEditText = renameSheetView.findViewById<EditText>(R.id.rename_EditText)
-            val rename_CancelText = renameSheetView.findViewById<TextView>(R.id.rename_CancelText)
-            val rename_OKText = renameSheetView.findViewById<TextView>(R.id.rename_OKText)
+            bindingRenamePopUp.renameEditText.requestFocus()
+            bindingRenamePopUp.renameEditText.setText(playListList[position].playListName)
+            bindingRenamePopUp.renameEditText.selectAll()
 
-            if (renameEditText != null) {
-                renameEditText.requestFocus() // Set focus on the EditText
-//                renameEditText.setText(ListsFragment.musicPlayList.ref.get(position).name)
-//                renameEditText.setSelection(
-//                    0,
-//                    ListsFragment.musicPlayList.ref.get(position).name.length
-//                )
-//                renameSheetDialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-            }
-
-            rename_OKText.setOnClickListener {
-                val newName = renameEditText.text.toString().trim()
-                if (newName.isNotEmpty()) {
-//                    ListsFragment.musicPlayList.ref.get(position).name = newName
-                    refreshPlayList()
-                    renameSheetDialog.dismiss()
-                } else {
-                    Toast.makeText(context, "Please enter a valid name", Toast.LENGTH_SHORT).show()
+            bindingRenamePopUp.renameOKText.setOnClickListener {
+                val newName = bindingRenamePopUp.renameEditText.text.toString().trim()
+                var playListExist = false
+                for (i in playListList) {
+                    if (newName.equals(i.playListName, ignoreCase = true)) {
+                        playListExist = true
+                        break
+                    }
                 }
+                if (playListExist && newName.isNotEmpty()) {
+                    showToast(context, "PlayList Exist!!")
+                } else {
+                    playListList[position].playListName = newName
+                    playListList[position].dateModified = System.currentTimeMillis()
+                    sharedPreferenceHelper.savePlayList(playListList)
+                    notifyDataSetChanged()
+                    renameSheetDialog.dismiss()
+                }
+
+            }
+            bindingRenamePopUp.renameCancelText.setOnClickListener {
+                renameSheetDialog.dismiss()
             }
 
-            rename_CancelText.setOnClickListener {
-                renameSheetDialog.dismiss() // Dismiss the renaming dialog
-            }
             renameSheetDialog.show()
-
-            bottomSheetDialog.dismiss()
         }
 
         //delete option
-        deleteOption.setOnClickListener {
+        bindingPopUp.popUpDelete.setOnClickListener {
             bottomSheetDialog.dismiss()
 
             val alertDialog = MaterialAlertDialogBuilder(context)
             alertDialog.setTitle(playListList[position].playListName)
                 .setMessage("Are you sure you want to delete this playlist?")
                 .setPositiveButton("Delete") { dialog, _ ->
-//                    ListsFragment.musicPlayList.ref.removeAt(position)
-                    refreshPlayList()
+                    playListList.removeAt(position)
+                    sharedPreferenceHelper.savePlayList(playListList)
+                    notifyDataSetChanged()
                     dialog.dismiss()
                 }
                 .setNegativeButton("Cancel") { dialog, _ ->
@@ -140,21 +147,13 @@ class AdapterPlayList(
 
         }
 
-        bottomSheetDialog.setContentView(sheetView)
         bottomSheetDialog.show()
     }
 
 
-    fun refreshPlayList() {
-        playListList = ArrayList()
-//        playListList.addAll(ListsFragment.musicPlayList.ref)
-        notifyDataSetChanged()
-    }
-
-
     class PlayListHolder(binding: ItemPlaylistBinding) : RecyclerView.ViewHolder(binding.root) {
-        val PlayListName = binding.ListsMyPlayListsName
-        val PlayListSize = binding.ListsMyPlayListsSize
+        val playListName = binding.ListsMyPlayListsName
+        val playListSize = binding.ListsMyPlayListsSize
         val root = binding.root
 
     }

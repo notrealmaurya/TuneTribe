@@ -51,6 +51,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="5dp"
+                android:background="@drawable/bg_edittext"
+                android:paddingHorizontal="15dp"
                 android:text="My PlayList 1"
                 android:textColor="@color/ImageViewAndTextViewColour"
                 android:textSize="14sp" />
@@ -69,7 +71,6 @@
 
             <TextView
                 android:id="@+id/newPlayListCancelTextDialog"
-                android:textColor="@color/ImageViewAndTextViewColour"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -77,6 +78,7 @@
                 android:background="@drawable/bg_about_ripple"
                 android:gravity="center"
                 android:text="Cancel"
+                android:textColor="@color/ImageViewAndTextViewColour"
                 android:textSize="16sp" />
 
             <LinearLayout
@@ -85,15 +87,14 @@
                 android:orientation="vertical">
 
                 <View
-                    android:background="@color/ViewColor"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:background="@color/ViewColor" />
 
             </LinearLayout>
 
             <TextView
                 android:id="@+id/newPlayListOKTextDialog"
-                android:textColor="@color/ImageViewAndTextViewColour"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -103,6 +104,7 @@
                 android:gravity="center"
                 android:padding="15dp"
                 android:text="OK"
+                android:textColor="@color/ImageViewAndTextViewColour"
                 android:textSize="16sp" />
 
         </LinearLayout>

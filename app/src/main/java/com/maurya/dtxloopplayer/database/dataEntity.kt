@@ -39,9 +39,9 @@ data class FolderDataClass(
 @Entity(tableName = "playListRecords")
 data class PlayListDataClass(
     @PrimaryKey val id: String,
-    val playListName: String,
-    val dateModified: Long,
-    val itemCount: Int,
+    var playListName: String,
+    var dateModified: Long,
+    var itemCount: Int,
     var isChecked: Boolean = false
 )
 
