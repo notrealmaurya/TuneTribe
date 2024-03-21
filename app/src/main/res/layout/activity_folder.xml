@@ -9,12 +9,6 @@
     tools:context=".activities.FolderActivity">
 
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_centerInParent="true" />
-
 
     <LinearLayout
         android:id="@+id/layout_topBTN"

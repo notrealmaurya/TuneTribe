@@ -11,6 +11,10 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.TextView
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.GsonBuilder
@@ -21,11 +25,16 @@ import com.maurya.dtxloopplayer.adapter.AdapterFolder
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.adapter.AdapterPlayList
 import com.maurya.dtxloopplayer.R
+import com.maurya.dtxloopplayer.database.FolderDataClass
 import com.maurya.dtxloopplayer.database.MusicDataClass
+import com.maurya.dtxloopplayer.database.PlayListDataClass
 import com.maurya.dtxloopplayer.databinding.FragmentListsBinding
 import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
+import com.maurya.dtxloopplayer.viewModelsObserver.ModelResult
+import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -33,17 +42,16 @@ class ListsFragment : Fragment() {
 
     private lateinit var folderAdapter: AdapterFolder
 
+
+    private val viewModel: ViewModelObserver by viewModels()
+
+    private lateinit var fragmentListsBinding: FragmentListsBinding
+
+    private lateinit var adapterPlayList: AdapterPlayList
+
     companion object {
-//        var musicPlayList: MusicPlayList = MusicPlayList()
-
-        @SuppressLint("StaticFieldLeak")
-        lateinit var fragmentListsBinding: FragmentListsBinding
-
-        @SuppressLint("StaticFieldLeak")
-        lateinit var playListAdapter: AdapterPlayList
-
-        @SuppressLint("StaticFieldLeak")
-        lateinit var musicAdapter: AdapterMusic
+        var playList: ArrayList<PlayListDataClass> = arrayListOf()
+        var folderList: ArrayList<FolderDataClass> = arrayListOf()
     }
 
     override fun onCreateView(
@@ -54,85 +62,68 @@ class ListsFragment : Fragment() {
         val view = fragmentListsBinding.root
 
 
-        fragmentListsBinding.recyclerViewListFragmentForMyPlayList.setHasFixedSize(true)
-        fragmentListsBinding.recyclerViewListFragmentForMyPlayList.setItemViewCacheSize(13)
-        fragmentListsBinding.recyclerViewListFragmentForMyPlayList.layoutManager =
-            LinearLayoutManager(context)
-        playListAdapter = AdapterPlayList(requireContext(), arrayListOf())
-        fragmentListsBinding.recyclerViewListFragmentForMyPlayList.adapter = playListAdapter
+        lifecycle.addObserver(viewModel)
 
-
-        sharedPreferenceRetrievingData()
-        updateText()
+        fetchFolderUsingViewModel()
+        fetchPlayListUsingViewModel()
 
         listeners()
+
+
 
         return view
     }
 
+    private fun fetchPlayListUsingViewModel() {
 
-    private fun sharedPreferenceRetrievingData() {
-
-        //for retrieving favourites data using shared preferences
-        FavouriteActivity.favouriteSongs = ArrayList()
-        val typeToken = object : TypeToken<ArrayList<MusicDataClass>>() {}.type
-        val jsonString = requireActivity().getSharedPreferences("FAVOURITES", MODE_PRIVATE)
-            .getString("FavouriteSongs", null)
-        if (jsonString != null) {
-            val data: ArrayList<MusicDataClass> =
-                GsonBuilder().create().fromJson(jsonString, typeToken)
-            FavouriteActivity.favouriteSongs.addAll(data)
+        fragmentListsBinding.recyclerViewListFragmentForMyPlayList.apply {
+            setHasFixedSize(true)
+            setItemViewCacheSize(13)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            adapterPlayList = AdapterPlayList(
+                requireContext(),
+                playList
+            )
+            adapter = adapterPlayList
         }
 
-        //for retrieving PlayList data using shared preferences
-//        musicPlayList = MusicPlayList()
-//        val jsonStringPlaylist = requireActivity().getSharedPreferences("FAVOURITES", MODE_PRIVATE)
-//            .getString("MusicPlaylist", null)
-//        if (jsonStringPlaylist != null) {
-//            val dataPlaylist: MusicPlayList =
-//                GsonBuilder().create().fromJson(jsonStringPlaylist, MusicPlayList::class.java)
-//            musicPlayList = dataPlaylist
-//        }
 
     }
 
-    private fun sharedPreferenceStoringData() {
-        // For storing favorite songs data using shared preferences
-        val editorFav = requireActivity().getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
-        val jsonStringFav = GsonBuilder().create().toJson(FavouriteActivity.favouriteSongs)
-        editorFav.putString("FavouriteSongs", jsonStringFav)
-        //for playlist
-//        val jsonStringPlaylist = GsonBuilder().create().toJson(musicPlayList)
-//        editorFav.putString("MusicPlaylist", jsonStringPlaylist)
-        playListAdapter.notifyDataSetChanged()
+    private fun fetchFolderUsingViewModel() {
 
-    }
+        viewModel.fetchFolders(requireContext())
 
-    private fun updateText() {
-        musicAdapter = AdapterMusic(
-            requireContext(),
-            FavouriteActivity.favouriteSongs,
-            favouriteActivity = true
-        )
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.foldersStateFLow.collect {
+                    when (it) {
+                        is ModelResult.Success -> {
+                            fragmentListsBinding.progressBar.visibility = View.GONE
+                            folderList.clear()
+                            folderList.addAll(it.data!!)
+                            val size = folderList.size
+                            fragmentListsBinding.ListsFolderListSize.text =
+                                if (size <= 1) "${size} folder " else "${size} folders "
+                        }
 
-//
-//        val musicFolderScanner = MusicFolderScanner(requireActivity().contentResolver)
-//        val musicFolders = musicFolderScanner.getAllMusicFolders()
-//        folderAdapter = FolderAdapter(requireContext(), musicFolders)
-//        updateTextViewWithFolderCount(folderAdapter, fragmentListsBinding.ListsFolderListSize)
+                        is ModelResult.Error -> {
+                            showToast(
+                                requireContext(),
+                                it.message.toString()
+                            )
+                        }
 
-    }
+                        is ModelResult.Loading -> {
+                        }
 
-    override fun onResume() {
-        super.onResume()
-        updateText()
-    }
+                        else -> {}
+                    }
+                }
+            }
+        }
 
-
-    override fun onPause() {
-        super.onPause()
-        sharedPreferenceStoringData()
-        updateText()
     }
 
 

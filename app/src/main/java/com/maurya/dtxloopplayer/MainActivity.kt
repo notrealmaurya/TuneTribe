@@ -50,6 +50,7 @@ import kotlin.collections.filter
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+
     private val themeList = arrayOf("Light Mode", "Night Mode", "Auto (System Defaults)")
 
     @Inject
@@ -67,14 +68,27 @@ class MainActivity : AppCompatActivity() {
 
         sharedPreferencesHelper = SharedPreferenceHelper(this)
 
-        db = Room.databaseBuilder(
-            this, tuneTribeDatabase::class.java, "musicRecords"
-        ).build()
+
+//        fetchFileUsingRoomDatabase()
+
+        permission()
+        initViewPager()
+        listeners()
+
+
+    }
+
+    private fun fetchFileUsingRoomDatabase() {
+
+//        db = Room.databaseBuilder(
+//            this, tuneTribeDatabase::class.java, "musicRecords"
+//        ).build()
 
 
 //        lifecycleScope.launch {
 //            db.tuneTribeDao().insertMusicData(getAllSongs(this@MainActivity))
 //        }
+
 
         contentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
             override fun onChange(selfChange: Boolean, uri: Uri?) {
@@ -91,12 +105,6 @@ class MainActivity : AppCompatActivity() {
             true,
             contentObserver
         )
-
-        permission()
-        initViewPager()
-        listeners()
-
-
     }
 
 
@@ -236,15 +244,7 @@ class MainActivity : AppCompatActivity() {
             if (!allPermissionsGranted) {
                 showPermissionRequiredDialog()
             } else {
-                val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-                val songsFetched = sharedPreferences.getBoolean("songsFetched", false)
 
-                if (!songsFetched) {
-                    lifecycleScope.launch {
-                        db.tuneTribeDao().insertMusicData(getAllSongs(this@MainActivity))
-                    }
-                    sharedPreferences.edit().putBoolean("songsFetched", true).apply()
-                }
             }
         }
     }
@@ -278,9 +278,8 @@ class MainActivity : AppCompatActivity() {
             exitProcess(1)
         }
 
-        contentResolver.unregisterContentObserver(contentObserver)
+//        contentResolver.unregisterContentObserver(contentObserver)
 
-        ListsFragment.playListAdapter.notifyDataSetChanged()
     }
 
 
