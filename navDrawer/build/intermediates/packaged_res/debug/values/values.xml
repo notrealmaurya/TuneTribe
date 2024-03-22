@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="Black">#000000</color>
+    <color name="White">#FFFFFF</color>
+    <color name="light_grey">#E0E3E3</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="transparent_White">#63FFFFFF</color>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="path_arrow">M 12, 4 L 10.59,5.41 L 16.17,11 L 18.99,11 L 12,4 z M 4, 11 L 4, 13 L 18.99, 13 L 20, 12 L 18.99, 11 L 4, 11 z M 12,20 L 10.59, 18.59 L 16.17, 13 L 18.99, 13 L 12, 20z</string>
+    <string name="path_drawer">M 3,6 L 3,8 L 21,8 L 21,6 L 3,6 z M 3,11 L 3,13 L 21,13 L 21, 12 L 21,11 L 3,11 z M 3,18 L 3,16 L 21,16 L 21,18 L 3,18 z</string>
+    <declare-styleable name="InnerDrawer">
+        <attr format="color" name="appbarColor"/>
+        <attr format="color" name="appbarTitleTextColor"/>
+        <attr format="dimension" name="appbarTitleTextSize"/>
+        <attr format="color" name="HamMenuIconTintColor"/>
+        <attr format="dimension" name="HamMenuIconSize"/>
+        <attr format="color" name="navigationDrawerBackgroundColor"/>
+        <attr format="color" name="menuItemTextColor"/>
+        <attr format="dimension" name="menuItemTextSize"/>
+        <attr format="color" name="menuItemIconColor"/>
+        
+        <attr format="float" name="shrinkValue"/>
+        <attr format="boolean" name="statusBarDark"/>
+        <attr format="reference" name="headerLayout"/>
+        <attr format="reference" name="footerlayout"/>
+        <attr format="boolean" name="footerInsideMenuList"/>
+        <attr format="boolean" name="headerInsideMenuList"/>
+        <attr format="boolean" name="appBarEnabled"/>
+        <attr format="boolean" name="closeDrawerOnMenuClick"/>
+        <attr format="boolean" name="blurContent"/>
+
+        <attr name="menuItemGravity">
+            <flag name="bottom" value="80"/>
+            <flag name="center" value="17"/>
+            <flag name="center_horizontal" value="1"/>
+            <flag name="center_vertical" value="16"/>
+            <flag name="clip_horizontal" value="8"/>
+            <flag name="clip_vertical" value="128"/>
+            <flag name="end" value="8388613"/>
+            <flag name="fill" value="119"/>
+            <flag name="fill_horizontal" value="7"/>
+            <flag name="fill_vertical" value="112"/>
+            <flag name="left" value="3"/>
+            <flag name="right" value="5"/>
+            <flag name="start" value="8388611"/>
+            <flag name="top" value="48"/>
+        </attr>
+    </declare-styleable>
+</resources>
