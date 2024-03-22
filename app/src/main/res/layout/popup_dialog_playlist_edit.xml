@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     app:cardCornerRadius="20dp"
+    android:background="@android:color/transparent"
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true">
 

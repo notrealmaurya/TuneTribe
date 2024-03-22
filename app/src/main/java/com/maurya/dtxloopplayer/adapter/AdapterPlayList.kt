@@ -53,7 +53,7 @@ class AdapterPlayList(
 
 
         val playListSongPreference =
-            sharedPreferenceHelper.getPlayListSongCount(playListList[position].id)
+            sharedPreferenceHelper.getPlayListSongCount(playListList[position].playListName)
 
 
         with(holder) {
@@ -65,8 +65,7 @@ class AdapterPlayList(
 
             root.setOnClickListener {
                 val intent = Intent(context, PlayListActivity::class.java)
-                intent.putExtra("index", position)
-                intent.putExtra("uuid", playListList[position].id)
+                intent.putExtra("playListName", playListList[position].playListName)
                 ContextCompat.startActivity(context, intent, null)
             }
 
@@ -162,8 +161,8 @@ class AdapterPlayList(
 
 
     class PlayListHolder(binding: ItemPlaylistBinding) : RecyclerView.ViewHolder(binding.root) {
-        val playListName = binding.ListsMyPlayListsName
-        val playListSize = binding.ListsMyPlayListsSize
+        val playListName = binding.namePlayListItem
+        val playListSize = binding.countPlayListItem
         val root = binding.root
 
     }

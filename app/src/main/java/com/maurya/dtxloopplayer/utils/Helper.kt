@@ -25,6 +25,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.Random
 import java.util.concurrent.TimeUnit
 import kotlin.math.ln
 import kotlin.math.pow
@@ -380,6 +381,10 @@ fun notifyAdapterSongTextPosition() {
 
 }
 
+fun generateUUID(): Int {
+    // Generate a random integer within a specified range
+    return Random().nextInt(1000000000)
+}
 
 fun showToast(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()

@@ -174,7 +174,6 @@ class AdapterMusic(
     }
 
 
-
     fun updateFavourites(newList: ArrayList<MusicDataClass>) {
         musicList = ArrayList()
         musicList.addAll(newList)

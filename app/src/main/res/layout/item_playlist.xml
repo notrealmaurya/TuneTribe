@@ -1,67 +1,70 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/LayoutMyPlayList"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="?attr/actionBarSize"
-    app:contentInsetStart="0dp">
+    android:background="@drawable/bg_ripplefactor_without_corner"
+    android:orientation="horizontal"
+    android:padding="10dp">
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp">
+    <androidx.cardview.widget.CardView
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="10dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img"
-            android:layout_width="28dp"
-            android:layout_height="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="23dp"
             android:src="@drawable/icon_myplaylist" />
 
+    </androidx.cardview.widget.CardView>
 
-        <LinearLayout
-            android:id="@+id/LayoutHPlayList"
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="10dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/namePlayListItem"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginStart="20dp"
-            android:layout_toEndOf="@id/img"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:fontFamily="@font/font_title"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="Hip Hinge"
+            android:textAllCaps="false"
+            android:textColor="@color/ImageViewAndTextViewColour"
+            android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/ListsMyPlayListsName"
-                android:textColor="@color/ImageViewAndTextViewColour"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="My playlists"
-                android:textAlignment="gravity"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/ListsMyPlayListsSize"
-                android:textColor="@color/ImageViewAndTextViewColour"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text=""
-                android:textAlignment="gravity"
-                android:textSize="13sp" />
+        <TextView
+            android:id="@+id/countPlayListItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/font_date"
+            android:singleLine="true"
+            android:text="Downloads"
+            android:textAllCaps="false"
+            android:textColor="#737A91"
+            android:textSize="15sp" />
 
 
-        </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
-</androidx.appcompat.widget.Toolbar>
+
+</LinearLayout>
 
 
 

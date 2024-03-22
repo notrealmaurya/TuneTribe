@@ -35,7 +35,7 @@ class SelectionActivity : AppCompatActivity() {
         sharedPreferenceHelper = SharedPreferenceHelper(this)
 
 
-        val currentPlayListUUID = intent.getStringExtra("uuid")
+        val currentPlayListUUID = intent.getStringExtra("playListName")
 
         binding.recyclerViewSelectionActivity.apply {
             setHasFixedSize(true)

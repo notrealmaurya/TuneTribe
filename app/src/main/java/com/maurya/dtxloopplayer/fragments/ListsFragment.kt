@@ -30,6 +30,7 @@ import com.maurya.dtxloopplayer.databinding.FragmentListsBinding
 import com.maurya.dtxloopplayer.databinding.PopupDialogNewplaylistBinding
 import com.maurya.dtxloopplayer.databinding.PopupDialogPlayeractivityMenuBinding
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
+import com.maurya.dtxloopplayer.utils.generateUUID
 import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.viewModelsObserver.ModelResult
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
@@ -201,7 +202,7 @@ class ListsFragment : Fragment() {
         if (playListExist) {
             showToast(requireContext(), "PlayList Exist!!")
         } else {
-            val playlistId = UUID.randomUUID().toString()
+            val playlistId = System.currentTimeMillis().toString()
             val savePlayList = PlayListDataClass(playlistId, name, System.currentTimeMillis(), 0)
             playList.add(savePlayList)
             sharedPreferenceHelper.savePlayList(playList)

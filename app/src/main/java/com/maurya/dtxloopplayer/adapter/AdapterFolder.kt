@@ -57,8 +57,8 @@ class AdapterFolder(
 
 
     class FolderHolder(binding: ItemPlaylistBinding) : RecyclerView.ViewHolder(binding.root) {
-        val folderName = binding.ListsMyPlayListsName
-        val folderPath = binding.ListsMyPlayListsSize
+        val folderName = binding.namePlayListItem
+        val folderPath = binding.countPlayListItem
         val folderImage = binding.img
         val root = binding.root
     }

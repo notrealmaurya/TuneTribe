@@ -13,6 +13,8 @@ import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.databinding.ActivityPlaylistBinding
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
+import com.maurya.dtxloopplayer.utils.generateUUID
+import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.reflect.Type
@@ -39,23 +41,25 @@ class PlayListActivity : AppCompatActivity() {
 
         sharedPreferenceHelper = SharedPreferenceHelper(this)
 
-        val currentPlayListPosition = intent.getIntExtra("index", -1)
-        val currentPlayListUUID = intent.getStringExtra("uuid")
+        fetchSongsFromPlayList()
+
+        val currentPlayListUUID = intent.getStringExtra("playListName")
 
         val playListSongPreference =
             sharedPreferenceHelper.getPlayListSong(currentPlayListUUID.toString())
 
-        if (playListSongPreference.isNotEmpty()){
+
+
+        if (playListSongPreference.isNotEmpty()) {
             currentPlayListMusicList.clear()
             currentPlayListMusicList.addAll(playListSongPreference)
+            adapterMusic.notifyDataSetChanged()
+        } else {
+            showToast(this, "Empty Playlist")
         }
 
-        Log.d("playItemClass", currentPlayListMusicList.toString())
 
-
-        fetchSongsFromPlayList()
-
-        listeners(currentPlayListPosition, currentPlayListUUID.toString())
+        listeners(currentPlayListUUID.toString())
 
     }
 
@@ -75,18 +79,17 @@ class PlayListActivity : AppCompatActivity() {
         }
     }
 
-    private fun listeners(currentPlayListPosition: Int, currentPlayListUUID: String) {
+    private fun listeners(currentPlayListUUID: String) {
 
         changeItemCount()
 
-        binding.playlistNamePlayListActivity.text =
-            ListsFragment.playList[currentPlayListPosition].playListName
+        binding.playlistNamePlayListActivity.text = currentPlayListUUID
 
         binding.PlayListBackBtn.setOnClickListener { finish() }
 
         binding.addBtnPlayListActivity.setOnClickListener {
             val intent = Intent(this, SelectionActivity::class.java)
-            intent.putExtra("uuid", currentPlayListUUID)
+            intent.putExtra("playListName", currentPlayListUUID)
             startActivity(intent)
         }
 
@@ -108,10 +111,10 @@ class PlayListActivity : AppCompatActivity() {
                         currentPlayListMusicList,
                         currentPlayListUUID
                     )
-//                    sharedPreferenceHelper.savePlayListSongCount(
-//                        currentPlayListMusicList.size,
-//                        currentPlayListUUID
-//                    )
+                    sharedPreferenceHelper.savePlayListSongCount(
+                        currentPlayListMusicList.size,
+                        currentPlayListUUID
+                    )
                     adapterMusic.notifyDataSetChanged()
                     changeItemCount()
                     dialog.dismiss()
@@ -136,6 +139,12 @@ class PlayListActivity : AppCompatActivity() {
         super.onResume()
         adapterMusic.notifyDataSetChanged()
         changeItemCount()
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        currentPlayListMusicList.clear()
     }
 
 
