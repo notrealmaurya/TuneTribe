@@ -143,6 +143,7 @@
         android:id="@+id/LayoutFolderList"
         android:layout_width="match_parent"
         android:layout_height="65dp"
+        android:background="@drawable/bg_ripplefactor_without_corner"
         android:clickable="true"
         android:gravity="center"
         android:minHeight="?attr/actionBarSize"
@@ -206,23 +207,24 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/LayoutFolderList"
-        android:layout_marginTop="15dp"
         android:background="@color/ViewColor" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/midView"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/AddNewPlayListListFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
+            android:background="@drawable/bg_ripplefactor_without_corner"
             android:fontFamily="@font/font_title"
             android:gravity="center_vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="5dp"
             android:text="New PlayList"
             android:textColor="@color/ImageViewAndTextViewColour"
             android:textSize="15sp"
@@ -232,17 +234,19 @@
         <LinearLayout
             android:id="@+id/LayoutMyFavourites"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
+            android:layout_height="60dp"
+            android:background="@drawable/bg_ripplefactor_without_corner"
             android:clickable="true"
             android:gravity="center"
             android:minHeight="?attr/actionBarSize"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp">
 
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginStart="20dp"
+                android:padding="3dp"
                 android:src="@drawable/icon_favourite" />
 
 
