@@ -1,10 +1,12 @@
 package com.maurya.dtxloopplayer.utils
 
 import android.content.Context
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.database.PlayListDataClass
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -48,25 +50,49 @@ class SharedPreferenceHelper @Inject constructor(@ApplicationContext context: Co
         sharedPreferences.edit().putString("playerActivity_theme", theme).apply()
     }
 
-
-    fun savePlayList(playlist: ArrayList<PlayListDataClass>) {
-        val gson = Gson()
-        val newPlaylistJson = gson.toJson(playlist)
-
+    fun savePlayList(playList: List<PlayListDataClass>) {
+        val newPlaylistJson = Gson().toJson(playList)
         sharedPreferences.edit().putString("playListData", newPlaylistJson).apply()
     }
 
-    fun getPlayList(): ArrayList<PlayListDataClass> {
-        val gson = Gson()
+    fun getPlayList(): List<PlayListDataClass> {
         val playlistsJson = sharedPreferences.getString("playListData", null)
-        return if (playlistsJson != null) {
-            val playlistType = object : TypeToken<ArrayList<PlayListDataClass>>() {}.type
-            gson.fromJson(playlistsJson, playlistType)
-        } else {
-            arrayListOf()
+        return try {
+            Gson().fromJson(playlistsJson, object : TypeToken<List<PlayListDataClass>>() {}.type)
+                ?: listOf()
+        } catch (e: Exception) {
+            emptyList()
         }
     }
 
+    fun savePlayListSong(playlistSong:List<MusicDataClass>, playListId: String) {
+        val newPlaylistJson = Gson().toJson(playlistSong)
+        sharedPreferences.edit().putString(playListId, newPlaylistJson).apply()
+    }
+
+    fun getPlayListSong(playListId: String): List<MusicDataClass> {
+        Log.d("ShareItemClass", "Fetching playlist song for playlist ID: $playListId")
+        val playlistSongJson = sharedPreferences.getString(playListId, null)
+        Log.d("ShareItemClass", "Playlist song JSON: $playlistSongJson")
+        return try {
+            val gson = Gson()
+            gson.fromJson(playlistSongJson, object : TypeToken<List<MusicDataClass>>() {}.type)
+                ?: listOf<MusicDataClass>().also {
+                    Log.d("ShareItemClass", "Playlist song JSON deserialization successful, but returned null list.")
+                }
+        } catch (e: Exception) {
+            Log.e("ShareItemClass", "Error while deserializing playlist song JSON: ${e.message}", e)
+            listOf()
+        }
+    }
+
+
+    fun savePlayListSongCount(count: Int, playListId: String) {
+        sharedPreferences.edit().putInt(playListId, count).apply()
+    }
+    fun getPlayListSongCount(playListId: String): Int {
+        return sharedPreferences.getInt(playListId,0)
+    }
 
 }
 

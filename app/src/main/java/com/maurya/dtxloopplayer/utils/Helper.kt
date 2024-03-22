@@ -7,22 +7,18 @@ import android.content.res.ColorStateList
 import android.database.Cursor
 import android.media.MediaMetadataRetriever
 import android.net.Uri
-import android.provider.MediaStore
 import android.provider.MediaStore.Audio.Media.*
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 import com.maurya.dtxloopplayer.activities.FavouriteActivity
-import com.maurya.dtxloopplayer.activities.FolderTracksActivity
-import com.maurya.dtxloopplayer.activities.PlayListActivity
 import com.maurya.dtxloopplayer.activities.PlayerActivity
-import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.FolderDataClass
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.database.PathDataClass
+import com.maurya.dtxloopplayer.database.PlayListDataClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -70,7 +66,6 @@ suspend fun getAllSongs(
                 "$DURATION >= ? AND $IS_MUSIC != 0"
             selectionArgs = arrayOf("30000")
         }
-
 
 
         val cursor = context.contentResolver.query(
@@ -140,7 +135,7 @@ suspend fun getAllFolders(
         val selectionArgs = arrayOf("30000")
 
         val projection = arrayOf(
-           BUCKET_DISPLAY_NAME, BUCKET_ID,DATA
+            BUCKET_DISPLAY_NAME, BUCKET_ID, DATA
         )
         val cursor = context.contentResolver.query(
             EXTERNAL_CONTENT_URI, projection, selection, selectionArgs,
@@ -361,19 +356,8 @@ fun favouriteChecker(id: String): Int {
 }
 
 
-fun checkPlayListData(playList: ArrayList<MusicDataClass>): ArrayList<MusicDataClass> {
-    playList.forEachIndexed { index, musicData ->
-        val file = File(musicData.path)
-        if (!file.exists()) {
-            playList.removeAt(index)
-        }
-    }
-    return playList
-}
-
-
 //song or songs count
-fun updateTextViewWithItemCount(itemCount:Int): String {
+fun updateTextViewWithItemCount(itemCount: Int): String {
     val itemCountText = if (itemCount == 1 || itemCount == 0) {
         "$itemCount song"
     } else {
@@ -393,9 +377,6 @@ fun sendIntent(context: Context, position: Int, reference: String) {
 
 fun notifyAdapterSongTextPosition() {
 
-    if (PlayListActivity.isInitialized) {
-        PlayListActivity.musicAdapter.notifyDataSetChanged()
-    }
 
 }
 

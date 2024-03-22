@@ -1,6 +1,5 @@
 package com.maurya.dtxloopplayer.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -8,7 +7,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivityFavouriteBinding
-import com.maurya.dtxloopplayer.utils.checkPlayListData
 import com.maurya.dtxloopplayer.utils.sendIntent
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 
@@ -29,7 +27,7 @@ class FavouriteActivity : AppCompatActivity() {
         binding = ActivityFavouriteBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        favouriteSongs = checkPlayListData(favouriteSongs)
+//        favouriteSongs = checkPlayListData(favouriteSongs)
 
         binding.FavouriteBackBtn.setOnClickListener {
             finish()

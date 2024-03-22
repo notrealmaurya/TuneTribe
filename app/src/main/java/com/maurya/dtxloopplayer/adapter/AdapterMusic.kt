@@ -2,31 +2,29 @@ package com.maurya.dtxloopplayer.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.os.Build
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import com.maurya.dtxloopplayer.activities.PlayListActivity
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.activities.SearchActivity
-import com.maurya.dtxloopplayer.activities.SelectionActivity
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ItemMusicBinding
 import com.maurya.dtxloopplayer.fragments.ListsFragment
-import com.maurya.dtxloopplayer.utils.formatDuration
+import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.sendIntent
 
 class AdapterMusic(
     private val context: Context,
     private var musicList: ArrayList<MusicDataClass> = arrayListOf(),
+    private var sharedPreferenceHelper: SharedPreferenceHelper? = null,
+    private var uuidCurrentPlayList: String = "",
     private val playListActivity: Boolean = false,
     private val selectionActivity: Boolean = false,
     private val folderSongsActivity: Boolean = false,
@@ -51,14 +49,27 @@ class AdapterMusic(
             musicArist.text = currentItem.albumArtist
             musicDuration.text = DateUtils.formatElapsedTime(currentItem.durationText / 1000)
 
-            Glide.with(context)
-                .asBitmap()
-                .load(currentItem.image)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .centerCrop()
-                .error(R.drawable.icon_music)
-                .into(musicArt)
+            when {
+                selectionActivity -> {
+                    Glide.with(context)
+                        .asBitmap()
+                        .load(R.drawable.icon_music)
+                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                        .centerCrop()
+                        .error(R.drawable.icon_music)
+                        .into(musicArt)
+                }
 
+                else -> {
+                    Glide.with(context)
+                        .asBitmap()
+                        .load(currentItem.image)
+                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                        .centerCrop()
+                        .error(R.drawable.icon_music)
+                        .into(musicArt)
+                }
+            }
         }
 
         when {
@@ -69,15 +80,18 @@ class AdapterMusic(
             }
 
             selectionActivity -> {
-                holder.chekbox.visibility = View.VISIBLE
-                holder.chekbox.isClickable = false
-//                holder.chekbox.isChecked = isSongAdded(musicList[position])
+                with(holder) {
+                    chekbox.visibility = View.VISIBLE
+                    chekbox.isClickable = false
+                    chekbox.isChecked = isSongAdded(musicList[position])
 
-                holder.root.setOnClickListener {
-                    val musicData = musicList[position]
-//                    val added = addSong(musicData)
-//                    holder.chekbox.isChecked = added
+                    root.setOnClickListener {
+                        val musicData = musicList[position]
+                        val isAdded = addOrRemoveSong(musicData)
+                        chekbox.isChecked = isAdded
+                    }
                 }
+
             }
 
             queueActivity -> {
@@ -134,6 +148,32 @@ class AdapterMusic(
         }
     }
 
+    private fun isSongAdded(musicData: MusicDataClass): Boolean {
+        return PlayListActivity.currentPlayListMusicList.contains(musicData)
+    }
+
+    private fun addOrRemoveSong(musicData: MusicDataClass): Boolean {
+        val isAdded = isSongAdded(musicData)
+        if (isAdded) {
+            PlayListActivity.currentPlayListMusicList.remove(musicData)
+        } else {
+            PlayListActivity.currentPlayListMusicList.add(musicData)
+        }
+
+        // Save playlist and its count
+        sharedPreferenceHelper?.savePlayListSong(
+            PlayListActivity.currentPlayListMusicList,
+            uuidCurrentPlayList
+        )
+        sharedPreferenceHelper?.savePlayListSongCount(
+            PlayListActivity.currentPlayListMusicList.size,
+            uuidCurrentPlayList
+        )
+
+        return !isAdded
+    }
+
+
 
     fun updateFavourites(newList: ArrayList<MusicDataClass>) {
         musicList = ArrayList()
@@ -141,13 +181,6 @@ class AdapterMusic(
         notifyDataSetChanged()
     }
 
-
-    fun refreshPlayList() {
-        musicList = ArrayList()
-//        musicList =
-//            ListsFragment.musicPlayList.ref[PlayListActivity.currentPlayListPosition].playList
-        notifyDataSetChanged()
-    }
 
     override fun getItemCount(): Int {
         return musicList.size

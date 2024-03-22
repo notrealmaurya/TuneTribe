@@ -2,6 +2,7 @@ package com.maurya.dtxloopplayer.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -25,6 +26,7 @@ import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.sendIntent
 import com.maurya.dtxloopplayer.utils.showToast
+import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 import java.util.UUID
 
 class AdapterPlayList(
@@ -49,15 +51,23 @@ class AdapterPlayList(
 
         val currentItem = playListList[position]
 
+
+        val playListSongPreference =
+            sharedPreferenceHelper.getPlayListSongCount(playListList[position].id)
+
+
         with(holder) {
             playListSize.isSelected = true
             playListName.isSelected = true
             playListName.text = currentItem.playListName
-            // playListSize.text = "${adapter.itemCount} songs"
+            playListSize.text = updateTextViewWithItemCount(playListSongPreference)
 
 
             root.setOnClickListener {
-                sendIntent(context, position, "adapterPlayList")
+                val intent = Intent(context, PlayListActivity::class.java)
+                intent.putExtra("index", position)
+                intent.putExtra("uuid", playListList[position].id)
+                ContextCompat.startActivity(context, intent, null)
             }
 
             root.setOnLongClickListener {

@@ -31,11 +31,12 @@
             android:layout_gravity="center"
             android:layout_marginStart="15dp"
             android:ellipsize="end"
+            android:fontFamily="@font/font_title"
             android:gravity="start"
             android:singleLine="true"
             android:text="PlayList Name"
             android:textColor="@color/ImageViewAndTextViewColour"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -46,8 +47,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/layout_topBTN"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -55,30 +56,33 @@
             android:id="@+id/shuffleBtnPlayListActivity"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
+            android:background="@drawable/icon_circle"
+            android:backgroundTint="#E0FFFF"
             android:drawableStart="@drawable/icon_shuffle"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
+            android:paddingHorizontal="10dp"
             android:text="Shuffle"
             android:textAllCaps="false"
-            android:textSize="12sp" />
+            android:textColor="#000000" />
 
         <TextView
             android:id="@+id/totalSongsPlayListActivity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
+            android:gravity="center_vertical"
             android:text="0 song"
             android:textColor="@color/ImageViewAndTextViewColour"
             android:textSize="13sp" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:padding="8dp"
+            android:src="@drawable/icon_menu_home" />
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="end|center"
-            android:layout_marginEnd="20dp"
-            android:src="@drawable/icon_checkbox_empty" />
+
     </LinearLayout>
 
 
@@ -101,7 +105,7 @@
 
     <LinearLayout
         android:id="@+id/bottomadd"
-        style="@style/LayoutStyle"
+        style="@style/PopUpWindowStyle"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
@@ -115,10 +119,11 @@
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
+            android:fontFamily="@font/font_date"
             android:gravity="center"
-            android:paddingStart="15dp"
+            android:paddingHorizontal="40dp"
             android:text="Add"
-            android:textSize="16sp"
+            android:textSize="20sp"
             app:drawableStartCompat="@drawable/icon_add" />
 
         <View
@@ -134,11 +139,12 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
+            android:fontFamily="@font/font_date"
             android:gravity="center"
-            android:paddingStart="15dp"
+            android:paddingHorizontal="15dp"
             android:text="Remove all"
             android:textColor="@color/ImageViewAndTextViewColour"
-            android:textSize="16sp"
+            android:textSize="20sp"
             app:drawableStartCompat="@drawable/icon_remove" />
 
     </LinearLayout>

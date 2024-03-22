@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
-import com.maurya.dtxloopplayer.database.FolderDataClass
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.database.tuneTribeDatabase
 import com.maurya.dtxloopplayer.databinding.FragmentSongsBinding

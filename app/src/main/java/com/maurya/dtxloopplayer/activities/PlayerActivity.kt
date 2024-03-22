@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.database.Cursor
-import android.graphics.Color
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.audiofx.AudioEffect
@@ -17,12 +16,9 @@ import android.os.IBinder
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.PopupMenu
 import android.widget.SeekBar
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -30,9 +26,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
-import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.MusicService
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
@@ -49,7 +43,6 @@ import com.maurya.dtxloopplayer.utils.getMusicArt
 import com.maurya.dtxloopplayer.utils.notifyAdapterSongTextPosition
 import com.maurya.dtxloopplayer.utils.setSongPosition
 import com.maurya.dtxloopplayer.utils.showToast
-import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Timer
 import java.util.TimerTask

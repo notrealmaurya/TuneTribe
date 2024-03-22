@@ -6,36 +6,51 @@ import android.os.Bundle
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
-import com.maurya.dtxloopplayer.MainActivity
-import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivitySelectionBinding
 import com.maurya.dtxloopplayer.fragments.SongsFragment
+import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class SelectionActivity : AppCompatActivity() {
 
-    private lateinit var adapter: AdapterMusic
-    private val musicList = mutableListOf<MusicDataClass>() // Your list of songs
+    private lateinit var adapterMusic: AdapterMusic
+
+    private lateinit var binding: ActivitySelectionBinding
+
+    @Inject
+    lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     companion object {
-        @SuppressLint("StaticFieldLeak")
-        lateinit var binding: ActivitySelectionBinding
-    }
 
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySelectionBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sharedPreferenceHelper = SharedPreferenceHelper(this)
 
 
-        binding.recyclerViewSelectionActivity.setHasFixedSize(true)
-        binding.recyclerViewSelectionActivity.setItemViewCacheSize(25)
-        binding.recyclerViewSelectionActivity.layoutManager = LinearLayoutManager(this)
-        adapter = AdapterMusic(this, SongsFragment.musicList, selectionActivity = true)
-        binding.recyclerViewSelectionActivity.adapter = adapter
+        val currentPlayListUUID = intent.getStringExtra("uuid")
 
-
+        binding.recyclerViewSelectionActivity.apply {
+            setHasFixedSize(true)
+            setItemViewCacheSize(13)
+            layoutManager =
+                LinearLayoutManager(this@SelectionActivity, LinearLayoutManager.VERTICAL, false)
+            adapterMusic = AdapterMusic(
+                this@SelectionActivity,
+                SongsFragment.musicList,
+                sharedPreferenceHelper,
+                selectionActivity = true,
+                uuidCurrentPlayList = currentPlayListUUID.toString()
+            )
+            adapter = adapterMusic
+        }
 
         listeners()
 
@@ -43,7 +58,6 @@ class SelectionActivity : AppCompatActivity() {
 
 
     private fun listeners() {
-
 
         //backBtn
         binding.backBtnSelectionActivity.setOnClickListener {
@@ -62,13 +76,11 @@ class SelectionActivity : AppCompatActivity() {
                             SearchActivity.musicListSearch.add(song)
                     }
                     SearchActivity.search = true
-                    adapter.updateSearchList(searchList = SearchActivity.musicListSearch)
+                    adapterMusic.updateSearchList(searchList = SearchActivity.musicListSearch)
                 }
                 return true
             }
         })
-
-
 
 
     }
