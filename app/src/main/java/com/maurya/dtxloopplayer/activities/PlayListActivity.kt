@@ -3,21 +3,17 @@ package com.maurya.dtxloopplayer.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
-import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.databinding.ActivityPlaylistBinding
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
-import com.maurya.dtxloopplayer.utils.generateUUID
-import com.maurya.dtxloopplayer.utils.showToast
+import com.maurya.dtxloopplayer.utils.checkListData
+import com.maurya.dtxloopplayer.utils.sendIntent
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 import dagger.hilt.android.AndroidEntryPoint
-import java.lang.reflect.Type
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -34,6 +30,10 @@ class PlayListActivity : AppCompatActivity() {
         var currentPlayListMusicList: ArrayList<MusicDataClass> = arrayListOf()
     }
 
+    private var playListSongPreference: List<MusicDataClass> = listOf()
+    private var currentPlayListUUID: String? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlaylistBinding.inflate(layoutInflater)
@@ -41,29 +41,34 @@ class PlayListActivity : AppCompatActivity() {
 
         sharedPreferenceHelper = SharedPreferenceHelper(this)
 
+        setRecyclerView()
         fetchSongsFromPlayList()
-
-        val currentPlayListUUID = intent.getStringExtra("playListName")
-
-        val playListSongPreference =
-            sharedPreferenceHelper.getPlayListSong(currentPlayListUUID.toString())
-
-
-
-        if (playListSongPreference.isNotEmpty()) {
-            currentPlayListMusicList.clear()
-            currentPlayListMusicList.addAll(playListSongPreference)
-            adapterMusic.notifyDataSetChanged()
-        } else {
-            showToast(this, "Empty Playlist")
-        }
-
-
         listeners(currentPlayListUUID.toString())
 
     }
 
     private fun fetchSongsFromPlayList() {
+
+        currentPlayListUUID = intent.getStringExtra("playListName")
+        playListSongPreference =
+            sharedPreferenceHelper.getPlayListSong(currentPlayListUUID.toString())
+
+        if (playListSongPreference.isNotEmpty()) {
+            binding.noSongsPlaylistActivity.visibility = View.GONE
+            binding.recyclerViewPlayListActivity.visibility = View.VISIBLE
+            binding.shuffle.visibility = View.VISIBLE
+            currentPlayListMusicList.clear()
+            currentPlayListMusicList.addAll(playListSongPreference)
+            currentPlayListMusicList = checkListData(currentPlayListMusicList)
+            adapterMusic.notifyDataSetChanged()
+        } else {
+            binding.recyclerViewPlayListActivity.visibility = View.GONE
+            binding.shuffle.visibility = View.GONE
+            binding.noSongsPlaylistActivity.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setRecyclerView() {
         binding.recyclerViewPlayListActivity.apply {
             setHasFixedSize(true)
             setItemViewCacheSize(13)
@@ -94,10 +99,7 @@ class PlayListActivity : AppCompatActivity() {
         }
 
         binding.shuffleBtnPlayListActivity.setOnClickListener {
-            val intent = Intent(this, PlayerActivity::class.java)
-            intent.putExtra("index", 0)
-            intent.putExtra("class", "PlayListActivityShuffle")
-            startActivity(intent)
+            sendIntent(this@PlayListActivity, position = 0, reference = "PlayListActivityShuffle")
         }
 
         binding.removeAllBtnPlayListActivity.setOnClickListener {
@@ -117,6 +119,7 @@ class PlayListActivity : AppCompatActivity() {
                     )
                     adapterMusic.notifyDataSetChanged()
                     changeItemCount()
+                    fetchSongsFromPlayList()
                     dialog.dismiss()
                 }
                 .setNegativeButton("Cancel") { dialog, _ ->
@@ -129,7 +132,6 @@ class PlayListActivity : AppCompatActivity() {
 
     }
 
-
     private fun changeItemCount() {
         binding.totalSongsPlayListActivity.text =
             updateTextViewWithItemCount(currentPlayListMusicList.size)
@@ -139,8 +141,8 @@ class PlayListActivity : AppCompatActivity() {
         super.onResume()
         adapterMusic.notifyDataSetChanged()
         changeItemCount()
+        fetchSongsFromPlayList()
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

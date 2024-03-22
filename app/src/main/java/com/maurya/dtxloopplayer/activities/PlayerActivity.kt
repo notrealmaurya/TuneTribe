@@ -26,6 +26,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
 import com.maurya.dtxloopplayer.MusicService
 import com.maurya.dtxloopplayer.R
@@ -88,17 +89,11 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        isInitialized = true
-
-        musicAdapter =
-            AdapterMusic(this, FavouriteActivity.favouriteSongs, favouriteActivity = true)
 
 
         binding.songNAME.isSelected = true
@@ -204,24 +199,24 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             )
 
             "FavouriteAdapter" -> initServiceAndPlaylist(
-                FavouriteActivity.favouriteSongs,
+                MainActivity.favouriteMusicList,
                 shuffle = false
             )
 
             "FavouriteActivityShuffle" -> initServiceAndPlaylist(
-                FavouriteActivity.favouriteSongs,
+                MainActivity.favouriteMusicList,
                 shuffle = true
             )
 
-//            "PlayListActivity" -> initServiceAndPlaylist(
-//                ListsFragment.musicPlayList.ref[PlayListActivity.currentPlayListPosition].playList,
-//                shuffle = false
-//            )
-//
-//            "PlayListActivityShuffle" -> initServiceAndPlaylist(
-//                ListsFragment.musicPlayList.ref[PlayListActivity.currentPlayListPosition].playList,
-//                shuffle = true
-//            )
+            "PlayListActivity" -> initServiceAndPlaylist(
+                PlayListActivity.currentPlayListMusicList,
+                shuffle = false
+            )
+
+            "PlayListActivityShuffle" -> initServiceAndPlaylist(
+                PlayListActivity.currentPlayListMusicList,
+                shuffle = true
+            )
 
             "folderSongsActivity" -> initServiceAndPlaylist(
                 FolderTracksActivity.folderMusicList, shuffle = false
@@ -441,25 +436,25 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         //add favourite
         binding.addFavouritePlayerActivity.setOnClickListener {
             favouriteIndex = favouriteChecker(musicListPlayerActivity[musicPosition].id)
+
             if (isFavourite) {
                 isFavourite = false
                 binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_empty)
-                FavouriteActivity.favouriteSongs.removeAt(favouriteIndex)
-                Toast.makeText(this, "Removed from Favourite", Toast.LENGTH_SHORT).show()
-//                updateTextViewWithItemCount(
-//                    musicAdapter,
-//                    ListsFragment.fragmentListsBinding.ListsMyFavouritesSize
-//                )
+                MainActivity.favouriteMusicList.removeAt(favouriteIndex)
+                showToast(this, "Removed from Favourite")
             } else {
                 isFavourite = true
                 binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_added)
-                FavouriteActivity.favouriteSongs.add(musicListPlayerActivity[musicPosition])
-                Toast.makeText(this, "Added in Favourite", Toast.LENGTH_SHORT).show()
-//                updateTextViewWithItemCount(
-//                    musicAdapter,
-//                    ListsFragment.fragmentListsBinding.ListsMyFavouritesSize
-//                )
+                MainActivity.favouriteMusicList.add(musicListPlayerActivity[musicPosition])
+                showToast(this, "Added in Favourite")
             }
+            sharedPreferenceHelper.savePlayListSong(
+                MainActivity.favouriteMusicList, "myFavouriteYouNoty572noty"
+            )
+            sharedPreferenceHelper.savePlayListSongCount(
+                MainActivity.favouriteMusicList.size,
+                "myFavouriteYouNoty572notyCount"
+            )
 
         }
 

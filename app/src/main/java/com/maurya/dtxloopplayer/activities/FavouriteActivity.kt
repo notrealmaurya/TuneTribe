@@ -4,70 +4,107 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.maurya.dtxloopplayer.MainActivity.Companion.favouriteMusicList
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivityFavouriteBinding
+import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
+import com.maurya.dtxloopplayer.utils.checkListData
+import com.maurya.dtxloopplayer.utils.favouriteChecker
 import com.maurya.dtxloopplayer.utils.sendIntent
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class FavouriteActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFavouriteBinding
 
-    private lateinit var musicAdapter: AdapterMusic
+    private lateinit var adapterMusic: AdapterMusic
 
-    companion object {
-        var favouriteSongs: ArrayList<MusicDataClass> = ArrayList()
-        var favouritesChanged: Boolean = false
-    }
+    @Inject
+    lateinit var sharedPreferenceHelper: SharedPreferenceHelper
+
+
+    private var favouriteListPreference: List<MusicDataClass> = listOf()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityFavouriteBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        favouriteSongs = checkPlayListData(favouriteSongs)
+        sharedPreferenceHelper = SharedPreferenceHelper(this)
+
+
+        setRecyclerView()
+        fetchSongsFromFavourite()
+        changeItemCount()
+
+        binding.shuffleFavouriteActivity.setOnClickListener {
+            sendIntent(this, position = 0, reference = "FavouriteActivityShuffle")
+        }
 
         binding.FavouriteBackBtn.setOnClickListener {
             finish()
         }
 
-        binding.recyclerViewFavouriteActivity.setHasFixedSize(true)
-        binding.recyclerViewFavouriteActivity.setItemViewCacheSize(13)
-        binding.recyclerViewFavouriteActivity.layoutManager = LinearLayoutManager(this)
-        musicAdapter = AdapterMusic(this, favouriteSongs, favouriteActivity = true)
-        binding.recyclerViewFavouriteActivity.adapter = musicAdapter
+    }
 
-        itemCount()
+    private fun setRecyclerView() {
+        binding.recyclerViewFavouriteActivity.apply {
+            setHasFixedSize(true)
+            setItemViewCacheSize(13)
+            layoutManager =
+                LinearLayoutManager(this@FavouriteActivity, LinearLayoutManager.VERTICAL, false)
+            adapterMusic = AdapterMusic(
+                this@FavouriteActivity,
+                favouriteMusicList,
+                sharedPreferenceHelper,
+                favouriteActivity = true
+            )
+            adapter = adapterMusic
+        }
 
-        favouritesChanged = false
+    }
 
-        if (favouriteSongs.size >= 1) {
+    private fun fetchSongsFromFavourite() {
+        favouriteListPreference =
+            sharedPreferenceHelper.getPlayListSong("myFavouriteYouNoty572noty")
+
+        if (favouriteListPreference.isNotEmpty()) {
             binding.shuffleSongCheckboxLayout.visibility = View.VISIBLE
             binding.recyclerViewFavouriteActivity.visibility = View.VISIBLE
-            binding.NoSongsFavouriteActivity.visibility = View.INVISIBLE
+            binding.NoSongsFavouriteActivity.visibility = View.GONE
+            favouriteMusicList.clear()
+            favouriteMusicList.addAll(favouriteListPreference)
+            favouriteMusicList = checkListData(favouriteMusicList)
+            adapterMusic.notifyDataSetChanged()
+        } else {
+            binding.shuffleSongCheckboxLayout.visibility = View.GONE
+            binding.recyclerViewFavouriteActivity.visibility = View.GONE
+            binding.NoSongsFavouriteActivity.visibility = View.VISIBLE
         }
 
-        binding.shuffleFavouriteActivity.setOnClickListener {
-            sendIntent(this, reference = "FavouriteActivityShuffle", position = 0)
-        }
+    }
 
-        itemCount()
+    private fun changeItemCount() {
+        binding.totalSongsFavouriteActivity.text =
+            updateTextViewWithItemCount(favouriteMusicList.size)
     }
 
     override fun onResume() {
         super.onResume()
-        if (favouritesChanged) {
-            musicAdapter.updateFavourites(favouriteSongs)
-            favouritesChanged = false
-        }
-        itemCount()
+        adapterMusic.notifyDataSetChanged()
+        fetchSongsFromFavourite()
+        changeItemCount()
     }
 
-    private fun itemCount() {
-        val count = updateTextViewWithItemCount(musicAdapter.itemCount)
-        binding.totalSongsFavouriteActivity.text = count
+    override fun onDestroy() {
+        super.onDestroy()
+        favouriteMusicList.clear()
     }
 
 

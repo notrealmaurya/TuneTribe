@@ -12,6 +12,8 @@ import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.maurya.dtxloopplayer.MainActivity
+import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.activities.FavouriteActivity
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
@@ -347,7 +349,7 @@ fun exitApplication() {
 
 fun favouriteChecker(id: String): Int {
     PlayerActivity.isFavourite = false
-    FavouriteActivity.favouriteSongs.forEachIndexed { index, musicData ->
+    MainActivity.favouriteMusicList.forEachIndexed { index, musicData ->
         if (id == musicData.id) {
             PlayerActivity.isFavourite = true
             return index
@@ -356,6 +358,14 @@ fun favouriteChecker(id: String): Int {
     return -1
 }
 
+fun checkListData(playlist: ArrayList<MusicDataClass>): ArrayList<MusicDataClass> {
+    playlist.forEachIndexed { index, music ->
+        val file = File(music.path)
+        if (!file.exists())
+            playlist.removeAt(index)
+    }
+    return playlist
+}
 
 //song or songs count
 fun updateTextViewWithItemCount(itemCount: Int): String {
@@ -379,11 +389,6 @@ fun sendIntent(context: Context, position: Int, reference: String) {
 fun notifyAdapterSongTextPosition() {
 
 
-}
-
-fun generateUUID(): Int {
-    // Generate a random integer within a specified range
-    return Random().nextInt(1000000000)
 }
 
 fun showToast(context: Context, message: String) {

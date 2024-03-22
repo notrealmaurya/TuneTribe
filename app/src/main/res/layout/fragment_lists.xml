@@ -175,13 +175,14 @@
                     android:id="@+id/Lists_FolderList"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/font_title"
                     android:gravity="center"
                     android:scrollHorizontally="false"
                     android:singleLine="true"
                     android:text="Folder list"
                     android:textAlignment="gravity"
                     android:textColor="@color/ImageViewAndTextViewColour"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/Lists_FolderList_Size"
@@ -189,8 +190,9 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="0 folder"
+                    android:fontFamily="@font/font_songcount"
                     android:textColor="#737A91"
-                    android:textSize="13sp" />
+                    android:textSize="15sp" />
 
 
             </LinearLayout>
@@ -268,22 +270,24 @@
                         android:id="@+id/Lists_MyFavourites"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/font_title"
                         android:gravity="center"
                         android:scrollHorizontally="false"
                         android:singleLine="true"
                         android:text="My favourites"
                         android:textAlignment="gravity"
                         android:textColor="@color/ImageViewAndTextViewColour"
-                        android:textSize="16sp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/Lists_MyFavourites_Size"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/font_songcount"
                         android:gravity="center"
                         android:text="40 Music"
                         android:textColor="#737A91"
-                        android:textSize="13sp" />
+                        android:textSize="15sp" />
 
 
                 </LinearLayout>

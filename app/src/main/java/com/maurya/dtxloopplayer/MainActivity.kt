@@ -36,6 +36,7 @@ import com.maurya.dtxloopplayer.fragments.SongsFragment
 import com.maurya.dtxloopplayer.database.tuneTribeDatabase
 import com.maurya.dtxloopplayer.databinding.ActivityMainBinding
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
+import com.maurya.dtxloopplayer.utils.checkListData
 import com.maurya.dtxloopplayer.utils.getAllPath
 import com.maurya.dtxloopplayer.utils.getAllSongs
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,10 +55,14 @@ class MainActivity : AppCompatActivity() {
     private val themeList = arrayOf("Light Mode", "Night Mode", "Auto (System Defaults)")
 
     @Inject
-    lateinit var sharedPreferencesHelper: SharedPreferenceHelper
+    lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
 
     private lateinit var db: tuneTribeDatabase
+
+    companion object{
+        var favouriteMusicList: ArrayList<MusicDataClass> = ArrayList()
+    }
 
 
     private lateinit var contentObserver: ContentObserver
@@ -66,8 +71,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sharedPreferencesHelper = SharedPreferenceHelper(this)
+        sharedPreferenceHelper = SharedPreferenceHelper(this)
 
+        val favouriteListPreference =   sharedPreferenceHelper.getPlayListSong("myFavouriteYouNoty572noty")
+        favouriteMusicList.clear()
+        favouriteMusicList.addAll(favouriteListPreference)
 
 //        fetchFileUsingRoomDatabase()
 

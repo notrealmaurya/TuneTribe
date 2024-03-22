@@ -30,8 +30,8 @@ import com.maurya.dtxloopplayer.databinding.FragmentListsBinding
 import com.maurya.dtxloopplayer.databinding.PopupDialogNewplaylistBinding
 import com.maurya.dtxloopplayer.databinding.PopupDialogPlayeractivityMenuBinding
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
-import com.maurya.dtxloopplayer.utils.generateUUID
 import com.maurya.dtxloopplayer.utils.showToast
+import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 import com.maurya.dtxloopplayer.viewModelsObserver.ModelResult
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import dagger.hilt.android.AndroidEntryPoint
@@ -80,7 +80,6 @@ class ListsFragment : Fragment() {
 
         val playListPreference = sharedPreferenceHelper.getPlayList()
         playList.addAll(playListPreference)
-
 
         listeners()
     }
@@ -140,10 +139,14 @@ class ListsFragment : Fragment() {
 
     private fun listeners() {
 
+        fragmentListsBinding.ListsMyFavouritesSize.text =
+            updateTextViewWithItemCount(sharedPreferenceHelper.getPlayListSongCount("myFavouriteYouNoty572notyCount"))
+
         fragmentListsBinding.LayoutFolderList.setOnClickListener {
             val intent = Intent(activity, FolderActivity::class.java)
             startActivity(intent)
         }
+
 
         fragmentListsBinding.LayoutMyFavourites.setOnClickListener {
             val intent = Intent(context, FavouriteActivity::class.java)
@@ -215,6 +218,8 @@ class ListsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         adapterPlayList.notifyDataSetChanged()
+        fragmentListsBinding.ListsMyFavouritesSize.text =
+            updateTextViewWithItemCount(sharedPreferenceHelper.getPlayListSongCount("myFavouriteYouNoty572notyCount"))
     }
 
 

@@ -54,7 +54,7 @@
             android:id="@+id/countPlayListItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/font_date"
+            android:fontFamily="@font/font_songcount"
             android:singleLine="true"
             android:text="Downloads"
             android:textAllCaps="false"
