@@ -157,7 +157,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
                     .setStyle(
                         MediaStyle()
                             .setMediaSession(mediaSession.sessionToken)
-                            .setShowActionsInCompactView(1, 2, 3)
+                            .setShowActionsInCompactView(0, 1, 2)
                     )
                     .setOnlyAlertOnce(true)
                     .build()
@@ -198,12 +198,12 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
                 override fun onPlay() {
                     super.onPlay()
-                    playMusic()
+                    playMusic(this@MusicService)
                 }
 
                 override fun onPause() {
                     super.onPause()
-                    pauseMusic()
+                    pauseMusic(this@MusicService)
                 }
 
                 override fun onSkipToNext() {
@@ -223,13 +223,6 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         } catch (e: Exception) {
             Log.e("MusicService", "Error in showNotification", e)
         }
-    }
-
-
-    override fun onCreate() {
-        super.onCreate()
-
-
     }
 
 
@@ -255,11 +248,11 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
                 }
 
                 ACTION_NEXT -> if (PlayerActivity.musicListPlayerActivity.size > 1) {
-                    prevNextSong(increment = true,this)
+                    prevNextSong(increment = true, this)
                 }
 
                 ACTION_PLAY -> {
-                    if (PlayerActivity.isPlaying) pauseMusic() else playMusic()
+                    if (PlayerActivity.isPlaying) pauseMusic(this@MusicService) else playMusic(this@MusicService)
                 }
             }
         }
@@ -270,11 +263,11 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
     override fun onAudioFocusChange(focusChange: Int) {
         when (focusChange) {
             AudioManager.AUDIOFOCUS_LOSS -> {
-                pauseMusic()
+                pauseMusic(this@MusicService)
             }
 
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
-                pauseMusic()
+                pauseMusic(this@MusicService)
             }
 
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
@@ -288,7 +281,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
                 PlayerActivity.musicService!!.audioManager.setStreamVolume(
                     AudioManager.STREAM_MUSIC,
                     duckedVolume,
-                    0 // Flags, typically 0
+                    0
                 )
             }
 
@@ -302,7 +295,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        pauseMusic()
+        pauseMusic(this@MusicService)
         // Release audio focus
         val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioManager.abandonAudioFocus(this)

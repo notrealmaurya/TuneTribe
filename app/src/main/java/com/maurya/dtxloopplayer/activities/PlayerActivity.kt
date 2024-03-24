@@ -230,7 +230,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             }
 
         }
-        if (musicService != null && !isPlaying) playMusic()
+//        if (musicService != null && !isPlaying) playMusic(musicService!!)
     }
 
 
@@ -257,8 +257,8 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
 
         binding.playPausePlayerActivity.setOnClickListener {
-            if (isPlaying) pauseMusic()
-            else playMusic()
+            if (isPlaying) pauseMusic(musicService!!)
+            else playMusic(musicService!!)
         }
 
         binding.nextSongPlayerActivity.setOnClickListener {
@@ -286,20 +286,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 fromUser: Boolean
             ) {
                 if (fromUser) {
-                    val playPauseIcon = if (isPlaying) {
-                        R.drawable.icon_pause
-                    } else {
-                        R.drawable.icon_play
-                    }
-
-                    val playPauseTitle = if (isPlaying) {
-                        "Pause"
-                    } else {
-                        "Play"
-                    }
-
                     musicService!!.mediaPlayer!!.seekTo(progress)
-                    musicService!!.showNotification(playPauseIcon, playPauseTitle)
                 }
             }
 
@@ -642,7 +629,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     private fun timerExpired() {
         runOnUiThread {
-            pauseMusic()
+            pauseMusic(musicService!!)
             MaterialAlertDialogBuilder(this)
                 .setTitle("Timer Expired")
                 .setMessage("Do you want to exit the application?")
@@ -661,4 +648,5 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 .show()
         }
     }
+
 }

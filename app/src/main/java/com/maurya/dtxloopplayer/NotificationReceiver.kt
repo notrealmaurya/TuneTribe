@@ -28,7 +28,7 @@ class NotificationReceiver : BroadcastReceiver() {
             }
 
             ACTION_PLAY -> {
-                if (PlayerActivity.isPlaying) pauseMusic() else playMusic()
+                if (PlayerActivity.isPlaying) pauseMusic(PlayerActivity.musicService!!) else playMusic(PlayerActivity.musicService!!)
             }
 
             ACTION_NEXT-> if (PlayerActivity.musicListPlayerActivity.size > 1) {

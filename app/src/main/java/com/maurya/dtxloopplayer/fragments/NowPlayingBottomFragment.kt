@@ -137,8 +137,8 @@ class NowPlayingBottomFragment : Fragment() {
         }
 
         fragmentNowPlayingBottomBinding.playPauseMiniPlayer.setOnClickListener {
-            if (PlayerActivity.isPlaying) pauseMusic()
-            else playMusic()
+            if (PlayerActivity.isPlaying) pauseMusic(PlayerActivity.musicService!!)
+            else playMusic(PlayerActivity.musicService!!)
         }
 
         fragmentNowPlayingBottomBinding.NextMiniPlayer.setOnClickListener {

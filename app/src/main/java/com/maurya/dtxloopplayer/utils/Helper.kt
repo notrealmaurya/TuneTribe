@@ -396,27 +396,27 @@ fun notifyAdapterSongTextPosition() {
 }
 
 
-fun playMusic() {
+fun playMusic(musicService: MusicService) {
     PlayerActivity.isPlaying = true
     PlayerActivity.musicService!!.mediaPlayer!!.start()
     PlayerActivity.binding.playPausePlayerActivity.setImageResource(R.drawable.icon_pause)
     NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.playPauseMiniPlayer.setImageResource(
         R.drawable.icon_pause
     )
-    PlayerActivity.musicService!!.showNotification(R.drawable.icon_pause, "Pause")
+    musicService.showNotification(R.drawable.icon_pause, "Pause")
     val lottieView = PlayerActivity.binding.lottiePlayerActivity
     lottieView.resumeAnimation()
 }
 
 
-fun pauseMusic() {
+fun pauseMusic(musicService: MusicService) {
     PlayerActivity.isPlaying = false
     PlayerActivity.musicService!!.mediaPlayer!!.pause()
     PlayerActivity.binding.playPausePlayerActivity.setImageResource(R.drawable.icon_play)
     NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.playPauseMiniPlayer.setImageResource(
         R.drawable.icon_play
     )
-    PlayerActivity.musicService!!.showNotification(R.drawable.icon_play, "Play")
+    musicService.showNotification(R.drawable.icon_play, "Play")
     val lottieView = PlayerActivity.binding.lottiePlayerActivity
     lottieView.pauseAnimation()
 }
@@ -430,10 +430,9 @@ fun prevNextSong(
     setSongPosition(increment = increment)
     createMediaPlayer(musicService)
     val viewModel = viewModelObserver ?: PlayerActivity.viewModel
-
     setMusicData(viewModel)
     setLayout()
-    playMusic()
+    playMusic(musicService)
 }
 
 fun setLayout() {
@@ -471,7 +470,7 @@ fun createMediaPlayer(musicService: MusicService) {
             prepare()
         }
         PlayerActivity.binding.playPausePlayerActivity.setImageResource(R.drawable.icon_pause)
-        musicService.showNotification(R.drawable.icon_pause, "Pause")
+//        musicService.showNotification(R.drawable.icon_pause, "Pause")
         PlayerActivity.binding.durationPLAYEDPlayerActivity.text =
             formatDuration(musicService.mediaPlayer?.currentPosition?.toLong() ?: 0)
         PlayerActivity.binding.durationTOTALPlayerActivity.text =
@@ -485,7 +484,7 @@ fun createMediaPlayer(musicService: MusicService) {
             musicService.mediaPlayer!!.duration
         PlayerActivity.nowPlayingId =
             PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].id
-        playMusic()
+        playMusic(musicService)
 
         PlayerActivity.loudnessEnhancer =
             LoudnessEnhancer(musicService.mediaPlayer?.audioSessionId ?: 0)
