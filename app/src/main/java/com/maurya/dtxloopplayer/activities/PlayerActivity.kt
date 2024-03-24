@@ -524,6 +524,13 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         musicService!!.mediaPlayer!!.setOnCompletionListener(this)
     }
 
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 13 || requestCode == RESULT_OK) {
+            return
+        }
+    }
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         if (musicService == null) {
@@ -548,15 +555,16 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         musicService = null
     }
 
-    private fun saveLottieAnimationTheme(theme: String) {
-        sharedPreferenceHelper.savePlayerActivityTheme(theme)
-    }
 
     override fun onDestroy() {
         super.onDestroy()
         if (musicListPlayerActivity[musicPosition].id == "Unknown" && !isPlaying) exitApplication()
     }
 
+
+    private fun saveLottieAnimationTheme(theme: String) {
+        sharedPreferenceHelper.savePlayerActivityTheme(theme)
+    }
 
     private fun timerMainDialog() {
 
