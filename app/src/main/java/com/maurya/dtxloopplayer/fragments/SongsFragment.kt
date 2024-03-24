@@ -40,7 +40,6 @@ class SongsFragment : Fragment() {
 
     @Inject
     lateinit var sharedPreferencesHelper: SharedPreferenceHelper
-
     private var sortingOrder: String = ""
 
     private val viewModel: ViewModelObserver by viewModels()
@@ -74,12 +73,8 @@ class SongsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         sharedPreferencesHelper = SharedPreferenceHelper(requireContext())
         sortingOrder = sharedPreferencesHelper.getSortingOrder().toString()
-
-
-        lifecycle.addObserver(viewModel)
 
         fragmentSongsBinding.recyclerViewSongFragment.apply {
             setHasFixedSize(true)

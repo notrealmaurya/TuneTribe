@@ -148,10 +148,15 @@ class AdapterMusic(
         }
     }
 
+
+
+    //for playlist selection activity
     private fun isSongAdded(musicData: MusicDataClass): Boolean {
         return PlayListActivity.currentPlayListMusicList.contains(musicData)
     }
 
+
+    //for playlist selection activity
     private fun addOrRemoveSong(musicData: MusicDataClass): Boolean {
         val isAdded = isSongAdded(musicData)
         if (isAdded) {
@@ -173,12 +178,6 @@ class AdapterMusic(
         return !isAdded
     }
 
-
-    fun updateFavourites(newList: ArrayList<MusicDataClass>) {
-        musicList = ArrayList()
-        musicList.addAll(newList)
-        notifyDataSetChanged()
-    }
 
 
     override fun getItemCount(): Int {

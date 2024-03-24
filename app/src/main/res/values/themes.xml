@@ -34,6 +34,7 @@
     <!-- PopUpWindowStyle-->
     <style name="PopUpWindowStyle">
         <item name="android:background">@drawable/bg_popup_window</item>
+        <item name="android:layout_width">wrap_content</item>
     </style>
 
 

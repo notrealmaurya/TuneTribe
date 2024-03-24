@@ -47,7 +47,7 @@ class SharedPreferenceHelper @Inject constructor(@ApplicationContext context: Co
         return sharedPreferences.getString("playerActivity_theme", null)
     }
 
-    fun setPlayerActivityTheme(theme: String) {
+    fun savePlayerActivityTheme(theme: String) {
         sharedPreferences.edit().putString("playerActivity_theme", theme).apply()
     }
 

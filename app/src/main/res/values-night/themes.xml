@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto">
+<resources xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.DTxLoopPlayer" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
@@ -13,7 +13,6 @@
     <style name="LayoutStyle">
         <item name="android:background">#111C25</item>
     </style>
-
 
 
     <!--    Bottom Dialog-->
@@ -38,10 +37,10 @@
     </style>
 
 
-
     <!-- PopUpWindowStyle-->
     <style name="PopUpWindowStyle">
         <item name="android:background">@drawable/bg_popup_window</item>
+        <item name="android:layout_width">wrap_content</item>
     </style>
 
 </resources>

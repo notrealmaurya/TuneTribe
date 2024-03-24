@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:theme="@style/PopUpWindowStyle">
 
 
@@ -18,6 +19,8 @@
     <item
         android:id="@+id/playerTheme5"
         android:title="Theme 5" />
-
+    <item
+        android:id="@+id/playerTheme6"
+        android:title="Theme 6" />
 
 </menu>

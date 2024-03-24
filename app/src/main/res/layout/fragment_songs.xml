@@ -22,13 +22,13 @@
             android:layout_height="30dp"
             android:background="@drawable/icon_circle"
             android:backgroundTint="#E0FFFF"
-            android:fontFamily="@font/font_songcount"
             android:drawableStart="@drawable/icon_shuffle"
+            android:fontFamily="@font/font_songcount"
             android:paddingHorizontal="10dp"
             android:text="Shuffle"
-            android:textSize="15sp"
             android:textAllCaps="false"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textSize="15sp" />
 
 
         <TextView

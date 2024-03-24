@@ -9,29 +9,44 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.R
+import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.FragmentNowPlayingBottomBinding
+import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.notifyAdapterSongTextPosition
+import com.maurya.dtxloopplayer.utils.pauseMusic
+import com.maurya.dtxloopplayer.utils.playMusic
+import com.maurya.dtxloopplayer.utils.sendIntent
 import com.maurya.dtxloopplayer.utils.setSongPosition
+import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class NowPlayingBottomFragment : Fragment() {
 
-    companion object {
-        @SuppressLint("StaticFieldLeak")
-        lateinit var fragmentNowPlayingBottomBinding: FragmentNowPlayingBottomBinding
-        var isInitialized = false
+    private lateinit var musicAdapter: AdapterMusic
 
-        lateinit var musicAdapter: AdapterMusic
+    companion object {
+        lateinit var fragmentNowPlayingBottomBinding: FragmentNowPlayingBottomBinding
     }
+
+
+    @Inject
+    lateinit var sharedPreferenceHelper: SharedPreferenceHelper
+
+    private val viewModel: ViewModelObserver by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,27 +55,39 @@ class NowPlayingBottomFragment : Fragment() {
         fragmentNowPlayingBottomBinding =
             FragmentNowPlayingBottomBinding.inflate(inflater, container, false)
         val view = fragmentNowPlayingBottomBinding.root
+        return view
+    }
 
-        isInitialized = true
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         fragmentNowPlayingBottomBinding.root.visibility = View.INVISIBLE
 
-        fragmentNowPlayingBottomBinding.songArtistMiniPlayer.isSelected = true
-        fragmentNowPlayingBottomBinding.songNameMiniPlayer.isSelected = true
+
+        viewModel.songInfo.observe(viewLifecycleOwner) { musicData ->
+            fragmentNowPlayingBottomBinding.songNameMiniPlayer.text = musicData.musicName
+            fragmentNowPlayingBottomBinding.songArtistMiniPlayer.text = musicData.albumArtist
+            Glide.with(this)
+                .asBitmap()
+                .load(musicData.image)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .centerCrop()
+                .error(R.drawable.icon_music)
+                .into(fragmentNowPlayingBottomBinding.AlbumArtMiniPlayer)
+        }
 
 
         listeners()
-
-        return view
     }
 
     private fun listeners() {
 
         fragmentNowPlayingBottomBinding.root.setOnClickListener {
-                val intent = Intent(requireContext(), PlayerActivity::class.java)
-                intent.putExtra("index", PlayerActivity.musicPosition)
-                intent.putExtra("class", "NowPlaying")
-                ContextCompat.startActivity(requireContext(), intent, null)
+            sendIntent(
+                requireContext(),
+                position = PlayerActivity.musicPosition,
+                reference = "NowPlaying"
+            )
         }
 
         fragmentNowPlayingBottomBinding.queueNowPlayingFragment.setOnClickListener {
@@ -118,24 +145,9 @@ class NowPlayingBottomFragment : Fragment() {
         fragmentNowPlayingBottomBinding.NextMiniPlayer.setOnClickListener {
             setSongPosition(increment = true)
             PlayerActivity.musicService!!.createMediaPlayer()
-            Glide.with(this)
-                .load(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].image)
-                .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
-                .into(fragmentNowPlayingBottomBinding.AlbumArtMiniPlayer)
-
-            PlayerActivity.binding.songNAME.text =
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].musicName
-            PlayerActivity.binding.songARTIST.text =
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].albumArtist
-
-            fragmentNowPlayingBottomBinding.songNameMiniPlayer.text =
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].musicName
-            fragmentNowPlayingBottomBinding.songArtistMiniPlayer.text =
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].albumArtist
-
+            setMusicData()
             PlayerActivity.musicService!!.showNotification(R.drawable.icon_pause, "Play")
             playMusic()
-            notifyAdapterSongTextPosition()
         }
     }
 
@@ -162,25 +174,20 @@ class NowPlayingBottomFragment : Fragment() {
         }
     }
 
-    private fun playMusic() {
-        PlayerActivity.isPlaying = true
-        PlayerActivity.musicService!!.mediaPlayer!!.start()
-        fragmentNowPlayingBottomBinding.playPauseMiniPlayer.setImageResource(
-            R.drawable.icon_pause
+    private fun setMusicData() {
+        viewModel.setMusicData(
+            MusicDataClass(
+                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].id,
+                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].musicName,
+                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].folderName,
+                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].durationText,
+                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].size,
+                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].albumArtist,
+                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].path,
+                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].image,
+                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].dateModified
+            )
         )
-        PlayerActivity.musicService!!.showNotification(R.drawable.icon_pause, "Pause")
-        PlayerActivity.binding.nextSongPlayerActivity.setImageResource(R.drawable.icon_pause)
-
-    }
-
-    private fun pauseMusic() {
-        PlayerActivity.isPlaying = false
-        PlayerActivity.musicService!!.mediaPlayer!!.pause()
-        fragmentNowPlayingBottomBinding.playPauseMiniPlayer.setImageResource(
-            R.drawable.icon_play
-        )
-        PlayerActivity.musicService!!.showNotification(R.drawable.icon_play, "Play")
-        PlayerActivity.binding.nextSongPlayerActivity.setImageResource(R.drawable.icon_play)
     }
 
 }

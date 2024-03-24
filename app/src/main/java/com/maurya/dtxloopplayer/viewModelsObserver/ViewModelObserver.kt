@@ -2,8 +2,11 @@ package com.maurya.dtxloopplayer.viewModelsObserver
 
 import android.content.Context
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.utils.showToast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -11,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ViewModelObserver @Inject constructor(private val repository: Repository) :
-    ViewModel(), DefaultLifecycleObserver {
+    ViewModel() {
 
     val songsStateFLow get() = repository.songsStateFlow
 
@@ -51,4 +54,11 @@ class ViewModelObserver @Inject constructor(private val repository: Repository) 
     }
 
 
+    //for song name, artist, seekbar
+    private val _songInfo = MutableLiveData<MusicDataClass>()
+    val songInfo: LiveData<MusicDataClass> get() = _songInfo
+
+    fun setMusicData(musicData: MusicDataClass) {
+        _songInfo.value = musicData
+    }
 }

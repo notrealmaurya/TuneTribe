@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.database.Cursor
+import android.graphics.drawable.InsetDrawable
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.audiofx.AudioEffect
@@ -15,12 +16,17 @@ import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.widget.PopupMenu
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -42,8 +48,11 @@ import com.maurya.dtxloopplayer.utils.favouriteChecker
 import com.maurya.dtxloopplayer.utils.formatDuration
 import com.maurya.dtxloopplayer.utils.getMusicArt
 import com.maurya.dtxloopplayer.utils.notifyAdapterSongTextPosition
+import com.maurya.dtxloopplayer.utils.pauseMusic
+import com.maurya.dtxloopplayer.utils.playMusic
 import com.maurya.dtxloopplayer.utils.setSongPosition
 import com.maurya.dtxloopplayer.utils.showToast
+import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Timer
 import java.util.TimerTask
@@ -63,6 +72,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper
+    private lateinit var viewModel: ViewModelObserver
 
     companion object {
         lateinit var musicListPlayerActivity: ArrayList<MusicDataClass>
@@ -87,6 +97,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
         lateinit var loudnessEnhancer: LoudnessEnhancer
 
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,13 +105,9 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
-        binding.songNAME.isSelected = true
-        binding.songARTIST.isSelected = true
-
-        // Retrieve the saved Lottie animation theme from SharedPreferences
         sharedPreferenceHelper = SharedPreferenceHelper(this)
+        viewModel = ViewModelProvider(this)[ViewModelObserver::class.java]
+
         val savedTheme = sharedPreferenceHelper.getPlayerActivityTheme()
 
         // Set the Lottie animation based on the saved theme
@@ -126,6 +133,26 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         } else {
             initializeLayout()
         }
+
+        favouriteIndex = favouriteChecker(musicListPlayerActivity[musicPosition].id)
+
+
+        binding.songNAME.isSelected = true
+        binding.songARTIST.isSelected = true
+
+
+        viewModel.songInfo.observe(this) { musicData ->
+            binding.songNAME.text = musicData.musicName
+            binding.songARTIST.text = musicData.albumArtist
+            Glide.with(this)
+                .asBitmap()
+                .load(musicData.image)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .centerCrop()
+                .error(R.drawable.icon_music)
+                .into(binding.songImagePlayerActivity)
+        }
+
 
         listeners()
 
@@ -247,11 +274,27 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 .into(binding.songImagePlayerActivity)
         }
 
-        binding.songNAME.text = musicListPlayerActivity[musicPosition].musicName
-        binding.songARTIST.text = musicListPlayerActivity[musicPosition].albumArtist
+        setMusicData()
+
         if (repeat) binding.repeatBtnPlayerActivity.setImageResource(R.drawable.icon_repeat_one)
         if (isFavourite) binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_added)
         else binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_empty)
+    }
+
+     private fun setMusicData() {
+        viewModel.setMusicData(
+            MusicDataClass(
+                musicListPlayerActivity[musicPosition].id,
+                musicListPlayerActivity[musicPosition].musicName,
+                musicListPlayerActivity[musicPosition].folderName,
+                musicListPlayerActivity[musicPosition].durationText,
+                musicListPlayerActivity[musicPosition].size,
+                musicListPlayerActivity[musicPosition].albumArtist,
+                musicListPlayerActivity[musicPosition].path,
+                musicListPlayerActivity[musicPosition].image,
+                musicListPlayerActivity[musicPosition].dateModified
+            )
+        )
     }
 
     private fun initServiceAndPlaylist(
@@ -306,6 +349,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
     }
 
     private fun listeners() {
+
 
         binding.PlayerBackBtn.setOnClickListener {
             finish()
@@ -386,10 +430,14 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         //Player Theme
         binding.playerthemePlayerActivity.setOnClickListener {
             val lottieView = binding.lottiePlayerActivity
-            val popupMenu = PopupMenu(this, binding.playerthemePlayerActivity)
+            val popupMenu =
+                PopupMenu(this, binding.playerthemePlayerActivity, R.style.PopUpWindowStyle)
             val inflater = popupMenu.menuInflater
             inflater.inflate(R.menu.player_theme_menu, popupMenu.menu)
+
+
             popupMenu.setOnMenuItemClickListener { item ->
+
                 when (item.itemId) {
                     R.id.playerTheme1 -> {
                         lottieView.setAnimation("wave.json")
@@ -423,6 +471,13 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                         binding.lottiePlayerActivity.setAnimation("wave5.json")
                         binding.lottiePlayerActivity.playAnimation()
                         saveLottieAnimationTheme("wave5.json")
+                        true
+                    }
+
+                    R.id.playerTheme6 -> {
+                        binding.lottiePlayerActivity.setAnimation("wave6.json")
+                        binding.lottiePlayerActivity.playAnimation()
+                        saveLottieAnimationTheme("wave6.json")
                         true
                     }
 
@@ -651,57 +706,21 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         createMediaPlayer()
         setLayout()
 
-        //for refreshing now playing image & text on song completion
-        NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.songNameMiniPlayer.isSelected =
-            true
-        NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.songArtistMiniPlayer.isSelected =
-            true
-        Glide.with(applicationContext)
-            .load(musicListPlayerActivity[musicPosition].image)
-            .apply(
-                RequestOptions().placeholder(R.drawable.icon_music).centerCrop()
-            )
-            .into(NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.AlbumArtMiniPlayer)
-        NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.songNameMiniPlayer.text =
-            musicListPlayerActivity[musicPosition].musicName
-        NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.songArtistMiniPlayer.text =
-            musicListPlayerActivity[musicPosition].albumArtist
-
-        notifyAdapterSongTextPosition()
-
+        setMusicData()
     }
 
-    private fun playMusic() {
-        isPlaying = true
-        musicService!!.mediaPlayer!!.start()
-        binding.playPausePlayerActivity.setImageResource(R.drawable.icon_pause)
-        musicService!!.showNotification(R.drawable.icon_pause, "Pause")
-        notifyAdapterSongTextPosition()
-        val lottieView = binding.lottiePlayerActivity
-        lottieView.playAnimation()
-    }
-
-    private fun pauseMusic() {
-        isPlaying = false
-        musicService!!.mediaPlayer!!.pause()
-        binding.playPausePlayerActivity.setImageResource(R.drawable.icon_play)
-        musicService!!.showNotification(R.drawable.icon_play, "Play")
-        notifyAdapterSongTextPosition()
-        val lottieView = binding.lottiePlayerActivity
-        lottieView.pauseAnimation()
-    }
 
     private fun prevNextMusic(increment: Boolean) {
         if (increment) {
             setSongPosition(increment = true)
             setLayout()
             createMediaPlayer()
-            notifyAdapterSongTextPosition()
+            setMusicData()
         } else {
             setSongPosition(increment = false)
             setLayout()
             createMediaPlayer()
-            notifyAdapterSongTextPosition()
+            setMusicData()
         }
     }
 
@@ -735,8 +754,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
     }
 
     private fun saveLottieAnimationTheme(theme: String) {
-        val sharedPreferenceHelper = SharedPreferenceHelper(this)
-        sharedPreferenceHelper.setPlayerActivityTheme(theme)
+        sharedPreferenceHelper.savePlayerActivityTheme(theme)
     }
 
     override fun onDestroy() {

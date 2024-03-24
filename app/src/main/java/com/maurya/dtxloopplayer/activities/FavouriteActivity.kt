@@ -17,26 +17,17 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
-@AndroidEntryPoint
 class FavouriteActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFavouriteBinding
 
     private lateinit var adapterMusic: AdapterMusic
 
-    @Inject
-    lateinit var sharedPreferenceHelper: SharedPreferenceHelper
-
-
-    private var favouriteListPreference: List<MusicDataClass> = listOf()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFavouriteBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        sharedPreferenceHelper = SharedPreferenceHelper(this)
 
 
         setRecyclerView()
@@ -62,7 +53,6 @@ class FavouriteActivity : AppCompatActivity() {
             adapterMusic = AdapterMusic(
                 this@FavouriteActivity,
                 favouriteMusicList,
-                sharedPreferenceHelper,
                 favouriteActivity = true
             )
             adapter = adapterMusic
@@ -71,17 +61,11 @@ class FavouriteActivity : AppCompatActivity() {
     }
 
     private fun fetchSongsFromFavourite() {
-        favouriteListPreference =
-            sharedPreferenceHelper.getPlayListSong("myFavouriteYouNoty572noty")
 
-        if (favouriteListPreference.isNotEmpty()) {
+        if (favouriteMusicList.isNotEmpty()) {
             binding.shuffleSongCheckboxLayout.visibility = View.VISIBLE
             binding.recyclerViewFavouriteActivity.visibility = View.VISIBLE
             binding.NoSongsFavouriteActivity.visibility = View.GONE
-            favouriteMusicList.clear()
-            favouriteMusicList.addAll(favouriteListPreference)
-            favouriteMusicList = checkListData(favouriteMusicList)
-            adapterMusic.notifyDataSetChanged()
         } else {
             binding.shuffleSongCheckboxLayout.visibility = View.GONE
             binding.recyclerViewFavouriteActivity.visibility = View.GONE
@@ -102,10 +86,6 @@ class FavouriteActivity : AppCompatActivity() {
         changeItemCount()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        favouriteMusicList.clear()
-    }
 
 
 }

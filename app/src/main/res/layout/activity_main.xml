@@ -83,10 +83,9 @@
         android:name="com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment"
         style="@style/LayoutStyle"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:minHeight="?attr/actionBarSize"
         android:visibility="visible"
         tools:layout="@layout/fragment_now_playing_bottom" />
 

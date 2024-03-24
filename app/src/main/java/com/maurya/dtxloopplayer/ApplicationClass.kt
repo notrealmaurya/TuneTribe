@@ -3,6 +3,7 @@ package com.maurya.dtxloopplayer
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
@@ -16,10 +17,9 @@ class ApplicationClass:Application() {
 
     companion object{
         const val CHANNEL_ID  = "channel1"
-        const val EXIT  = "exit"
-        const val PLAY = "play"
-        const val NEXT  = "next"
-        const val PREVIOUS  = "previous"
+        const val ACTION_PLAY = "play"
+        const val ACTION_NEXT  = "next"
+        const val ACTION_PREVIOUS  = "previous"
     }
 
     @Inject
@@ -33,7 +33,7 @@ class ApplicationClass:Application() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(CHANNEL_ID,"Now Playing Song",NotificationManager.IMPORTANCE_HIGH)
             notificationChannel.description = "This is Important Channel for showing Songs"
-            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(notificationChannel)
 
         } else {

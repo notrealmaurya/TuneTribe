@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
@@ -63,19 +64,16 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".MusicService" />
 
-        <receiver
-            android:name=".NotificationReceiver"
+        <service
+            android:name=".MusicService"
             android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="PLAY" />
-                <action android:name="PREVIOUS" />
-                <action android:name="NEXT" />
-                <action android:name="EXIT" />
-            </intent-filter>
-        </receiver>
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
+
+        <receiver android:name=".NotificationReceiver"/>
+
+
     </application>
 
 </manifest>

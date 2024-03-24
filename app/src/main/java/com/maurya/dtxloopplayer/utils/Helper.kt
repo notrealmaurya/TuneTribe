@@ -21,6 +21,7 @@ import com.maurya.dtxloopplayer.database.FolderDataClass
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.database.PathDataClass
 import com.maurya.dtxloopplayer.database.PlayListDataClass
+import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -390,6 +391,33 @@ fun notifyAdapterSongTextPosition() {
 
 
 }
+
+
+fun playMusic() {
+    PlayerActivity.isPlaying = true
+    PlayerActivity.musicService!!.mediaPlayer!!.start()
+    PlayerActivity.binding.playPausePlayerActivity.setImageResource(R.drawable.icon_pause)
+    NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.playPauseMiniPlayer.setImageResource(
+        R.drawable.icon_pause
+    )
+    PlayerActivity.musicService!!.showNotification(R.drawable.icon_pause, "Pause")
+    val lottieView = PlayerActivity.binding.lottiePlayerActivity
+    lottieView.resumeAnimation()
+}
+
+
+fun pauseMusic() {
+    PlayerActivity.isPlaying = false
+    PlayerActivity.musicService!!.mediaPlayer!!.pause()
+    PlayerActivity.binding.playPausePlayerActivity.setImageResource(R.drawable.icon_play)
+    NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.playPauseMiniPlayer.setImageResource(
+        R.drawable.icon_play
+    )
+    PlayerActivity.musicService!!.showNotification(R.drawable.icon_play, "Play")
+    val lottieView = PlayerActivity.binding.lottiePlayerActivity
+    lottieView.pauseAnimation()
+}
+
 
 fun showToast(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()

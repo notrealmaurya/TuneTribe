@@ -215,7 +215,8 @@ class MainActivity : AppCompatActivity() {
                         Manifest.permission.READ_MEDIA_AUDIO,
                         Manifest.permission.READ_MEDIA_IMAGES,
                         Manifest.permission.READ_MEDIA_VIDEO,
-                        Manifest.permission.POST_NOTIFICATIONS
+                        Manifest.permission.POST_NOTIFICATIONS,
+                        Manifest.permission.FOREGROUND_SERVICE
                     ), 1
                 )
                 if (!Environment.isExternalStorageManager()) {
@@ -226,7 +227,7 @@ class MainActivity : AppCompatActivity() {
                 ActivityCompat.requestPermissions(
                     this@MainActivity, arrayOf(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     ), 2
                 )
             }
