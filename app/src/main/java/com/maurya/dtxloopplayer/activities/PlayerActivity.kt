@@ -43,13 +43,18 @@ import com.maurya.dtxloopplayer.databinding.ActivityPlayerBinding
 import com.maurya.dtxloopplayer.databinding.PopupDialogPlayeractivityMenuBinding
 import com.maurya.dtxloopplayer.databinding.PopupVideoSpeedBinding
 import com.maurya.dtxloopplayer.fragments.SongsFragment
+import com.maurya.dtxloopplayer.utils.createMediaPlayer
 import com.maurya.dtxloopplayer.utils.exitApplication
 import com.maurya.dtxloopplayer.utils.favouriteChecker
 import com.maurya.dtxloopplayer.utils.formatDuration
 import com.maurya.dtxloopplayer.utils.getMusicArt
+import com.maurya.dtxloopplayer.utils.getMusicDetailsPlayerActivity
 import com.maurya.dtxloopplayer.utils.notifyAdapterSongTextPosition
 import com.maurya.dtxloopplayer.utils.pauseMusic
 import com.maurya.dtxloopplayer.utils.playMusic
+import com.maurya.dtxloopplayer.utils.prevNextSong
+import com.maurya.dtxloopplayer.utils.setLayout
+import com.maurya.dtxloopplayer.utils.setMusicData
 import com.maurya.dtxloopplayer.utils.setSongPosition
 import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
@@ -72,18 +77,18 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper
-    private lateinit var viewModel: ViewModelObserver
 
     companion object {
+
+        lateinit var viewModel: ViewModelObserver
+
         lateinit var musicListPlayerActivity: ArrayList<MusicDataClass>
         var musicPosition: Int = 0
         var isPlaying: Boolean = false
         var musicService: MusicService? = null
-        var isInitialized = false
 
-        @SuppressLint("StaticFieldLeak")
+
         lateinit var binding: ActivityPlayerBinding
-
 
         //timer
         var isTimerOn: Boolean = false
@@ -96,7 +101,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         var favouriteIndex: Int = -1
 
         lateinit var loudnessEnhancer: LoudnessEnhancer
-
 
     }
 
@@ -123,7 +127,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             bindService(intentService, this, BIND_AUTO_CREATE)
             startService(intentService)
             musicListPlayerActivity = ArrayList()
-            musicListPlayerActivity.add(getMusicDetails(intent.data!!))
+            musicListPlayerActivity.add(getMusicDetailsPlayerActivity(intent.data!!, this))
             Glide.with(this)
                 .load(getMusicArt(musicListPlayerActivity[musicPosition].path))
                 .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
@@ -153,38 +157,10 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 .into(binding.songImagePlayerActivity)
         }
 
-
         listeners()
 
     }
 
-    private fun createMediaPlayer() {
-        try {
-            if (musicService!!.mediaPlayer == null) musicService!!.mediaPlayer = MediaPlayer()
-            musicService!!.mediaPlayer!!.reset()
-            musicService!!.mediaPlayer!!.setDataSource(musicListPlayerActivity[musicPosition].path)
-            musicService!!.mediaPlayer!!.prepare()
-            binding.durationPLAYEDPlayerActivity.text =
-                formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
-            binding.durationTOTALPlayerActivity.text =
-                formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
-            binding.seekBARPlayerActivity.progress = 0
-            binding.seekBARPlayerActivity.max = musicService!!.mediaPlayer!!.duration
-            NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.seekBarMiniPlayer.progress =
-                0
-            NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.seekBarMiniPlayer.max =
-                musicService!!.mediaPlayer!!.duration
-
-            musicService!!.mediaPlayer!!.setOnCompletionListener(this)
-            nowPlayingId = musicListPlayerActivity[musicPosition].id
-            playMusic()
-            loudnessEnhancer = LoudnessEnhancer(musicService!!.mediaPlayer!!.audioSessionId)
-            loudnessEnhancer.enabled = true
-
-        } catch (e: Exception) {
-            Log.e("MusicService", "Error in CreateMediaPlayerPlayerActivity", e)
-        }
-    }
 
     private fun initializeLayout() {
         musicPosition = intent.getIntExtra("index", 0)
@@ -193,17 +169,10 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
             "NowPlaying" -> {
                 setLayout()
-                binding.durationPLAYEDPlayerActivity.text =
-                    formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
-                binding.durationTOTALPlayerActivity.text =
-                    formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
+                setMusicData(viewModel)
                 binding.seekBARPlayerActivity.progress =
                     musicService!!.mediaPlayer!!.currentPosition
                 binding.seekBARPlayerActivity.max = musicService!!.mediaPlayer!!.duration
-                NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.seekBarMiniPlayer.progress =
-                    musicService!!.mediaPlayer!!.currentPosition
-                NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.seekBarMiniPlayer.max =
-                    musicService!!.mediaPlayer!!.duration
 
                 if (isPlaying) binding.playPausePlayerActivity.setImageResource(R.drawable.icon_pause)
                 else binding.playPausePlayerActivity.setImageResource(R.drawable.icon_play)
@@ -264,43 +233,10 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         if (musicService != null && !isPlaying) playMusic()
     }
 
-    private fun setLayout() {
-        favouriteIndex = favouriteChecker(musicListPlayerActivity[musicPosition].id)
-
-        if (!isFinishing && !isDestroyed) {
-            Glide.with(this)
-                .load(musicListPlayerActivity[musicPosition].image)
-                .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
-                .into(binding.songImagePlayerActivity)
-        }
-
-        setMusicData()
-
-        if (repeat) binding.repeatBtnPlayerActivity.setImageResource(R.drawable.icon_repeat_one)
-        if (isFavourite) binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_added)
-        else binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_empty)
-    }
-
-     private fun setMusicData() {
-        viewModel.setMusicData(
-            MusicDataClass(
-                musicListPlayerActivity[musicPosition].id,
-                musicListPlayerActivity[musicPosition].musicName,
-                musicListPlayerActivity[musicPosition].folderName,
-                musicListPlayerActivity[musicPosition].durationText,
-                musicListPlayerActivity[musicPosition].size,
-                musicListPlayerActivity[musicPosition].albumArtist,
-                musicListPlayerActivity[musicPosition].path,
-                musicListPlayerActivity[musicPosition].image,
-                musicListPlayerActivity[musicPosition].dateModified
-            )
-        )
-    }
 
     private fun initServiceAndPlaylist(
         playlist: ArrayList<MusicDataClass>,
-        shuffle: Boolean,
-        playNext: Boolean = false
+        shuffle: Boolean
     ) {
         val intent = Intent(this, MusicService::class.java)
         bindService(intent, this, BIND_AUTO_CREATE)
@@ -309,44 +245,9 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         musicListPlayerActivity.addAll(playlist)
         if (shuffle) musicListPlayerActivity.shuffle()
         setLayout()
+        setMusicData(viewModel)
     }
 
-    private fun getMusicDetails(contentUri: Uri): MusicDataClass {
-
-        var cursor: Cursor? = null
-        try {
-            val projection = arrayOf(
-                MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.DATE_MODIFIED  // Include the DATE_ADDED column
-            )
-            cursor = this.contentResolver.query(contentUri, projection, null, null, null)
-            val dataColumn = cursor?.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
-            val durationColumn = cursor?.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
-            val dateAddedColumn =
-                cursor?.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_MODIFIED) // Get the index of DATE_ADDED
-
-            cursor!!.moveToFirst()
-            val path = dataColumn?.let { cursor.getString(it) }
-            val duration = durationColumn?.let { cursor.getLong(it) }!!
-            val dateModified =
-                dateAddedColumn?.let { cursor.getLong(it) } ?: 0 // Handle if DATE_ADDED is null
-
-            return MusicDataClass(
-                id = "Unknown",
-                path.toString(),
-                "Unknown",
-                duration,
-                "Unknown",
-                "Unknown",
-                path.toString(),
-                "Unknown",
-                dateModified
-            )
-        } finally {
-            cursor?.close()
-        }
-    }
 
     private fun listeners() {
 
@@ -360,9 +261,22 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             else playMusic()
         }
 
-        binding.nextSongPlayerActivity.setOnClickListener { prevNextMusic(increment = true) }
+        binding.nextSongPlayerActivity.setOnClickListener {
+            prevNextSong(
+                increment = true,
+                musicService!!, viewModel
+            )
+            musicService!!.mediaPlayer!!.setOnCompletionListener(this)
+        }
 
-        binding.prevSongPlayerActivity.setOnClickListener { prevNextMusic(increment = false) }
+        binding.prevSongPlayerActivity.setOnClickListener {
+            prevNextSong(
+                increment = false,
+                musicService!!, viewModel
+            )
+
+            musicService!!.mediaPlayer!!.setOnCompletionListener(this)
+        }
 
         binding.seekBARPlayerActivity.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
@@ -605,6 +519,45 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     }
 
+    override fun onCompletion(mp: MediaPlayer?) {
+        prevNextSong(increment = true, musicService!!, viewModel)
+        musicService!!.mediaPlayer!!.setOnCompletionListener(this)
+    }
+
+
+    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+        if (musicService == null) {
+            val binder = service as MusicService.MyBinder
+            musicService = binder.currentService()
+            musicService!!.seekBarSetup()
+            musicService!!.audioManager =
+                getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            musicService!!.audioManager.requestAudioFocus(
+                musicService,
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN
+            )
+
+        }
+        createMediaPlayer(musicService!!)
+        musicService!!.mediaPlayer!!.setOnCompletionListener(this)
+        musicService!!.seekBarSetup()
+    }
+
+    override fun onServiceDisconnected(name: ComponentName?) {
+        musicService = null
+    }
+
+    private fun saveLottieAnimationTheme(theme: String) {
+        sharedPreferenceHelper.savePlayerActivityTheme(theme)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (musicListPlayerActivity[musicPosition].id == "Unknown" && !isPlaying) exitApplication()
+    }
+
+
     private fun timerMainDialog() {
 
         val presetDurations = arrayOf("15 min", "30 min", "45 min", "1 hr")
@@ -700,67 +653,4 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 .show()
         }
     }
-
-    override fun onCompletion(mp: MediaPlayer?) {
-        setSongPosition(increment = true)
-        createMediaPlayer()
-        setLayout()
-
-        setMusicData()
-    }
-
-
-    private fun prevNextMusic(increment: Boolean) {
-        if (increment) {
-            setSongPosition(increment = true)
-            setLayout()
-            createMediaPlayer()
-            setMusicData()
-        } else {
-            setSongPosition(increment = false)
-            setLayout()
-            createMediaPlayer()
-            setMusicData()
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 13 || requestCode == RESULT_OK) {
-            return
-        }
-    }
-
-    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        if (musicService == null) {
-            val binder = service as MusicService.MyBinder
-            musicService = binder.currentService()
-            musicService!!.seekBarSetup()
-            musicService!!.audioManager =
-                getSystemService(Context.AUDIO_SERVICE) as AudioManager
-            musicService!!.audioManager.requestAudioFocus(
-                musicService,
-                AudioManager.STREAM_MUSIC,
-                AudioManager.AUDIOFOCUS_GAIN
-            )
-
-        }
-        createMediaPlayer()
-        musicService!!.seekBarSetup()
-    }
-
-    override fun onServiceDisconnected(name: ComponentName?) {
-        musicService = null
-    }
-
-    private fun saveLottieAnimationTheme(theme: String) {
-        sharedPreferenceHelper.savePlayerActivityTheme(theme)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (musicListPlayerActivity[musicPosition].id == "Unknown" && !isPlaying) exitApplication()
-    }
-
-
 }

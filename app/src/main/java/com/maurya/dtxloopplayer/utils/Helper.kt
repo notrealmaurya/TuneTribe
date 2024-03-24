@@ -6,29 +6,32 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.database.Cursor
 import android.media.MediaMetadataRetriever
+import android.media.MediaPlayer
+import android.media.audiofx.LoudnessEnhancer
 import android.net.Uri
+import android.provider.MediaStore
 import android.provider.MediaStore.Audio.Media.*
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.maurya.dtxloopplayer.MainActivity
+import com.maurya.dtxloopplayer.MusicService
 import com.maurya.dtxloopplayer.R
-import com.maurya.dtxloopplayer.activities.FavouriteActivity
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.FolderDataClass
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.database.PathDataClass
-import com.maurya.dtxloopplayer.database.PlayListDataClass
 import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
+import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.Random
 import java.util.concurrent.TimeUnit
 import kotlin.math.ln
 import kotlin.math.pow
@@ -419,7 +422,117 @@ fun pauseMusic() {
 }
 
 
+fun prevNextSong(
+    increment: Boolean,
+    musicService: MusicService,
+    viewModelObserver: ViewModelObserver? = null
+) {
+    setSongPosition(increment = increment)
+    createMediaPlayer(musicService)
+    val viewModel = viewModelObserver ?: PlayerActivity.viewModel
+
+    setMusicData(viewModel)
+    setLayout()
+    playMusic()
+}
+
+fun setLayout() {
+    PlayerActivity.favouriteIndex =
+        favouriteChecker(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].id)
+    if (PlayerActivity.repeat) PlayerActivity.binding.repeatBtnPlayerActivity.setImageResource(R.drawable.icon_repeat_one)
+    if (PlayerActivity.isFavourite) PlayerActivity.binding.addFavouritePlayerActivity.setImageResource(
+        R.drawable.icon_favourite_added
+    )
+    else PlayerActivity.binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_empty)
+}
+
+fun setMusicData(viewModel: ViewModelObserver) {
+    viewModel.setMusicData(
+        MusicDataClass(
+            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].id,
+            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].musicName,
+            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].folderName,
+            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].durationText,
+            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].size,
+            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].albumArtist,
+            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].path,
+            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].image,
+            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].dateModified
+        )
+    )
+}
+
+fun createMediaPlayer(musicService: MusicService) {
+    try {
+        if (musicService.mediaPlayer == null) musicService.mediaPlayer = MediaPlayer()
+        musicService.mediaPlayer?.apply {
+            reset()
+            setDataSource(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].path)
+            prepare()
+        }
+        PlayerActivity.binding.playPausePlayerActivity.setImageResource(R.drawable.icon_pause)
+        musicService.showNotification(R.drawable.icon_pause, "Pause")
+        PlayerActivity.binding.durationPLAYEDPlayerActivity.text =
+            formatDuration(musicService.mediaPlayer?.currentPosition?.toLong() ?: 0)
+        PlayerActivity.binding.durationTOTALPlayerActivity.text =
+            formatDuration(musicService.mediaPlayer?.duration?.toLong() ?: 0)
+        PlayerActivity.binding.seekBARPlayerActivity.progress = 0
+        PlayerActivity.binding.seekBARPlayerActivity.max =
+            musicService.mediaPlayer?.duration ?: 0
+        NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.seekBarMiniPlayer.progress =
+            0
+        NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.seekBarMiniPlayer.max =
+            musicService.mediaPlayer!!.duration
+        PlayerActivity.nowPlayingId =
+            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].id
+        playMusic()
+
+        PlayerActivity.loudnessEnhancer =
+            LoudnessEnhancer(musicService.mediaPlayer?.audioSessionId ?: 0)
+        PlayerActivity.loudnessEnhancer.enabled = true
+    } catch (e: Exception) {
+        Log.e("MusicService", "Error in createMediaPlayer", e)
+    }
+}
+
+
 fun showToast(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
+
+fun getMusicDetailsPlayerActivity(contentUri: Uri, context: Context): MusicDataClass {
+    var cursor: Cursor? = null
+    try {
+        val projection = arrayOf(
+            MediaStore.Audio.Media.DATA,
+            MediaStore.Audio.Media.DURATION,
+            MediaStore.Audio.Media.DATE_MODIFIED
+        )
+        cursor = context.contentResolver.query(contentUri, projection, null, null, null)
+        val dataColumn = cursor?.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+        val durationColumn = cursor?.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
+        val dateAddedColumn =
+            cursor?.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_MODIFIED) // Get the index of DATE_ADDED
+
+        cursor!!.moveToFirst()
+        val path = dataColumn?.let { cursor.getString(it) }
+        val duration = durationColumn?.let { cursor.getLong(it) }!!
+        val dateModified =
+            dateAddedColumn?.let { cursor.getLong(it) } ?: 0 // Handle if DATE_ADDED is null
+
+        return MusicDataClass(
+            id = "Unknown",
+            path.toString(),
+            "Unknown",
+            duration,
+            "Unknown",
+            "Unknown",
+            path.toString(),
+            "Unknown",
+            dateModified
+        )
+    } finally {
+        cursor?.close()
+    }
+}

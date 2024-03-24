@@ -40,7 +40,6 @@ class FolderTracksActivity : AppCompatActivity() {
 
         val folderPath = intent.getStringExtra("folderPath") ?: ""
 
-        lifecycle.addObserver(viewModel)
 
         viewModel.fetchSongsFromFolder(this, folderPath)
 

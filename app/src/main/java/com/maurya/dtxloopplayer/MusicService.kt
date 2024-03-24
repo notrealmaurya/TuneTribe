@@ -24,6 +24,7 @@ import android.widget.RemoteViews
 import androidx.annotation.OptIn
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.media.app.NotificationCompat.MediaStyle
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaStyleNotificationHelper
@@ -33,14 +34,17 @@ import com.maurya.dtxloopplayer.ApplicationClass.Companion.ACTION_NEXT
 import com.maurya.dtxloopplayer.ApplicationClass.Companion.ACTION_PLAY
 import com.maurya.dtxloopplayer.ApplicationClass.Companion.ACTION_PREVIOUS
 import com.maurya.dtxloopplayer.activities.PlayerActivity
+import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
 import com.maurya.dtxloopplayer.utils.Versioning
+import com.maurya.dtxloopplayer.utils.createMediaPlayer
 import com.maurya.dtxloopplayer.utils.favouriteChecker
 import com.maurya.dtxloopplayer.utils.formatDuration
 import com.maurya.dtxloopplayer.utils.getMusicArt
 import com.maurya.dtxloopplayer.utils.notifyAdapterSongTextPosition
 import com.maurya.dtxloopplayer.utils.pauseMusic
 import com.maurya.dtxloopplayer.utils.playMusic
+import com.maurya.dtxloopplayer.utils.prevNextSong
 import com.maurya.dtxloopplayer.utils.setSongPosition
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 
@@ -192,15 +196,14 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
                     super.onSeekTo(pos)
                 }
 
-
                 override fun onPlay() {
-                    playMusic()
                     super.onPlay()
+                    playMusic()
                 }
 
                 override fun onPause() {
-                    pauseMusic()
                     super.onPause()
+                    pauseMusic()
                 }
 
                 override fun onSkipToNext() {
@@ -222,36 +225,13 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         }
     }
 
+
     override fun onCreate() {
         super.onCreate()
 
+
     }
 
-    fun createMediaPlayer() {
-        try {
-            if (mediaPlayer == null) mediaPlayer = MediaPlayer()
-            mediaPlayer!!.reset()
-            mediaPlayer!!.setDataSource(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].path)
-            mediaPlayer!!.prepare()
-            PlayerActivity.binding.playPausePlayerActivity.setImageResource(R.drawable.icon_pause)
-            showNotification(R.drawable.icon_pause, "Pause")
-            PlayerActivity.binding.durationPLAYEDPlayerActivity.text =
-                formatDuration(mediaPlayer!!.currentPosition.toLong())
-            PlayerActivity.binding.durationTOTALPlayerActivity.text =
-                formatDuration(mediaPlayer!!.duration.toLong())
-            PlayerActivity.binding.seekBARPlayerActivity.progress = 0
-            PlayerActivity.binding.seekBARPlayerActivity.max =
-                mediaPlayer!!.duration
-            PlayerActivity.nowPlayingId =
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].id
-            PlayerActivity.nowPlayingId =
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].id
-            PlayerActivity.loudnessEnhancer = LoudnessEnhancer(mediaPlayer!!.audioSessionId)
-            PlayerActivity.loudnessEnhancer.enabled = true
-        } catch (e: Exception) {
-            Log.e("MusicService", "Error in seekBarSetup", e)
-        }
-    }
 
     fun seekBarSetup() {
         runnable = Runnable {
@@ -275,7 +255,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
                 }
 
                 ACTION_NEXT -> if (PlayerActivity.musicListPlayerActivity.size > 1) {
-                    prevNextSong(increment = true, context = this)
+                    prevNextSong(increment = true,this)
                 }
 
                 ACTION_PLAY -> {
@@ -286,42 +266,6 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         return START_NOT_STICKY
     }
 
-    private fun prevNextSong(increment: Boolean, context: Context) {
-        setSongPosition(increment = increment)
-        PlayerActivity.musicService!!.createMediaPlayer()
-
-
-
-
-        Glide.with(context)
-            .load(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].image)
-            .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
-            .into(PlayerActivity.binding.songImagePlayerActivity)
-
-        PlayerActivity.binding.songNAME.text =
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].musicName
-        PlayerActivity.binding.songARTIST.text =
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].albumArtist
-        Glide.with(context)
-            .load(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].image)
-            .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
-            .into(NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.AlbumArtMiniPlayer)
-
-        NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.songNameMiniPlayer.text =
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].folderName
-        NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.songArtistMiniPlayer.text =
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].albumArtist
-
-        playMusic()
-        PlayerActivity.favouriteIndex =
-            favouriteChecker(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].id)
-        if (PlayerActivity.isFavourite) PlayerActivity.binding.addFavouritePlayerActivity.setImageResource(
-            R.drawable.icon_favourite_added
-        )
-        else PlayerActivity.binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_empty)
-
-        notifyAdapterSongTextPosition()
-    }
 
     override fun onAudioFocusChange(focusChange: Int) {
         when (focusChange) {
@@ -354,7 +298,6 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         }
 
     }
-
 
 
     override fun onDestroy() {

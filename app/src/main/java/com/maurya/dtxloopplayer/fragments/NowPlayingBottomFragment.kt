@@ -23,9 +23,11 @@ import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.FragmentNowPlayingBottomBinding
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
+import com.maurya.dtxloopplayer.utils.createMediaPlayer
 import com.maurya.dtxloopplayer.utils.notifyAdapterSongTextPosition
 import com.maurya.dtxloopplayer.utils.pauseMusic
 import com.maurya.dtxloopplayer.utils.playMusic
+import com.maurya.dtxloopplayer.utils.prevNextSong
 import com.maurya.dtxloopplayer.utils.sendIntent
 import com.maurya.dtxloopplayer.utils.setSongPosition
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
@@ -63,7 +65,6 @@ class NowPlayingBottomFragment : Fragment() {
 
         fragmentNowPlayingBottomBinding.root.visibility = View.INVISIBLE
 
-
         viewModel.songInfo.observe(viewLifecycleOwner) { musicData ->
             fragmentNowPlayingBottomBinding.songNameMiniPlayer.text = musicData.musicName
             fragmentNowPlayingBottomBinding.songArtistMiniPlayer.text = musicData.albumArtist
@@ -75,7 +76,6 @@ class NowPlayingBottomFragment : Fragment() {
                 .error(R.drawable.icon_music)
                 .into(fragmentNowPlayingBottomBinding.AlbumArtMiniPlayer)
         }
-
 
         listeners()
     }
@@ -136,18 +136,13 @@ class NowPlayingBottomFragment : Fragment() {
             musicAdapter.notifyDataSetChanged()
         }
 
-
         fragmentNowPlayingBottomBinding.playPauseMiniPlayer.setOnClickListener {
             if (PlayerActivity.isPlaying) pauseMusic()
             else playMusic()
         }
 
         fragmentNowPlayingBottomBinding.NextMiniPlayer.setOnClickListener {
-            setSongPosition(increment = true)
-            PlayerActivity.musicService!!.createMediaPlayer()
-            setMusicData()
-            PlayerActivity.musicService!!.showNotification(R.drawable.icon_pause, "Play")
-            playMusic()
+            prevNextSong(increment = true, PlayerActivity.musicService!!, viewModel)
         }
     }
 
@@ -174,20 +169,5 @@ class NowPlayingBottomFragment : Fragment() {
         }
     }
 
-    private fun setMusicData() {
-        viewModel.setMusicData(
-            MusicDataClass(
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].id,
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].musicName,
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].folderName,
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].durationText,
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].size,
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].albumArtist,
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].path,
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].image,
-                PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].dateModified
-            )
-        )
-    }
 
 }
