@@ -21,6 +21,7 @@ import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.database.MusicDataClass
+import com.maurya.dtxloopplayer.databinding.ActivityPlayerBinding
 import com.maurya.dtxloopplayer.databinding.FragmentNowPlayingBottomBinding
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.createMediaPlayer
@@ -32,6 +33,7 @@ import com.maurya.dtxloopplayer.utils.sendIntent
 import com.maurya.dtxloopplayer.utils.setSongPosition
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 
@@ -39,9 +41,15 @@ import javax.inject.Inject
 class NowPlayingBottomFragment : Fragment() {
 
     private lateinit var musicAdapter: AdapterMusic
+    private lateinit var fragmentNowPlayingBottomBinding: FragmentNowPlayingBottomBinding
 
     companion object {
-        lateinit var fragmentNowPlayingBottomBinding: FragmentNowPlayingBottomBinding
+
+        private var bindingRef: WeakReference<FragmentNowPlayingBottomBinding>? = null
+
+        fun getNowPlayingFragmentBinding(): FragmentNowPlayingBottomBinding? {
+            return bindingRef?.get()
+        }
     }
 
 
@@ -62,6 +70,8 @@ class NowPlayingBottomFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        bindingRef = WeakReference(fragmentNowPlayingBottomBinding)
 
 //        fragmentNowPlayingBottomBinding.root.visibility = View.INVISIBLE
 

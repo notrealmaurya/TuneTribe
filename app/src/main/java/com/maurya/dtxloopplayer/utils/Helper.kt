@@ -397,28 +397,32 @@ fun notifyAdapterSongTextPosition() {
 
 
 fun playMusic(musicService: MusicService) {
+    val playerBinding = PlayerActivity.getPlayerActivityBinding()
+    val nowPlayingBottomBinding = NowPlayingBottomFragment.getNowPlayingFragmentBinding()
+
     PlayerActivity.isPlaying = true
     PlayerActivity.musicService!!.mediaPlayer!!.start()
-    PlayerActivity.binding.playPausePlayerActivity.setImageResource(R.drawable.icon_pause)
-    NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.playPauseMiniPlayer.setImageResource(
+    playerBinding?.playPausePlayerActivity?.setImageResource(R.drawable.icon_pause)
+    nowPlayingBottomBinding?.playPauseMiniPlayer?.setImageResource(
         R.drawable.icon_pause
     )
     musicService.showNotification(R.drawable.icon_pause, "Pause")
-    val lottieView = PlayerActivity.binding.lottiePlayerActivity
-    lottieView.resumeAnimation()
+    playerBinding?.lottiePlayerActivity?.resumeAnimation()
 }
 
 
 fun pauseMusic(musicService: MusicService) {
+    val playerBinding = PlayerActivity.getPlayerActivityBinding()
+    val nowPlayingBottomBinding = NowPlayingBottomFragment.getNowPlayingFragmentBinding()
+
     PlayerActivity.isPlaying = false
     PlayerActivity.musicService!!.mediaPlayer!!.pause()
-    PlayerActivity.binding.playPausePlayerActivity.setImageResource(R.drawable.icon_play)
-    NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.playPauseMiniPlayer.setImageResource(
+    playerBinding?.playPausePlayerActivity?.setImageResource(R.drawable.icon_play)
+    nowPlayingBottomBinding?.playPauseMiniPlayer?.setImageResource(
         R.drawable.icon_play
     )
     musicService.showNotification(R.drawable.icon_play, "Play")
-    val lottieView = PlayerActivity.binding.lottiePlayerActivity
-    lottieView.pauseAnimation()
+    playerBinding?.lottiePlayerActivity?.pauseAnimation()
 }
 
 
@@ -436,13 +440,15 @@ fun prevNextSong(
 }
 
 fun setLayout() {
+    val playerBinding = PlayerActivity.getPlayerActivityBinding()
+
     PlayerActivity.favouriteIndex =
         favouriteChecker(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].id)
-    if (PlayerActivity.repeat) PlayerActivity.binding.repeatBtnPlayerActivity.setImageResource(R.drawable.icon_repeat_one)
-    if (PlayerActivity.isFavourite) PlayerActivity.binding.addFavouritePlayerActivity.setImageResource(
+    if (PlayerActivity.repeat) playerBinding?.repeatBtnPlayerActivity?.setImageResource(R.drawable.icon_repeat_one)
+    if (PlayerActivity.isFavourite) playerBinding?.addFavouritePlayerActivity?.setImageResource(
         R.drawable.icon_favourite_added
     )
-    else PlayerActivity.binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_empty)
+    else playerBinding?.addFavouritePlayerActivity?.setImageResource(R.drawable.icon_favourite_empty)
 }
 
 fun setMusicData(viewModel: ViewModelObserver) {
@@ -463,24 +469,27 @@ fun setMusicData(viewModel: ViewModelObserver) {
 
 fun createMediaPlayer(musicService: MusicService) {
     try {
+        val playerBinding = PlayerActivity.getPlayerActivityBinding()
+        val nowPlayingBottomBinding = NowPlayingBottomFragment.getNowPlayingFragmentBinding()
+
         if (musicService.mediaPlayer == null) musicService.mediaPlayer = MediaPlayer()
         musicService.mediaPlayer?.apply {
             reset()
             setDataSource(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].path)
             prepare()
         }
-        PlayerActivity.binding.playPausePlayerActivity.setImageResource(R.drawable.icon_pause)
+        playerBinding?.playPausePlayerActivity?.setImageResource(R.drawable.icon_pause)
 //        musicService.showNotification(R.drawable.icon_pause, "Pause")
-        PlayerActivity.binding.durationPLAYEDPlayerActivity.text =
+        playerBinding?.durationPLAYEDPlayerActivity?.text =
             formatDuration(musicService.mediaPlayer?.currentPosition?.toLong() ?: 0)
-        PlayerActivity.binding.durationTOTALPlayerActivity.text =
+        playerBinding?.durationTOTALPlayerActivity?.text =
             formatDuration(musicService.mediaPlayer?.duration?.toLong() ?: 0)
-        PlayerActivity.binding.seekBARPlayerActivity.progress = 0
-        PlayerActivity.binding.seekBARPlayerActivity.max =
+        playerBinding?.seekBARPlayerActivity?.progress = 0
+        playerBinding?.seekBARPlayerActivity?.max =
             musicService.mediaPlayer?.duration ?: 0
-        NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.seekBarMiniPlayer.progress =
+        nowPlayingBottomBinding?.seekBarMiniPlayer?.progress =
             0
-        NowPlayingBottomFragment.fragmentNowPlayingBottomBinding.seekBarMiniPlayer.max =
+        nowPlayingBottomBinding?.seekBarMiniPlayer?.max =
             musicService.mediaPlayer!!.duration
         PlayerActivity.nowPlayingId =
             PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].id

@@ -59,6 +59,7 @@ import com.maurya.dtxloopplayer.utils.setSongPosition
 import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.ref.WeakReference
 import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.TimeUnit
@@ -74,6 +75,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     private var timer: Timer? = null
 
+    private lateinit var binding: ActivityPlayerBinding
 
     @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper
@@ -88,7 +90,11 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         var musicService: MusicService? = null
 
 
-        lateinit var binding: ActivityPlayerBinding
+        private var bindingRef: WeakReference<ActivityPlayerBinding>? = null
+
+        fun getPlayerActivityBinding(): ActivityPlayerBinding? {
+            return bindingRef?.get()
+        }
 
         //timer
         var isTimerOn: Boolean = false
@@ -109,6 +115,8 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        bindingRef = WeakReference(binding)
 
         sharedPreferenceHelper = SharedPreferenceHelper(this)
         viewModel = ViewModelProvider(this)[ViewModelObserver::class.java]
@@ -159,13 +167,13 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
 
 
-        val positionRetrieve = sharedPreferenceHelper.getPlayBackState()
-        if (positionRetrieve > 0) {
-            musicService!!.mediaPlayer!!.seekTo(positionRetrieve)
-            if (isPlaying) {
-                musicService!!.mediaPlayer!!.start()
-            }
-        }
+//        val positionRetrieve = sharedPreferenceHelper.getPlayBackState()
+//        if (positionRetrieve > 0) {
+//            musicService!!.mediaPlayer!!.seekTo(positionRetrieve)
+//            if (isPlaying) {
+//                musicService!!.mediaPlayer!!.start()
+//            }
+//        }
 
 
         listeners()
