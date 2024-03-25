@@ -102,6 +102,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
         lateinit var loudnessEnhancer: LoudnessEnhancer
 
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -156,6 +157,16 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 .error(R.drawable.icon_music)
                 .into(binding.songImagePlayerActivity)
         }
+
+
+        val positionRetrieve = sharedPreferenceHelper.getPlayBackState()
+        if (positionRetrieve > 0) {
+            musicService!!.mediaPlayer!!.seekTo(positionRetrieve)
+            if (isPlaying) {
+                musicService!!.mediaPlayer!!.start()
+            }
+        }
+
 
         listeners()
 
@@ -415,7 +426,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
 
         //Player activity menu
-        val bottomSheetDialog = BottomSheetDialog(this,R.style.ThemeOverlay_App_BottomSheetDialog)
+        val bottomSheetDialog = BottomSheetDialog(this, R.style.ThemeOverlay_App_BottomSheetDialog)
         val bottomSheetView =
             LayoutInflater.from(this)
                 .inflate(R.layout.popup_dialog_playeractivity_menu, binding.root, false)
@@ -547,6 +558,25 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         super.onDestroy()
         if (musicListPlayerActivity[musicPosition].id == "Unknown" && !isPlaying) exitApplication()
     }
+
+    override fun onPause() {
+        super.onPause()
+        sharedPreferenceHelper.savePlayBackState(
+            musicService!!.mediaPlayer!!.currentPosition,
+            musicService!!.mediaPlayer!!.isPlaying
+        )
+    }
+
+//    override fun onStart() {
+//        super.onStart()
+//
+//        if (musicPosition > 0) {
+//            musicService!!.mediaPlayer!!.seekTo(musicPosition)
+//            if (isPlaying) {
+//                musicService!!.mediaPlayer!!.start()
+//            }
+//        }
+//    }
 
 
     private fun saveLottieAnimationTheme(theme: String) {

@@ -63,7 +63,7 @@ class NowPlayingBottomFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fragmentNowPlayingBottomBinding.root.visibility = View.INVISIBLE
+//        fragmentNowPlayingBottomBinding.root.visibility = View.INVISIBLE
 
         viewModel.songInfo.observe(viewLifecycleOwner) { musicData ->
             fragmentNowPlayingBottomBinding.songNameMiniPlayer.text = musicData.musicName

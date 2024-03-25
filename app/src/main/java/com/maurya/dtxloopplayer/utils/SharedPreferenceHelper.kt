@@ -1,6 +1,7 @@
 package com.maurya.dtxloopplayer.utils
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -100,6 +101,16 @@ class SharedPreferenceHelper @Inject constructor(@ApplicationContext context: Co
     fun getPlayListSongCount(playListId: String): Int {
         val key = "playlistCount_$playListId"
         return sharedPreferences.getInt(key, 0)
+    }
+
+    fun savePlayBackState(position: Int, isPlaying: Boolean) {
+        sharedPreferences.edit().putInt("playbackPosition", position)
+            .putBoolean("isPlaying", isPlaying).apply()
+    }
+
+
+    fun getPlayBackState(): Int {
+        return sharedPreferences.getInt("playbackPosition", 0)
     }
 
 
