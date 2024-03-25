@@ -415,7 +415,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
 
         //Player activity menu
-        val bottomSheetDialog = BottomSheetDialog(this)
+        val bottomSheetDialog = BottomSheetDialog(this,R.style.ThemeOverlay_App_BottomSheetDialog)
         val bottomSheetView =
             LayoutInflater.from(this)
                 .inflate(R.layout.popup_dialog_playeractivity_menu, binding.root, false)

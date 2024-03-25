@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:paddingStart="0dp"
+        android:clickable="false"
         android:paddingEnd="0dp"
         android:progressTint="#FF4D4D"
         android:thumb="@android:color/transparent" />

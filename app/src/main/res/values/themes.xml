@@ -11,7 +11,7 @@
         <item name="android:background">@color/white</item>
     </style>
 
-    <!--    Bottom Dialog-->
+    <!--    Bottom Sheet Dialog-->
     <style name="ThemeOverlay.App.BottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/ShoppingList.BottomSheetDialog</item>
     </style>

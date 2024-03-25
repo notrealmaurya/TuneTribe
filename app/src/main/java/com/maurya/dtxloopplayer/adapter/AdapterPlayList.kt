@@ -84,7 +84,7 @@ class AdapterPlayList(
 
 
     private fun showBottomSheetDialog(position: Int) {
-        val bottomSheetDialog = BottomSheetDialog(context)
+        val bottomSheetDialog = BottomSheetDialog(context,R.style.ThemeOverlay_App_BottomSheetDialog)
         val bottomSheetView =
             LayoutInflater.from(context)
                 .inflate(R.layout.popup_dialog_playlist_edit, null)
@@ -96,7 +96,7 @@ class AdapterPlayList(
         bindingPopUp.popUpRename.setOnClickListener {
             bottomSheetDialog.dismiss()
             val renameSheetDialog =
-                BottomSheetDialog(context)
+                BottomSheetDialog(context,R.style.ThemeOverlay_App_BottomSheetDialog)
             val renameSheetView =
                 LayoutInflater.from(context).inflate(R.layout.popup_dialog_rename, null)
             val bindingRenamePopUp = PopupDialogRenameBinding.bind(renameSheetView)
