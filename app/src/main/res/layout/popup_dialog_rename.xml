@@ -3,10 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/pop_sheet"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:cardCornerRadius="30dp"
+    android:layout_height="match_parent"
     app:cardBackgroundColor="@android:color/transparent"
+    app:cardCornerRadius="20dp"
     app:cardElevation="0dp"
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true">
@@ -16,7 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
 
         <com.airbnb.lottie.LottieAnimationView
             android:layout_width="110dp"
@@ -29,7 +27,6 @@
             app:lottie_autoPlay="true"
             app:lottie_fileName="rename.json"
             app:lottie_loop="true" />
-
 
         <TextView
             android:layout_width="match_parent"
