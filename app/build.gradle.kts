@@ -62,34 +62,12 @@ dependencies {
     kapt(libs.hilt.android.compiler)
     annotationProcessor(libs.dagger.compiler)
 
-
     //lifecycle ViewModel LiveData
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
 
     //coroutines
     implementation(libs.kotlinx.coroutines.android)
-
-    // Navigation Component
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
-
-    //lottie
-    implementation(libs.lottie)
-
-    //glide
-    implementation(libs.glide)
-
-
-    //notification
-    implementation(libs.androidx.media)
-
-    //gson
-    implementation(libs.gson)
-
-    //drawer
-    implementation(libs.minavdrawer)
-
 
     //room
     implementation(libs.androidx.room.runtime)
@@ -98,5 +76,23 @@ dependencies {
     // To use Kotlin Symbol Processing (KSP)
     ksp(libs.androidx.room.room.compiler)
 
+
+
+    // Navigation Component
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    //lottie
+    implementation(libs.lottie)
+    //glide
+    implementation(libs.glide)
+    //circular Imageview
+    implementation (libs.circleimageview)
+
+
+    //notification
+    implementation(libs.androidx.media)
+
+    //gson
+    implementation(libs.gson)
 
 }

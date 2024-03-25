@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="65dp">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/PlayerBackBtn"
             android:layout_width="60dp"
             android:layout_height="match_parent"
@@ -71,28 +71,28 @@
 
     </RelativeLayout>
 
-
-    <LinearLayout
-        android:id="@+id/PlayerLayoutThumbnail"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/pop_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/PlayerLayoutSeekBar"
         android:layout_below="@+id/layout_topBTN"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_margin="30dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="40dp"
+        app:cardElevation="0dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/songImagePlayerActivity"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:padding="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/icon_circle"
             android:scaleType="centerCrop"
             android:src="@drawable/icon_music" />
 
-
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 
     <LinearLayout

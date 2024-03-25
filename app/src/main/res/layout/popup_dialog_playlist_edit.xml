@@ -4,17 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    app:cardBackgroundColor="@android:color/transparent"
     app:cardCornerRadius="20dp"
-    android:background="@android:color/transparent"
+    app:cardElevation="0dp"
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true">
 
 
     <LinearLayout
+        style="@style/LayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        style="@style/LayoutStyle"
         android:orientation="vertical">
 
 
@@ -23,20 +24,20 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="10dp"
-            android:textColor="@color/ImageViewAndTextViewColour"
             android:gravity="center|start"
             android:paddingStart="40dp"
-            android:text="PlayList Name"/>
+            android:text="PlayList Name"
+            android:textColor="@color/ImageViewAndTextViewColour" />
 
 
         <LinearLayout
             android:id="@+id/popUpDelete"
             android:layout_width="match_parent"
             android:layout_height="65dp"
+            android:background="@drawable/bg_about_ripple"
             android:clickable="true"
             android:gravity="center_vertical"
             android:minHeight="?attr/actionBarSize"
-            android:background="@drawable/bg_about_ripple"
             android:orientation="horizontal">
 
             <ImageView
@@ -48,12 +49,12 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:textSize="15sp"
-                android:textColor="@color/ImageViewAndTextViewColour"
                 android:layout_marginStart="20dp"
                 android:drawablePadding="25dp"
                 android:gravity="center|start"
-                android:text="Delete" />
+                android:text="Delete"
+                android:textColor="@color/ImageViewAndTextViewColour"
+                android:textSize="15sp" />
 
         </LinearLayout>
 
@@ -62,11 +63,11 @@
             android:id="@+id/popUpRename"
             android:layout_width="match_parent"
             android:layout_height="65dp"
-            android:clickable="true"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/bg_about_ripple"
+            android:clickable="true"
             android:gravity="center_vertical"
             android:minHeight="?attr/actionBarSize"
-            android:layout_marginBottom="20dp"
             android:orientation="horizontal">
 
 
@@ -80,11 +81,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:gravity="center|start"
                 android:layout_marginStart="21dp"
+                android:gravity="center|start"
                 android:text="Rename"
-                android:textSize="15sp"
-                android:textColor="@color/ImageViewAndTextViewColour"/>
+                android:textColor="@color/ImageViewAndTextViewColour"
+                android:textSize="15sp" />
 
 
         </LinearLayout>

@@ -15,11 +15,11 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/FavouriteBackBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
             android:layout_marginStart="5dp"
-            android:padding="10dp"
+            android:background="@drawable/bg_ripplefactor"
+            android:padding="17dp"
             android:src="@drawable/icon_back" />
 
         <TextView
@@ -28,11 +28,12 @@
             android:layout_gravity="center"
             android:layout_marginStart="15dp"
             android:ellipsize="end"
+            android:fontFamily="@font/font_title"
             android:gravity="start"
             android:singleLine="true"
             android:text="Favourite Songs"
             android:textColor="@color/ImageViewAndTextViewColour"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -65,10 +66,11 @@
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
+            android:fontFamily="@font/font_songcount"
             android:gravity="center_vertical"
             android:text="0 song"
             android:textColor="@color/ImageViewAndTextViewColour"
-            android:textSize="13sp" />
+            android:textSize="15sp" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="40dp"
@@ -94,7 +96,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/view"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp" />
 
     <LinearLayout
         android:id="@+id/NoSongsFavouriteActivity"

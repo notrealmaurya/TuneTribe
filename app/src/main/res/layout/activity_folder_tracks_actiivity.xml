@@ -21,13 +21,13 @@
         android:layout_height="65dp"
         android:orientation="horizontal">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/folderTracksBackBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
             android:layout_marginStart="5dp"
-            android:padding="10dp"
+            android:background="@drawable/bg_ripplefactor"
+            android:padding="17dp"
             android:src="@drawable/icon_back" />
 
         <TextView
@@ -37,12 +37,14 @@
             android:layout_gravity="center"
             android:layout_marginStart="15dp"
             android:ellipsize="end"
+            android:fontFamily="@font/font_title"
             android:gravity="start"
             android:singleLine="true"
-            android:text="PlayList Name"
+            android:text="Folder"
             android:textColor="@color/ImageViewAndTextViewColour"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
+        />
 
     </LinearLayout>
 
@@ -61,23 +63,26 @@
             android:id="@+id/shuffleBtnFoldersTrackActivity"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
+            android:background="@drawable/icon_circle"
+            android:backgroundTint="#E0FFFF"
             android:drawableStart="@drawable/icon_shuffle"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
+            android:paddingHorizontal="10dp"
             android:text="Shuffle"
             android:textAllCaps="false"
-            android:textSize="12sp" />
+            android:textColor="#000000" />
+
 
         <TextView
             android:id="@+id/totalSongsFoldersTrackActivity"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
+            android:fontFamily="@font/font_songcount"
+            android:gravity="center_vertical"
             android:text="0 song"
             android:textColor="@color/ImageViewAndTextViewColour"
-            android:textSize="13sp" />
-
+            android:textSize="15sp" />
 
         <ImageView
             android:layout_width="20dp"

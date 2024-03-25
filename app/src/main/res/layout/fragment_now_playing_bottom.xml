@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/BottomPlayerHome"
     android:layout_width="match_parent"
@@ -20,23 +21,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/seekBarMiniPlayer"
-        android:layout_marginHorizontal="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="15dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <com.google.android.material.imageview.ShapeableImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/AlbumArtMiniPlayer"
             android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:background="@drawable/icon_circle"
-            android:padding="12dp"
+            android:padding="8dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/icon_music" />
+            android:src="@drawable/icon_music"
+            />
+
 
         <LinearLayout
             android:id="@+id/midLayout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:orientation="vertical">

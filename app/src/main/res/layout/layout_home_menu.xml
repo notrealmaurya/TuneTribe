@@ -6,7 +6,6 @@
     android:elevation="30dp"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:id="@+id/nameAtoZLayoutPopUpMenu"
         style="@style/PopUpWindowStyle"

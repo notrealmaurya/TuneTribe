@@ -7,24 +7,12 @@
     android:padding="10dp">
 
 
-    <androidx.cardview.widget.CardView
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/musicImageMusicItem"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="10dp"
-        app:cardBackgroundColor="@android:color/transparent"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="0dp">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/musicImageMusicItem"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingHorizontal="5dp"
-            android:src="@drawable/icon_music" />
-
-    </androidx.cardview.widget.CardView>
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon_music" />
 
 
     <LinearLayout
