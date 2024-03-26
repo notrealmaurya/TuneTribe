@@ -23,4 +23,7 @@
         android:id="@+id/playerTheme6"
         android:title="Theme 6" />
 
+    <item
+        android:id="@+id/playerTheme7"
+        android:title="Theme 7" />
 </menu>

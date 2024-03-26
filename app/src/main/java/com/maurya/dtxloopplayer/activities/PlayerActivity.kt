@@ -401,6 +401,13 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                         true
                     }
 
+                    R.id.playerTheme7 -> {
+                        binding.lottiePlayerActivity.setAnimation("wave7.json")
+                        binding.lottiePlayerActivity.playAnimation()
+                        saveLottieAnimationTheme("wave7.json")
+                        true
+                    }
+
                     else -> false
                 }
             }
