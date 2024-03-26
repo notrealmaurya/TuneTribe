@@ -192,8 +192,8 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
             mediaSession.setCallback(object : MediaSessionCompat.Callback() {
                 override fun onSeekTo(pos: Long) {
-                    mediaPlayer!!.seekTo(pos.toInt())
                     super.onSeekTo(pos)
+                    mediaPlayer!!.seekTo(pos.toInt())
                 }
 
                 override fun onPlay() {
@@ -207,13 +207,13 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
                 }
 
                 override fun onSkipToNext() {
-                    prevNextSong(increment = true, this@MusicService)
                     super.onSkipToNext()
+                    prevNextSong(increment = true, this@MusicService)
                 }
 
                 override fun onSkipToPrevious() {
-                    prevNextSong(increment = false, this@MusicService)
                     super.onSkipToPrevious()
+                    prevNextSong(increment = false, this@MusicService)
                 }
 
             })

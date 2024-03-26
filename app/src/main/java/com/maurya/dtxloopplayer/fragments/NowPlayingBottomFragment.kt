@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -45,6 +46,8 @@ class NowPlayingBottomFragment : Fragment() {
 
     companion object {
 
+        lateinit var viewModel: ViewModelObserver
+
         private var bindingRef: WeakReference<FragmentNowPlayingBottomBinding>? = null
 
         fun getNowPlayingFragmentBinding(): FragmentNowPlayingBottomBinding? {
@@ -56,7 +59,6 @@ class NowPlayingBottomFragment : Fragment() {
     @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
-    private val viewModel: ViewModelObserver by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,6 +76,8 @@ class NowPlayingBottomFragment : Fragment() {
         bindingRef = WeakReference(fragmentNowPlayingBottomBinding)
 
 //        fragmentNowPlayingBottomBinding.root.visibility = View.INVISIBLE
+
+        viewModel = ViewModelProvider(this)[ViewModelObserver::class.java]
 
         viewModel.songInfo.observe(viewLifecycleOwner) { musicData ->
             fragmentNowPlayingBottomBinding.songNameMiniPlayer.text = musicData.musicName

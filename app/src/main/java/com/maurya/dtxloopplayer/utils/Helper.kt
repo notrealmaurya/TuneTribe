@@ -434,7 +434,8 @@ fun prevNextSong(
     setSongPosition(increment = increment)
     createMediaPlayer(musicService)
     val viewModel = viewModelObserver ?: PlayerActivity.viewModel
-    setMusicData(viewModel)
+    setMusicData(PlayerActivity.viewModel)
+    setMusicData(NowPlayingBottomFragment.viewModel)
     setLayout()
     playMusic(musicService)
 }

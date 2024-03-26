@@ -9,10 +9,6 @@ import com.maurya.dtxloopplayer.ApplicationClass.Companion.ACTION_NEXT
 import com.maurya.dtxloopplayer.ApplicationClass.Companion.ACTION_PLAY
 import com.maurya.dtxloopplayer.ApplicationClass.Companion.ACTION_PREVIOUS
 import com.maurya.dtxloopplayer.activities.PlayerActivity
-import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
-import com.maurya.dtxloopplayer.utils.exitApplication
-import com.maurya.dtxloopplayer.utils.favouriteChecker
-import com.maurya.dtxloopplayer.utils.notifyAdapterSongTextPosition
 import com.maurya.dtxloopplayer.utils.pauseMusic
 import com.maurya.dtxloopplayer.utils.playMusic
 import com.maurya.dtxloopplayer.utils.prevNextSong
