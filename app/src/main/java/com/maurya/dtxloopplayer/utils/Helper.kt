@@ -429,11 +429,9 @@ fun pauseMusic(musicService: MusicService) {
 fun prevNextSong(
     increment: Boolean,
     musicService: MusicService,
-    viewModelObserver: ViewModelObserver? = null
 ) {
     setSongPosition(increment = increment)
     createMediaPlayer(musicService)
-    val viewModel = viewModelObserver ?: PlayerActivity.viewModel
     setMusicData(PlayerActivity.viewModel)
     setMusicData(NowPlayingBottomFragment.viewModel)
     setLayout()

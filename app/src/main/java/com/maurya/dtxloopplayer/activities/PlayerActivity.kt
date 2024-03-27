@@ -283,7 +283,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         binding.nextSongPlayerActivity.setOnClickListener {
             prevNextSong(
                 increment = true,
-                musicService!!, viewModel
+                musicService!!
             )
             musicService!!.mediaPlayer!!.setOnCompletionListener(this)
         }
@@ -291,7 +291,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         binding.prevSongPlayerActivity.setOnClickListener {
             prevNextSong(
                 increment = false,
-                musicService!!, viewModel
+                musicService!!
             )
 
             musicService!!.mediaPlayer!!.setOnCompletionListener(this)
@@ -533,7 +533,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
-        prevNextSong(increment = true, musicService!!, viewModel)
+        prevNextSong(increment = true, musicService!!)
         musicService!!.mediaPlayer!!.setOnCompletionListener(this)
     }
 

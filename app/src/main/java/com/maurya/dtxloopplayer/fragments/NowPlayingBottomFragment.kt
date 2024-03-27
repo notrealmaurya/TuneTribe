@@ -156,7 +156,7 @@ class NowPlayingBottomFragment : Fragment() {
         }
 
         fragmentNowPlayingBottomBinding.NextMiniPlayer.setOnClickListener {
-            prevNextSong(increment = true, PlayerActivity.musicService!!, viewModel)
+            prevNextSong(increment = true, PlayerActivity.musicService!!)
         }
     }
 
