@@ -15,7 +15,6 @@ import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.MusicService
 import com.maurya.dtxloopplayer.R
@@ -24,7 +23,6 @@ import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.FolderDataClass
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.database.PathDataClass
-import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -390,22 +388,15 @@ fun sendIntent(context: Context, position: Int, reference: String) {
     ContextCompat.startActivity(context, intent, null)
 }
 
-fun notifyAdapterSongTextPosition() {
 
-
-}
 
 
 fun playMusic(musicService: MusicService) {
     val playerBinding = PlayerActivity.getPlayerActivityBinding()
-    val nowPlayingBottomBinding = NowPlayingBottomFragment.getNowPlayingFragmentBinding()
 
-    PlayerActivity.isPlaying = true
-    PlayerActivity.musicService!!.mediaPlayer!!.start()
+    MainActivity.isPlaying = true
+    MainActivity.musicService!!.mediaPlayer!!.start()
     playerBinding?.playPausePlayerActivity?.setImageResource(R.drawable.icon_pause)
-    nowPlayingBottomBinding?.playPauseMiniPlayer?.setImageResource(
-        R.drawable.icon_pause
-    )
     musicService.showNotification(R.drawable.icon_pause, "Pause")
     playerBinding?.lottiePlayerActivity?.resumeAnimation()
 }
@@ -413,14 +404,10 @@ fun playMusic(musicService: MusicService) {
 
 fun pauseMusic(musicService: MusicService) {
     val playerBinding = PlayerActivity.getPlayerActivityBinding()
-    val nowPlayingBottomBinding = NowPlayingBottomFragment.getNowPlayingFragmentBinding()
 
-    PlayerActivity.isPlaying = false
-    PlayerActivity.musicService!!.mediaPlayer!!.pause()
+    MainActivity.isPlaying = false
+    MainActivity.musicService!!.mediaPlayer!!.pause()
     playerBinding?.playPausePlayerActivity?.setImageResource(R.drawable.icon_play)
-    nowPlayingBottomBinding?.playPauseMiniPlayer?.setImageResource(
-        R.drawable.icon_play
-    )
     musicService.showNotification(R.drawable.icon_play, "Play")
     playerBinding?.lottiePlayerActivity?.pauseAnimation()
 }
@@ -432,17 +419,15 @@ fun prevNextSong(
 ) {
     setSongPosition(increment = increment)
     createMediaPlayer(musicService)
-    setMusicData(PlayerActivity.viewModel)
-    setMusicData(NowPlayingBottomFragment.viewModel)
+    setMusicData(MainActivity.viewModel)
     setLayout()
     playMusic(musicService)
 }
 
 fun setLayout() {
     val playerBinding = PlayerActivity.getPlayerActivityBinding()
-
     PlayerActivity.favouriteIndex =
-        favouriteChecker(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].id)
+        favouriteChecker(MainActivity.musicListPlayerFragment[MainActivity.musicPosition].id)
     if (PlayerActivity.repeat) playerBinding?.repeatBtnPlayerActivity?.setImageResource(R.drawable.icon_repeat_one)
     if (PlayerActivity.isFavourite) playerBinding?.addFavouritePlayerActivity?.setImageResource(
         R.drawable.icon_favourite_added
@@ -453,15 +438,15 @@ fun setLayout() {
 fun setMusicData(viewModel: ViewModelObserver) {
     viewModel.setMusicData(
         MusicDataClass(
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].id,
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].musicName,
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].folderName,
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].durationText,
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].size,
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].albumArtist,
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].path,
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].image,
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].dateModified
+            MainActivity.musicListPlayerFragment[MainActivity.musicPosition].id,
+            MainActivity.musicListPlayerFragment[MainActivity.musicPosition].musicName,
+            MainActivity.musicListPlayerFragment[MainActivity.musicPosition].folderName,
+            MainActivity.musicListPlayerFragment[MainActivity.musicPosition].durationText,
+            MainActivity.musicListPlayerFragment[MainActivity.musicPosition].size,
+            MainActivity.musicListPlayerFragment[MainActivity.musicPosition].albumArtist,
+            MainActivity.musicListPlayerFragment[MainActivity.musicPosition].path,
+            MainActivity.musicListPlayerFragment[MainActivity.musicPosition].image,
+            MainActivity.musicListPlayerFragment[MainActivity.musicPosition].dateModified
         )
     )
 }
@@ -469,16 +454,15 @@ fun setMusicData(viewModel: ViewModelObserver) {
 fun createMediaPlayer(musicService: MusicService) {
     try {
         val playerBinding = PlayerActivity.getPlayerActivityBinding()
-        val nowPlayingBottomBinding = NowPlayingBottomFragment.getNowPlayingFragmentBinding()
 
         if (musicService.mediaPlayer == null) musicService.mediaPlayer = MediaPlayer()
         musicService.mediaPlayer?.apply {
             reset()
-            setDataSource(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].path)
+            setDataSource(MainActivity.musicListPlayerFragment[MainActivity.musicPosition].path)
             prepare()
         }
         playerBinding?.playPausePlayerActivity?.setImageResource(R.drawable.icon_pause)
-//        musicService.showNotification(R.drawable.icon_pause, "Pause")
+        musicService.showNotification(R.drawable.icon_pause, "Pause")
         playerBinding?.durationPLAYEDPlayerActivity?.text =
             formatDuration(musicService.mediaPlayer?.currentPosition?.toLong() ?: 0)
         playerBinding?.durationTOTALPlayerActivity?.text =
@@ -486,12 +470,8 @@ fun createMediaPlayer(musicService: MusicService) {
         playerBinding?.seekBARPlayerActivity?.progress = 0
         playerBinding?.seekBARPlayerActivity?.max =
             musicService.mediaPlayer?.duration ?: 0
-        nowPlayingBottomBinding?.seekBarMiniPlayer?.progress =
-            0
-        nowPlayingBottomBinding?.seekBarMiniPlayer?.max =
-            musicService.mediaPlayer!!.duration
         PlayerActivity.nowPlayingId =
-            PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].id
+            MainActivity.musicListPlayerFragment[MainActivity.musicPosition].id
         playMusic(musicService)
 
         PlayerActivity.loudnessEnhancer =

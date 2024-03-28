@@ -10,9 +10,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.media.audiofx.LoudnessEnhancer
 import android.os.Binder
-import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -20,33 +18,18 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
-import android.widget.RemoteViews
-import androidx.annotation.OptIn
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.media.app.NotificationCompat.MediaStyle
-import androidx.media3.common.util.UnstableApi
-import androidx.media3.session.MediaStyleNotificationHelper
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.maurya.dtxloopplayer.ApplicationClass.Companion.ACTION_NEXT
 import com.maurya.dtxloopplayer.ApplicationClass.Companion.ACTION_PLAY
 import com.maurya.dtxloopplayer.ApplicationClass.Companion.ACTION_PREVIOUS
 import com.maurya.dtxloopplayer.activities.PlayerActivity
-import com.maurya.dtxloopplayer.database.MusicDataClass
-import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
 import com.maurya.dtxloopplayer.utils.Versioning
-import com.maurya.dtxloopplayer.utils.createMediaPlayer
-import com.maurya.dtxloopplayer.utils.favouriteChecker
 import com.maurya.dtxloopplayer.utils.formatDuration
 import com.maurya.dtxloopplayer.utils.getMusicArt
-import com.maurya.dtxloopplayer.utils.notifyAdapterSongTextPosition
 import com.maurya.dtxloopplayer.utils.pauseMusic
 import com.maurya.dtxloopplayer.utils.playMusic
 import com.maurya.dtxloopplayer.utils.prevNextSong
-import com.maurya.dtxloopplayer.utils.setSongPosition
-import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 
 class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 

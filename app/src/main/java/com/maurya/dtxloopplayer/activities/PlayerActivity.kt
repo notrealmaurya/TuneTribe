@@ -1,29 +1,15 @@
 package com.maurya.dtxloopplayer.activities
 
-import android.annotation.SuppressLint
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
-import android.database.Cursor
-import android.graphics.drawable.InsetDrawable
-import android.media.AudioManager
-import android.media.MediaPlayer
 import android.media.audiofx.AudioEffect
 import android.media.audiofx.LoudnessEnhancer
 import android.net.Uri
 import android.os.Bundle
-import android.os.IBinder
-import android.provider.MediaStore
-import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.widget.PopupMenu
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -33,29 +19,18 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.maurya.dtxloopplayer.MainActivity
-import com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment
-import com.maurya.dtxloopplayer.MusicService
 import com.maurya.dtxloopplayer.R
-import com.maurya.dtxloopplayer.adapter.AdapterMusic
-import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.databinding.ActivityPlayerBinding
 import com.maurya.dtxloopplayer.databinding.PopupDialogPlayeractivityMenuBinding
 import com.maurya.dtxloopplayer.databinding.PopupVideoSpeedBinding
-import com.maurya.dtxloopplayer.fragments.SongsFragment
-import com.maurya.dtxloopplayer.utils.createMediaPlayer
-import com.maurya.dtxloopplayer.utils.exitApplication
 import com.maurya.dtxloopplayer.utils.favouriteChecker
-import com.maurya.dtxloopplayer.utils.formatDuration
 import com.maurya.dtxloopplayer.utils.getMusicArt
 import com.maurya.dtxloopplayer.utils.getMusicDetailsPlayerActivity
-import com.maurya.dtxloopplayer.utils.notifyAdapterSongTextPosition
 import com.maurya.dtxloopplayer.utils.pauseMusic
 import com.maurya.dtxloopplayer.utils.playMusic
 import com.maurya.dtxloopplayer.utils.prevNextSong
-import com.maurya.dtxloopplayer.utils.setLayout
 import com.maurya.dtxloopplayer.utils.setMusicData
-import com.maurya.dtxloopplayer.utils.setSongPosition
 import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,10 +43,7 @@ import kotlin.system.exitProcess
 
 
 @AndroidEntryPoint
-class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
-
-    private lateinit var musicAdapter: AdapterMusic
-    private var shuffle: Boolean = false
+class PlayerActivity : AppCompatActivity() {
 
     private var timer: Timer? = null
 
@@ -80,15 +52,10 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
     @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
+
+    private lateinit var viewModel: ViewModelObserver
+
     companion object {
-
-        lateinit var viewModel: ViewModelObserver
-
-        lateinit var musicListPlayerActivity: ArrayList<MusicDataClass>
-        var musicPosition: Int = 0
-        var isPlaying: Boolean = false
-        var musicService: MusicService? = null
-
 
         private var bindingRef: WeakReference<ActivityPlayerBinding>? = null
 
@@ -107,7 +74,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         var favouriteIndex: Int = -1
 
         lateinit var loudnessEnhancer: LoudnessEnhancer
-
 
     }
 
@@ -130,25 +96,18 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
 
 
-        if (intent.data?.scheme.contentEquals("content")) {
-            musicPosition = 0
-            val intentService = Intent(this, MusicService::class.java)
-            bindService(intentService, this, BIND_AUTO_CREATE)
-            startService(intentService)
-            musicListPlayerActivity = ArrayList()
-            musicListPlayerActivity.add(getMusicDetailsPlayerActivity(intent.data!!, this))
-            Glide.with(this)
-                .load(getMusicArt(musicListPlayerActivity[musicPosition].path))
-                .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
-                .into(binding.songImagePlayerActivity)
-            binding.songNAME.text = musicListPlayerActivity[musicPosition].musicName
-            binding.songARTIST.text = musicListPlayerActivity[musicPosition].albumArtist
-        } else {
-            initializeLayout()
-        }
+        MainActivity.musicListPlayerFragment.add(getMusicDetailsPlayerActivity(intent.data!!, this))
+        Glide.with(this)
+            .load(getMusicArt(MainActivity.musicListPlayerFragment[MainActivity.musicPosition].path))
+            .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
+            .into(binding.songImagePlayerActivity)
+        binding.songNAME.text =
+            MainActivity.musicListPlayerFragment[MainActivity.musicPosition].musicName
+        binding.songARTIST.text =
+            MainActivity.musicListPlayerFragment[MainActivity.musicPosition].albumArtist
 
-        favouriteIndex = favouriteChecker(musicListPlayerActivity[musicPosition].id)
-
+        favouriteIndex =
+            favouriteChecker(MainActivity.musicListPlayerFragment[MainActivity.musicPosition].id)
 
         binding.songNAME.isSelected = true
         binding.songARTIST.isSelected = true
@@ -166,105 +125,11 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 .into(binding.songImagePlayerActivity)
         }
 
-
-//        val positionRetrieve = sharedPreferenceHelper.getPlayBackState()
-//        if (positionRetrieve > 0) {
-//            musicService!!.mediaPlayer!!.seekTo(positionRetrieve)
-//            if (isPlaying) {
-//                musicService!!.mediaPlayer!!.start()
-//            }
-//        }
+        setMusicData(viewModel)
 
 
         listeners()
 
-    }
-
-
-    private fun initializeLayout() {
-        musicPosition = intent.getIntExtra("index", 0)
-
-        when (intent.getStringExtra("class")) {
-
-            "NowPlaying" -> {
-                setLayout()
-                setMusicData(viewModel)
-                binding.seekBARPlayerActivity.progress =
-                    musicService!!.mediaPlayer!!.currentPosition
-                binding.seekBARPlayerActivity.max = musicService!!.mediaPlayer!!.duration
-
-                if (isPlaying) binding.playPausePlayerActivity.setImageResource(R.drawable.icon_pause)
-                else binding.playPausePlayerActivity.setImageResource(R.drawable.icon_play)
-            }
-
-
-            "MusicAdapterSearch" -> initServiceAndPlaylist(
-                SearchActivity.musicListSearch,
-                shuffle = false
-            )
-
-            "SongsFragment" -> initServiceAndPlaylist(
-                SongsFragment.musicList,
-                shuffle = false
-            )
-
-            "SongsFragmentShuffle" -> initServiceAndPlaylist(
-                SongsFragment.musicList,
-                shuffle = true
-            )
-
-            "FavouriteAdapter" -> initServiceAndPlaylist(
-                MainActivity.favouriteMusicList,
-                shuffle = false
-            )
-
-            "FavouriteActivityShuffle" -> initServiceAndPlaylist(
-                MainActivity.favouriteMusicList,
-                shuffle = true
-            )
-
-            "PlayListActivity" -> initServiceAndPlaylist(
-                PlayListActivity.currentPlayListMusicList,
-                shuffle = false
-            )
-
-            "PlayListActivityShuffle" -> initServiceAndPlaylist(
-                PlayListActivity.currentPlayListMusicList,
-                shuffle = true
-            )
-
-            "folderSongsActivity" -> initServiceAndPlaylist(
-                FolderTracksActivity.folderMusicList, shuffle = false
-
-            )
-
-            "folderSongsActivityShuffle" -> initServiceAndPlaylist(
-                FolderTracksActivity.folderMusicList, shuffle = true
-            )
-
-            "queueActivity" -> {
-                initServiceAndPlaylist(
-                    musicListPlayerActivity, shuffle = false
-                )
-            }
-
-        }
-//        if (musicService != null && !isPlaying) playMusic(musicService!!)
-    }
-
-
-    private fun initServiceAndPlaylist(
-        playlist: ArrayList<MusicDataClass>,
-        shuffle: Boolean
-    ) {
-        val intent = Intent(this, MusicService::class.java)
-        bindService(intent, this, BIND_AUTO_CREATE)
-        startService(intent)
-        musicListPlayerActivity = ArrayList()
-        musicListPlayerActivity.addAll(playlist)
-        if (shuffle) musicListPlayerActivity.shuffle()
-        setLayout()
-        setMusicData(viewModel)
     }
 
 
@@ -276,25 +141,22 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
 
         binding.playPausePlayerActivity.setOnClickListener {
-            if (isPlaying) pauseMusic(musicService!!)
-            else playMusic(musicService!!)
+            if (MainActivity.isPlaying) pauseMusic(MainActivity.musicService!!)
+            else playMusic(MainActivity.musicService!!)
         }
 
         binding.nextSongPlayerActivity.setOnClickListener {
             prevNextSong(
                 increment = true,
-                musicService!!
+                MainActivity.musicService!!
             )
-            musicService!!.mediaPlayer!!.setOnCompletionListener(this)
         }
 
         binding.prevSongPlayerActivity.setOnClickListener {
             prevNextSong(
                 increment = false,
-                musicService!!
+                MainActivity.musicService!!
             )
-
-            musicService!!.mediaPlayer!!.setOnCompletionListener(this)
         }
 
         binding.seekBARPlayerActivity.setOnSeekBarChangeListener(object :
@@ -305,10 +167,9 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 fromUser: Boolean
             ) {
                 if (fromUser) {
-                    musicService!!.mediaPlayer!!.seekTo(progress)
+                    MainActivity.musicService!!.mediaPlayer!!.seekTo(progress)
                 }
             }
-
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
             override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
@@ -341,7 +202,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             shareIntent.type = "audio/*"
             shareIntent.putExtra(
                 Intent.EXTRA_STREAM,
-                Uri.parse(musicListPlayerActivity[musicPosition].path)
+                Uri.parse(MainActivity.musicListPlayerFragment[MainActivity.musicPosition].path)
             )
             startActivity(Intent.createChooser(shareIntent, "Sharing Music File"))
         }
@@ -417,7 +278,8 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
         //add favourite
         binding.addFavouritePlayerActivity.setOnClickListener {
-            favouriteIndex = favouriteChecker(musicListPlayerActivity[musicPosition].id)
+            favouriteIndex =
+                favouriteChecker(MainActivity.musicListPlayerFragment[MainActivity.musicPosition].id)
 
             if (isFavourite) {
                 isFavourite = false
@@ -427,7 +289,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             } else {
                 isFavourite = true
                 binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_added)
-                MainActivity.favouriteMusicList.add(musicListPlayerActivity[musicPosition])
+                MainActivity.favouriteMusicList.add(MainActivity.musicListPlayerFragment[MainActivity.musicPosition])
                 showToast(this, "Added in Favourite")
             }
             sharedPreferenceHelper.savePlayListSong(
@@ -458,7 +320,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             val equalizerIntent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL)
             equalizerIntent.putExtra(
                 AudioEffect.EXTRA_AUDIO_SESSION,
-                musicService!!.mediaPlayer!!.audioSessionId
+                MainActivity.musicService!!.mediaPlayer!!.audioSessionId
             )
 
             equalizerIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, baseContext.packageName)
@@ -532,10 +394,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     }
 
-    override fun onCompletion(mp: MediaPlayer?) {
-        prevNextSong(increment = true, musicService!!)
-        musicService!!.mediaPlayer!!.setOnCompletionListener(this)
-    }
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -544,55 +402,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             return
         }
     }
-
-    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        if (musicService == null) {
-            val binder = service as MusicService.MyBinder
-            musicService = binder.currentService()
-            musicService!!.seekBarSetup()
-            musicService!!.audioManager =
-                getSystemService(Context.AUDIO_SERVICE) as AudioManager
-            musicService!!.audioManager.requestAudioFocus(
-                musicService,
-                AudioManager.STREAM_MUSIC,
-                AudioManager.AUDIOFOCUS_GAIN
-            )
-
-        }
-        createMediaPlayer(musicService!!)
-        musicService!!.mediaPlayer!!.setOnCompletionListener(this)
-        musicService!!.seekBarSetup()
-    }
-
-    override fun onServiceDisconnected(name: ComponentName?) {
-        musicService = null
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (musicListPlayerActivity[musicPosition].id == "Unknown" && !isPlaying) exitApplication()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        sharedPreferenceHelper.savePlayBackState(
-            musicService!!.mediaPlayer!!.currentPosition,
-            musicService!!.mediaPlayer!!.isPlaying
-        )
-    }
-
-//    override fun onStart() {
-//        super.onStart()
-//
-//        if (musicPosition > 0) {
-//            musicService!!.mediaPlayer!!.seekTo(musicPosition)
-//            if (isPlaying) {
-//                musicService!!.mediaPlayer!!.start()
-//            }
-//        }
-//    }
-
 
     private fun saveLottieAnimationTheme(theme: String) {
         sharedPreferenceHelper.savePlayerActivityTheme(theme)
@@ -674,7 +483,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     private fun timerExpired() {
         runOnUiThread {
-            pauseMusic(musicService!!)
+            pauseMusic(MainActivity.musicService!!)
             MaterialAlertDialogBuilder(this)
                 .setTitle("Timer Expired")
                 .setMessage("Do you want to exit the application?")

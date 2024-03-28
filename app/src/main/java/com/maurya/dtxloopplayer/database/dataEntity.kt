@@ -7,7 +7,6 @@ import android.provider.MediaStore
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "musicRecords")
 data class MusicDataClass(
     var id: String,
     var musicName: String,
@@ -20,15 +19,9 @@ data class MusicDataClass(
     var dateModified: Long,
     var isChecked: Boolean = false,
     var isFavourite: Boolean = false
-) {
-    @PrimaryKey(autoGenerate = true)
-    var ids: Long = 0
-}
+)
 
 
-
-
-@Entity(tableName = "folderRecords")
 data class FolderDataClass(
     @PrimaryKey val id: String,
     val folderName: String,
@@ -37,8 +30,6 @@ data class FolderDataClass(
     var isChecked: Boolean = false
 )
 
-
-@Entity(tableName = "playListRecords")
 data class PlayListDataClass(
     @PrimaryKey val id: String,
     var playListName: String,

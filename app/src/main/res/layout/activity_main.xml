@@ -7,9 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".MainActivity"
-    >
-
+    tools:context=".MainActivity">
 
     <LinearLayout
         android:id="@+id/topLayout"
@@ -67,26 +65,30 @@
 
     </LinearLayout>
 
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/view_PAGER"
+    <LinearLayout
+        android:id="@+id/main_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/BottomPlayerHome"
         android:layout_below="@id/topLayout"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:orientation="vertical">
 
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/BottomPlayerHome"
-        android:name="com.maurya.dtxloopplayer.fragments.NowPlayingBottomFragment"
-        style="@style/LayoutStyle"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:visibility="visible"
-        tools:layout="@layout/fragment_now_playing_bottom" />
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/view_PAGER"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        </FrameLayout>
+
+        <!-- CONTROLS PANEL -->
+        <include layout="@layout/player_controls_panel" />
+    </LinearLayout>
 
 
 </RelativeLayout>
