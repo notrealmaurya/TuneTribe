@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/BottomPlayerHome"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/PopUpWindowColour">
+
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/seekBarMiniPlayer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            app:indicatorColor="#FF4D4D"
+            app:trackCornerRadius="2dp"
+            app:trackThickness="2dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/seekBarMiniPlayer"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="15dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/AlbumArtMiniPlayer"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:padding="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icon_music" />
+
+
+            <LinearLayout
+                android:id="@+id/midLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/songNameMiniPlayer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:fontFamily="@font/font_title"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="This is Song Name"
+                    android:textColor="@color/ImageViewAndTextViewColour"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/songArtistMiniPlayer"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:ellipsize="marquee"
+                    android:fontFamily="@font/font_songcount"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="This is Artist Name"
+                    android:textColor="#737A91"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/playPauseMiniPlayer"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_ripplefactor"
+                android:clickable="true"
+                android:padding="8dp"
+                android:src="@drawable/icon_play" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/NextMiniPlayer"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_ripplefactor"
+                android:padding="7dp"
+                android:src="@drawable/icon_notification_next" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/queueNowPlayingFragment"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_ripplefactor"
+                android:clickable="true"
+                android:padding="5dp"
+                android:src="@drawable/icon_queue" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</merge>
