@@ -322,32 +322,23 @@ private fun getAlbumArtThumbnail(context: Context, musicFilePath: String): Uri? 
 fun setSongPosition(increment: Boolean) {
     if (!PlayerActivity.repeat) {
         if (increment) {
-            if (PlayerActivity.musicListPlayerActivity.size - 1 == PlayerActivity.musicPosition) {
-                PlayerActivity.musicPosition = 0
+            if (MainActivity.musicListPlayerFragment.size - 1 == MainActivity.musicPosition) {
+                MainActivity.musicPosition = 0
             } else {
-                ++PlayerActivity.musicPosition
+                ++MainActivity.musicPosition
             }
 
         } else {
-            if (0 == PlayerActivity.musicPosition) {
-                PlayerActivity.musicPosition =
-                    PlayerActivity.musicListPlayerActivity.size - 1
+            if (0 == MainActivity.musicPosition) {
+                MainActivity.musicPosition =
+                    MainActivity.musicListPlayerFragment.size - 1
             } else {
-                --PlayerActivity.musicPosition
+                --MainActivity.musicPosition
             }
         }
     }
 }
 
-fun exitApplication() {
-    if (PlayerActivity.musicService != null) {
-        PlayerActivity.musicService!!.audioManager.abandonAudioFocus(PlayerActivity.musicService)
-        PlayerActivity.musicService!!.stopForeground(true)
-        PlayerActivity.musicService!!.mediaPlayer!!.release()
-        PlayerActivity.musicService = null
-    }
-    exitProcess(1)
-}
 
 fun favouriteChecker(id: String): Int {
     PlayerActivity.isFavourite = false
@@ -387,8 +378,6 @@ fun sendIntent(context: Context, position: Int, reference: String) {
     intent.putExtra("index", position)
     ContextCompat.startActivity(context, intent, null)
 }
-
-
 
 
 fun playMusic(musicService: MusicService) {
