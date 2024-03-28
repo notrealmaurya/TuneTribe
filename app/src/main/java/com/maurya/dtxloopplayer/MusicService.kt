@@ -103,7 +103,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
 
             val musicArt =
-                getMusicArt(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].path)
+                getMusicArt(MainActivity.musicListPlayerFragment[MainActivity.musicPosition].path)
             val image: Bitmap?
             if (musicArt != null) {
                 image = BitmapFactory.decodeByteArray(musicArt, 0, musicArt.size)
@@ -127,11 +127,11 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
                     .setSilent(true)
                     .setShowWhen(false)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    .setOngoing(PlayerActivity.isPlaying)
+                    .setOngoing(MainActivity.isPlaying)
                     .setSmallIcon(R.drawable.icon_music)
                     .setLargeIcon(image)
-                    .setContentTitle(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].musicName)
-                    .setContentText(PlayerActivity.musicListPlayerActivity[PlayerActivity.musicPosition].albumArtist)
+                    .setContentTitle(MainActivity.musicListPlayerFragment[MainActivity.musicPosition].musicName)
+                    .setContentText(MainActivity.musicListPlayerFragment[MainActivity.musicPosition].albumArtist)
                     .addAction(R.drawable.icon_notification_prev, "Prev", prevPendingIntent)
                     .addAction(playPauseButton, title, playPendingIntent)
                     .addAction(R.drawable.icon_notification_next, "Next", nextPendingIntent)
@@ -146,7 +146,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
                     .build()
 
 
-            val playbackSpeed = if (PlayerActivity.isPlaying) 1F else 0F
+            val playbackSpeed = if (MainActivity.isPlaying) 1F else 0F
 
             mediaSession.setMetadata(
                 MediaMetadataCompat.Builder()
@@ -211,14 +211,11 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
     fun seekBarSetup() {
         val playerBinding = PlayerActivity.getPlayerActivityBinding()
-        val nowPlayingBottomBinding = NowPlayingBottomFragment.getNowPlayingFragmentBinding()
 
         runnable = Runnable {
             playerBinding?.durationPLAYEDPlayerActivity?.text =
                 formatDuration(mediaPlayer!!.currentPosition.toLong())
             playerBinding?.seekBARPlayerActivity?.progress = mediaPlayer!!.currentPosition
-            nowPlayingBottomBinding?.seekBarMiniPlayer?.progress =
-                mediaPlayer!!.currentPosition
             Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
         }
         Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
@@ -229,16 +226,16 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
             when (it.action) {
-                ACTION_PREVIOUS -> if (PlayerActivity.musicListPlayerActivity.size > 1) {
+                ACTION_PREVIOUS -> if (MainActivity.musicListPlayerFragment.size > 1) {
                     prevNextSong(false, this)
                 }
 
-                ACTION_NEXT -> if (PlayerActivity.musicListPlayerActivity.size > 1) {
+                ACTION_NEXT -> if (MainActivity.musicListPlayerFragment.size > 1) {
                     prevNextSong(increment = true, this)
                 }
 
                 ACTION_PLAY -> {
-                    if (PlayerActivity.isPlaying) pauseMusic(this@MusicService) else playMusic(this@MusicService)
+                    if (MainActivity.isPlaying) pauseMusic(this@MusicService) else playMusic(this@MusicService)
                 }
             }
         }
@@ -258,13 +255,13 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
                 val currentVolume =
-                    PlayerActivity.musicService!!.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+                    MainActivity.musicService!!.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
                 val maxVolume =
-                    PlayerActivity.musicService!!.audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+                    MainActivity.musicService!!.audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
 
                 val duckedVolume = maxVolume / 2
 
-                PlayerActivity.musicService!!.audioManager.setStreamVolume(
+                MainActivity.musicService!!.audioManager.setStreamVolume(
                     AudioManager.STREAM_MUSIC,
                     duckedVolume,
                     0

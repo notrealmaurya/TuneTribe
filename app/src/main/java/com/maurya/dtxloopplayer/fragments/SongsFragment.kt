@@ -56,8 +56,6 @@ class SongsFragment : Fragment() {
         var musicList: ArrayList<MusicDataClass> = arrayListOf()
     }
 
-    private lateinit var db: tuneTribeDatabase
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -88,31 +86,8 @@ class SongsFragment : Fragment() {
         }
 
         fetchMusicUsingViewModel()
-//        fetchMusicUsingRoomDatabase()
 
         listener()
-
-
-    }
-
-    private fun fetchMusicUsingRoomDatabase() {
-        fragmentSongsBinding.progressBar.visibility = View.GONE
-
-        db = Room.databaseBuilder(requireContext(), tuneTribeDatabase::class.java, "musicRecords")
-            .build()
-
-        fragmentSongsBinding.progressBar.visibility = View.VISIBLE
-
-
-        db.tuneTribeDao().getAllMusicData().observe(viewLifecycleOwner) { retrievedData ->
-            Log.d("FragmentItemClass", "Size of retrievedData: ${retrievedData.size}")
-            fragmentSongsBinding.progressBar.visibility = View.GONE
-            musicList.clear()
-            musicList.addAll(retrievedData)
-            adapterMusic.notifyDataSetChanged()
-            fragmentSongsBinding.MusicListTotalSongFragment.text =
-                "Recording Files : ${adapterMusic.itemCount}"
-        }
 
 
     }

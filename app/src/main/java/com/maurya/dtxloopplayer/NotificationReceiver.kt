@@ -19,24 +19,22 @@ class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
 
         when (intent?.action) {
-            ACTION_PREVIOUS -> if (PlayerActivity.musicListPlayerActivity.size > 1) {
+            ACTION_PREVIOUS -> if (MainActivity.musicListPlayerFragment.size > 1) {
                 prevNextSong(increment = false, MusicService())
             }
 
             ACTION_PLAY -> {
-                if (PlayerActivity.isPlaying) pauseMusic(PlayerActivity.musicService!!) else playMusic(PlayerActivity.musicService!!)
+                if (MainActivity.isPlaying) pauseMusic(MainActivity.musicService!!) else playMusic(
+                    MainActivity.musicService!!
+                )
             }
 
-            ACTION_NEXT-> if (PlayerActivity.musicListPlayerActivity.size > 1) {
+            ACTION_NEXT -> if (MainActivity.musicListPlayerFragment.size > 1) {
                 prevNextSong(increment = true, MusicService())
             }
 
         }
     }
-
-
-
-
 
 
 }

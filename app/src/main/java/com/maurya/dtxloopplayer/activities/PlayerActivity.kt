@@ -69,7 +69,6 @@ class PlayerActivity : AppCompatActivity() {
 
         var repeat: Boolean = false
 
-        var nowPlayingId: String = ""
         var isFavourite: Boolean = false
         var favouriteIndex: Int = -1
 

@@ -459,7 +459,7 @@ fun createMediaPlayer(musicService: MusicService) {
         playerBinding?.seekBARPlayerActivity?.progress = 0
         playerBinding?.seekBARPlayerActivity?.max =
             musicService.mediaPlayer?.duration ?: 0
-        PlayerActivity.nowPlayingId =
+        MainActivity.nowPlayingId =
             MainActivity.musicListPlayerFragment[MainActivity.musicPosition].id
         playMusic(musicService)
 

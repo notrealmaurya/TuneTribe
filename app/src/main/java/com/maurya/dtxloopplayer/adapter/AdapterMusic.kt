@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.activities.PlayListActivity
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.R
@@ -19,6 +20,7 @@ import com.maurya.dtxloopplayer.databinding.ItemMusicBinding
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.sendIntent
+import com.maurya.dtxloopplayer.utils.showToast
 
 class AdapterMusic(
     private val context: Context,
@@ -128,17 +130,12 @@ class AdapterMusic(
             else -> {
                 holder.root.setOnClickListener {
                     when {
-                        musicList[position].id == PlayerActivity.nowPlayingId ->
-                            sendIntent(
-                                context,
-                                reference = "NowPlaying",
-                                position = PlayerActivity.musicPosition
-                            )
+                        musicList[position].id == MainActivity.nowPlayingId ->
+                            showToast(context, "This song is currently Playing")
 
                         else -> {
                             sendIntent(context, reference = "SongsFragment", position = position)
                         }
-
 
                     }
 
@@ -147,7 +144,6 @@ class AdapterMusic(
 
         }
     }
-
 
 
     //for playlist selection activity
@@ -177,7 +173,6 @@ class AdapterMusic(
 
         return !isAdded
     }
-
 
 
     override fun getItemCount(): Int {

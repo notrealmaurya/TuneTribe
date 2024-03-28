@@ -79,13 +79,17 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
         var musicPosition: Int = 0
         var isPlaying: Boolean = false
         var boundEnabled: Boolean = false
+        var nowPlayingId: String = ""
 
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
+        playerControlsPanelBinding = PlayerControlsPanelBinding.bind(activityMainBinding.root)
+
         setContentView(activityMainBinding.root)
+
 
         sharedPreferenceHelper = SharedPreferenceHelper(this)
 
