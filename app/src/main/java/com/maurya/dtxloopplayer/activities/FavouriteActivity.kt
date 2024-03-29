@@ -8,6 +8,7 @@ import com.maurya.dtxloopplayer.MainActivity.Companion.favouriteMusicList
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivityFavouriteBinding
+import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.checkListData
 import com.maurya.dtxloopplayer.utils.favouriteChecker
@@ -85,7 +86,6 @@ class FavouriteActivity : AppCompatActivity() {
         fetchSongsFromFavourite()
         changeItemCount()
     }
-
 
 
 }

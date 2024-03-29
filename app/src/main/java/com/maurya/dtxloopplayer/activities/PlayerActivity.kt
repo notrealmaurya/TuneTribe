@@ -30,6 +30,7 @@ import com.maurya.dtxloopplayer.utils.getMusicDetailsPlayerActivity
 import com.maurya.dtxloopplayer.utils.pauseMusic
 import com.maurya.dtxloopplayer.utils.playMusic
 import com.maurya.dtxloopplayer.utils.prevNextSong
+import com.maurya.dtxloopplayer.utils.setLayout
 import com.maurya.dtxloopplayer.utils.setMusicData
 import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
@@ -53,9 +54,9 @@ class PlayerActivity : AppCompatActivity() {
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
 
-    private lateinit var viewModel: ViewModelObserver
 
     companion object {
+        lateinit var viewModel: ViewModelObserver
 
         private var bindingRef: WeakReference<ActivityPlayerBinding>? = null
 
@@ -95,18 +96,6 @@ class PlayerActivity : AppCompatActivity() {
         }
 
 
-        MainActivity.musicListPlayerFragment.add(getMusicDetailsPlayerActivity(intent.data!!, this))
-        Glide.with(this)
-            .load(getMusicArt(MainActivity.musicListPlayerFragment[MainActivity.musicPosition].path))
-            .apply(RequestOptions().placeholder(R.drawable.icon_music).centerCrop())
-            .into(binding.songImagePlayerActivity)
-        binding.songNAME.text =
-            MainActivity.musicListPlayerFragment[MainActivity.musicPosition].musicName
-        binding.songARTIST.text =
-            MainActivity.musicListPlayerFragment[MainActivity.musicPosition].albumArtist
-
-        favouriteIndex =
-            favouriteChecker(MainActivity.musicListPlayerFragment[MainActivity.musicPosition].id)
 
         binding.songNAME.isSelected = true
         binding.songARTIST.isSelected = true
@@ -126,6 +115,7 @@ class PlayerActivity : AppCompatActivity() {
 
         setMusicData(viewModel)
 
+        setLayout(MainActivity.musicService!!)
 
         listeners()
 

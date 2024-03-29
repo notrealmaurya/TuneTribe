@@ -18,6 +18,7 @@ import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ItemMusicBinding
 import com.maurya.dtxloopplayer.fragments.ListsFragment
+import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.sendIntent
 import com.maurya.dtxloopplayer.utils.showToast
@@ -25,6 +26,7 @@ import com.maurya.dtxloopplayer.utils.showToast
 class AdapterMusic(
     private val context: Context,
     private var musicList: ArrayList<MusicDataClass> = arrayListOf(),
+    private val listener: MediaControlInterface? = null,
     private var sharedPreferenceHelper: SharedPreferenceHelper? = null,
     private var uuidCurrentPlayList: String = "",
     private val playListActivity: Boolean = false,
@@ -134,7 +136,7 @@ class AdapterMusic(
                             showToast(context, "This song is currently Playing")
 
                         else -> {
-                            sendIntent(context, reference = "SongsFragment", position = position)
+                            listener?.onSongSelected(musicList, position)
                         }
 
                     }

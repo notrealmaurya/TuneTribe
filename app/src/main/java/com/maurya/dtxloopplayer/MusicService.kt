@@ -211,11 +211,14 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
     fun seekBarSetup() {
         val playerBinding = PlayerActivity.getPlayerActivityBinding()
+        val bottomPlayerBinding = MainActivity.getBottomPlayerBinding()
 
         runnable = Runnable {
             playerBinding?.durationPLAYEDPlayerActivity?.text =
                 formatDuration(mediaPlayer!!.currentPosition.toLong())
             playerBinding?.seekBARPlayerActivity?.progress = mediaPlayer!!.currentPosition
+            bottomPlayerBinding?.seekBarMiniPlayer?.progress =  mediaPlayer!!.currentPosition
+
             Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
         }
         Handler(Looper.getMainLooper()).postDelayed(runnable, 0)

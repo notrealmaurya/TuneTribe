@@ -13,15 +13,17 @@ import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.databinding.ActivityFolderTracksActiivityBinding
 import java.io.File
 import com.maurya.dtxloopplayer.database.MusicDataClass
+import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 import com.maurya.dtxloopplayer.viewModelsObserver.ModelResult
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.text.FieldPosition
 
 @AndroidEntryPoint
-class FolderTracksActivity : AppCompatActivity() {
+class FolderTracksActivity : AppCompatActivity(),MediaControlInterface {
 
     private lateinit var binding: ActivityFolderTracksActiivityBinding
 
@@ -51,7 +53,7 @@ class FolderTracksActivity : AppCompatActivity() {
                 this@FolderTracksActivity, LinearLayoutManager.VERTICAL, false
             )
             adapterMusic = AdapterMusic(
-                this@FolderTracksActivity, folderMusicList, folderSongsActivity = true
+                this@FolderTracksActivity, folderMusicList,this@FolderTracksActivity, folderSongsActivity = true
             )
             adapter = adapterMusic
         }
@@ -99,6 +101,15 @@ class FolderTracksActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+    }
+
+    override fun onSongSelected( songs: ArrayList<MusicDataClass>,position: Int) {
+        TODO("Not yet implemented")
+    }
+
+
+    override fun onAddToQueue(song: MusicDataClass) {
+        TODO("Not yet implemented")
     }
 
 

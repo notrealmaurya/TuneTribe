@@ -8,10 +8,11 @@ import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivitySearchBinding
 import com.maurya.dtxloopplayer.fragments.SongsFragment
+import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(),MediaControlInterface {
 
     private lateinit var binding: ActivitySearchBinding
 
@@ -41,7 +42,7 @@ class SearchActivity : AppCompatActivity() {
                 LinearLayoutManager(this@SearchActivity, LinearLayoutManager.VERTICAL, false)
             adapterMusic = AdapterMusic(
                 this@SearchActivity,
-                SongsFragment.musicList, searchActivity = true
+                SongsFragment.musicList, this@SearchActivity,searchActivity = true
             )
             adapter = adapterMusic
         }
@@ -70,6 +71,19 @@ class SearchActivity : AppCompatActivity() {
         })
 
 
+    }
+
+
+    override fun onSongSelected(
+        songs: ArrayList<MusicDataClass>,
+        position: Int
+    ) {
+        TODO("Not yet implemented")
+    }
+
+
+    override fun onAddToQueue(song: MusicDataClass) {
+        TODO("Not yet implemented")
     }
 
 

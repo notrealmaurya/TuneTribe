@@ -6,15 +6,17 @@ import android.os.Bundle
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
+import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivitySelectionBinding
 import com.maurya.dtxloopplayer.fragments.SongsFragment
+import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class SelectionActivity : AppCompatActivity() {
+class SelectionActivity : AppCompatActivity() ,MediaControlInterface{
 
     private lateinit var adapterMusic: AdapterMusic
 
@@ -45,6 +47,7 @@ class SelectionActivity : AppCompatActivity() {
             adapterMusic = AdapterMusic(
                 this@SelectionActivity,
                 SongsFragment.musicList,
+                this@SelectionActivity,
                 sharedPreferenceHelper,
                 selectionActivity = true,
                 uuidCurrentPlayList = currentPlayListUUID.toString()
@@ -83,6 +86,16 @@ class SelectionActivity : AppCompatActivity() {
         })
 
 
+    }
+
+
+
+    override fun onSongSelected(musicList: ArrayList<MusicDataClass>, position: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onAddToQueue(song: MusicDataClass) {
+        TODO("Not yet implemented")
     }
 
 }

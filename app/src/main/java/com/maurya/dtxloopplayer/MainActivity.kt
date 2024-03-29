@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.IBinder
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -22,9 +23,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayoutMediator
@@ -37,6 +41,7 @@ import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.fragments.SongsFragment
 import com.maurya.dtxloopplayer.databinding.ActivityMainBinding
+import com.maurya.dtxloopplayer.databinding.ActivityPlayerBinding
 import com.maurya.dtxloopplayer.databinding.PlayerControlsPanelBinding
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.createMediaPlayer
@@ -44,10 +49,10 @@ import com.maurya.dtxloopplayer.utils.pauseMusic
 import com.maurya.dtxloopplayer.utils.playMusic
 import com.maurya.dtxloopplayer.utils.prevNextSong
 import com.maurya.dtxloopplayer.utils.sendIntent
-import com.maurya.dtxloopplayer.utils.setLayout
 import com.maurya.dtxloopplayer.utils.setMusicData
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 import kotlin.system.exitProcess
 
@@ -75,11 +80,18 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
         lateinit var viewModel: ViewModelObserver
 
 
-        lateinit var musicListPlayerFragment: ArrayList<MusicDataClass>
-        var musicPosition: Int = 0
+        var musicListPlayerFragment: ArrayList<MusicDataClass> = arrayListOf()
+        var musicPosition: Int = -1
         var isPlaying: Boolean = false
         var boundEnabled: Boolean = false
         var nowPlayingId: String = ""
+
+
+        private var bindingRef: WeakReference<PlayerControlsPanelBinding>? = null
+
+        fun getBottomPlayerBinding(): PlayerControlsPanelBinding? {
+            return bindingRef?.get()
+        }
 
     }
 
@@ -89,8 +101,9 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
         playerControlsPanelBinding = PlayerControlsPanelBinding.bind(activityMainBinding.root)
 
         setContentView(activityMainBinding.root)
+        bindingRef = WeakReference(playerControlsPanelBinding)
 
-
+        viewModel = ViewModelProvider(this)[ViewModelObserver::class.java]
         sharedPreferenceHelper = SharedPreferenceHelper(this)
 
         val favouriteListPreference =
@@ -103,10 +116,21 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
         initViewPager()
         listeners()
 
+        viewModel.songInfo.observe(this) { musicData ->
+            playerControlsPanelBinding.songNameMiniPlayer.text = musicData.musicName
+            playerControlsPanelBinding.songArtistMiniPlayer.text = musicData.albumArtist
+            Glide.with(this)
+                .asBitmap()
+                .load(musicData.image)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .centerCrop()
+                .error(R.drawable.icon_music)
+                .into(playerControlsPanelBinding.AlbumArtMiniPlayer)
+        }
     }
 
-    private fun initializeLayout() {
-        musicPosition = intent.getIntExtra("index", 0)
+    private fun handleIntent(intent: Intent?) {
+        musicPosition = intent!!.getIntExtra("index", 0)
 
         when (intent.getStringExtra("class")) {
 
@@ -166,20 +190,23 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
 
     private fun initServiceAndPlaylist(
         playlist: ArrayList<MusicDataClass>,
-        shuffle: Boolean
+        shuffle: Boolean,
     ) {
-        playerControlsPanelBinding.seekBarMiniPlayer.progress =
-            musicService!!.mediaPlayer!!.currentPosition
-        playerControlsPanelBinding.seekBarMiniPlayer.max = musicService!!.mediaPlayer!!.duration
-
-        if (isPlaying) playerControlsPanelBinding.playPauseMiniPlayer.setImageResource(R.drawable.icon_pause)
-        else playerControlsPanelBinding.playPauseMiniPlayer.setImageResource(R.drawable.icon_play)
+        createMediaPlayer(musicService!!)
+        musicService!!.mediaPlayer!!.setOnCompletionListener(this@MainActivity)
 
         musicListPlayerFragment = ArrayList()
         musicListPlayerFragment.addAll(playlist)
         if (shuffle) musicListPlayerFragment.shuffle()
-        setLayout()
         setMusicData(viewModel)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent != null) {
+            handleIntent(intent)
+            if (!isPlaying) pauseMusic(musicService!!)
+        }
     }
 
 
@@ -258,6 +285,58 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
     }
 
 
+    override fun onStart() {
+        super.onStart()
+        doBindService()
+    }
+
+
+    private fun doBindService() {
+        mainIntent = Intent(this, MusicService::class.java).also {
+            bindService(it, connection, Context.BIND_AUTO_CREATE)
+        }
+    }
+
+    // Defines callbacks for service binding, passed to bindService()
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            if (musicService == null) {
+                boundEnabled = true
+                val binder = service as MusicService.MyBinder
+                musicService = binder.currentService()
+                musicService!!.audioManager =
+                    getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                musicService!!.audioManager.requestAudioFocus(
+                    musicService,
+                    AudioManager.STREAM_MUSIC,
+                    AudioManager.AUDIOFOCUS_GAIN
+                )
+
+            }
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            boundEnabled = false
+            musicService = null
+        }
+    }
+
+    override fun onCompletion(mp: MediaPlayer) {
+        prevNextSong(increment = true, musicService!!)
+        musicService!!.mediaPlayer!!.setOnCompletionListener(this)
+    }
+
+    fun onSongSelected(
+        songs: ArrayList<MusicDataClass>,
+        position: Int
+    ) {
+        musicPosition = position
+        Log.d("posItemClass", position.toString())
+        Log.d("posItemClass", musicPosition.toString())
+        initServiceAndPlaylist(songs, false)
+    }
+
+
     private fun initViewPager() {
 
         val myAdapter = ViewPagerAdapter(this)
@@ -277,7 +356,6 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
         }.attach()
 
     }
-
 
     private fun permission() {
         if (ContextCompat.checkSelfPermission(
@@ -383,51 +461,6 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
             exitProcess(1)
         }
 
-    }
-
-    override fun onStart() {
-        super.onStart()
-        doBindService()
-    }
-
-
-    private fun doBindService() {
-        mainIntent = Intent(this, MusicService::class.java).also {
-            bindService(it, connection, Context.BIND_AUTO_CREATE)
-        }
-    }
-
-    // Defines callbacks for service binding, passed to bindService()
-    private val connection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            if (musicService == null) {
-                boundEnabled = true
-                val binder = service as MusicService.MyBinder
-                musicService = binder.currentService()
-                musicService!!.seekBarSetup()
-                musicService!!.audioManager =
-                    getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                musicService!!.audioManager.requestAudioFocus(
-                    musicService,
-                    AudioManager.STREAM_MUSIC,
-                    AudioManager.AUDIOFOCUS_GAIN
-                )
-
-            }
-            createMediaPlayer(musicService!!)
-            musicService!!.mediaPlayer!!.setOnCompletionListener(this@MainActivity)
-            musicService!!.seekBarSetup()
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-            boundEnabled = false
-            musicService = null
-        }
-    }
-
-    override fun onCompletion(mp: MediaPlayer?) {
-        prevNextSong(increment = true, musicService!!)
-        musicService!!.mediaPlayer!!.setOnCompletionListener(this)
     }
 
 

@@ -9,6 +9,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivityPlaylistBinding
+import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.checkListData
 import com.maurya.dtxloopplayer.utils.sendIntent
@@ -17,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PlayListActivity : AppCompatActivity() {
+class PlayListActivity : AppCompatActivity(),MediaControlInterface {
 
     private lateinit var binding: ActivityPlaylistBinding
 
@@ -77,6 +78,7 @@ class PlayListActivity : AppCompatActivity() {
             adapterMusic = AdapterMusic(
                 this@PlayListActivity,
                 currentPlayListMusicList,
+                this@PlayListActivity,
                 sharedPreferenceHelper,
                 playListActivity = true
             )
@@ -147,6 +149,14 @@ class PlayListActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         currentPlayListMusicList.clear()
+    }
+
+    override fun onSongSelected(musicList: ArrayList<MusicDataClass>, position: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onAddToQueue(song: MusicDataClass) {
+        TODO("Not yet implemented")
     }
 
 

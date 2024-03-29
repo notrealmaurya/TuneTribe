@@ -16,10 +16,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
+import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.FragmentSongsBinding
+import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.sendIntent
 import com.maurya.dtxloopplayer.utils.showToast
@@ -31,7 +33,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SongsFragment : Fragment() {
+class SongsFragment : Fragment(), MediaControlInterface {
+
 
     private lateinit var fragmentSongsBinding: FragmentSongsBinding
 
@@ -80,7 +83,8 @@ class SongsFragment : Fragment() {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapterMusic = AdapterMusic(
                 requireContext(),
-                musicList
+                musicList,
+                this@SongsFragment
             )
             adapter = adapterMusic
         }
@@ -172,6 +176,18 @@ class SongsFragment : Fragment() {
                 popupWindow.dismiss()
             }
         }
+
+
+    }
+
+    override fun onSongSelected(songList: ArrayList<MusicDataClass>, position: Int) {
+        if (activity is MainActivity) {
+            (activity as MainActivity).onSongSelected(songList, position)
+        }
+
+    }
+
+    override fun onAddToQueue(song: MusicDataClass) {
 
 
     }
