@@ -25,8 +25,6 @@ import com.maurya.dtxloopplayer.databinding.ActivityPlayerBinding
 import com.maurya.dtxloopplayer.databinding.PopupDialogPlayeractivityMenuBinding
 import com.maurya.dtxloopplayer.databinding.PopupVideoSpeedBinding
 import com.maurya.dtxloopplayer.utils.favouriteChecker
-import com.maurya.dtxloopplayer.utils.getMusicArt
-import com.maurya.dtxloopplayer.utils.getMusicDetailsPlayerActivity
 import com.maurya.dtxloopplayer.utils.pauseMusic
 import com.maurya.dtxloopplayer.utils.playMusic
 import com.maurya.dtxloopplayer.utils.prevNextSong
@@ -52,7 +50,6 @@ class PlayerActivity : AppCompatActivity() {
 
     @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper
-
 
 
     companion object {
@@ -94,7 +91,6 @@ class PlayerActivity : AppCompatActivity() {
             binding.lottiePlayerActivity.setAnimation(savedTheme)
             binding.lottiePlayerActivity.playAnimation()
         }
-
 
 
         binding.songNAME.isSelected = true

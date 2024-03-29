@@ -55,13 +55,7 @@ class AdapterMusic(
 
             when {
                 selectionActivity -> {
-                    Glide.with(context)
-                        .asBitmap()
-                        .load(R.drawable.icon_music)
-                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                        .centerCrop()
-                        .error(R.drawable.icon_music)
-                        .into(musicArt)
+                    musicArt.visibility = View.GONE
                 }
 
                 else -> {
@@ -79,20 +73,22 @@ class AdapterMusic(
         when {
             playListActivity -> {
                 holder.root.setOnClickListener {
-                    sendIntent(context, reference = "PlayListActivity", position = position)
+                    listener?.onSongSelected(musicList, position)
                 }
             }
 
             selectionActivity -> {
                 with(holder) {
-                    chekbox.visibility = View.VISIBLE
-                    chekbox.isClickable = false
-                    chekbox.isChecked = isSongAdded(musicList[position])
+                    musicName.isSelected = false
+                    musicArist.isSelected = false
+                    checkbox.visibility = View.VISIBLE
+                    checkbox.isClickable = false
+                    checkbox.isChecked = isSongAdded(musicList[position])
 
                     root.setOnClickListener {
                         val musicData = musicList[position]
                         val isAdded = addOrRemoveSong(musicData)
-                        chekbox.isChecked = isAdded
+                        checkbox.isChecked = isAdded
                     }
                 }
 
@@ -100,30 +96,27 @@ class AdapterMusic(
 
             queueActivity -> {
                 holder.root.setOnClickListener {
-                    sendIntent(context, reference = "queueActivity", position = position)
+                    listener?.onSongSelected(musicList, position)
                 }
             }
 
             folderSongsActivity -> {
                 holder.root.setOnClickListener {
-                    sendIntent(context, reference = "folderSongsActivity", position = position)
+                    listener?.onSongSelected(musicList, position)
                 }
             }
 
             searchActivity -> {
                 holder.root.setOnClickListener {
                     if (SearchActivity.search) {
-                        sendIntent(
-                            context, reference = "MusicAdapterSearch",
-                            position = position
-                        )
+                        listener?.onSongSelected(musicList, position)
                     }
                 }
             }
 
             favouriteActivity -> {
                 holder.root.setOnClickListener {
-                    sendIntent(context, reference = "FavouriteAdapter", position = position)
+                    listener?.onSongSelected(musicList, position)
                 }
 
             }
@@ -194,7 +187,7 @@ class AdapterMusic(
         val musicDuration = binding.musicDurationMusicItem
         val musicArt = binding.musicImageMusicItem
         val root = binding.root
-        val chekbox = binding.checkBoxMusicItem
+        val checkbox = binding.checkBoxMusicItem
 
 
     }

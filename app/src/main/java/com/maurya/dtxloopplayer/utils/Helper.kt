@@ -447,8 +447,6 @@ fun setLayout(musicService: MusicService) {
     PlayerActivity.loudnessEnhancer =
         LoudnessEnhancer(musicService.mediaPlayer?.audioSessionId ?: 0)
     PlayerActivity.loudnessEnhancer.enabled = true
-
-    playMusic(musicService)
 }
 
 fun setMusicData(viewModel: ViewModelObserver) {
@@ -478,6 +476,7 @@ fun createMediaPlayer(musicService: MusicService) {
             prepare()
         }
         setLayout(musicService)
+        playMusic(musicService)
 
     } catch (e: Exception) {
         Log.e("MusicService", "Error in createMediaPlayer", e)
