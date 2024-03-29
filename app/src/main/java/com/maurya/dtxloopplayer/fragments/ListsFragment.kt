@@ -2,33 +2,24 @@ package com.maurya.dtxloopplayer.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.EditText
-import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.maurya.dtxloopplayer.activities.FavouriteActivity
-import com.maurya.dtxloopplayer.activities.FolderActivity
 import com.maurya.dtxloopplayer.adapter.AdapterFolder
 import com.maurya.dtxloopplayer.adapter.AdapterPlayList
 import com.maurya.dtxloopplayer.R
-import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.database.FolderDataClass
 import com.maurya.dtxloopplayer.database.PlayListDataClass
 import com.maurya.dtxloopplayer.databinding.FragmentListsBinding
 import com.maurya.dtxloopplayer.databinding.PopupDialogNewplaylistBinding
-import com.maurya.dtxloopplayer.databinding.PopupDialogPlayeractivityMenuBinding
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
@@ -36,7 +27,6 @@ import com.maurya.dtxloopplayer.viewModelsObserver.ModelResult
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 
@@ -138,18 +128,23 @@ class ListsFragment : Fragment() {
 
     private fun listeners() {
 
+
         fragmentListsBinding.ListsMyFavouritesSize.text =
             updateTextViewWithItemCount(sharedPreferenceHelper.getPlayListSongCount("myFavouriteYouNoty572notyCount"))
 
         fragmentListsBinding.LayoutFolderList.setOnClickListener {
-            val intent = Intent(activity, FolderActivity::class.java)
-            startActivity(intent)
+            val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.containerMainActivity, FolderFragment())
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
         }
 
 
         fragmentListsBinding.LayoutMyFavourites.setOnClickListener {
-            val intent = Intent(context, FavouriteActivity::class.java)
-            startActivity(intent)
+            val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.containerMainActivity, FavouriteFragment())
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
         }
 
         fragmentListsBinding.AddNewPlayListListFragment.setOnClickListener {

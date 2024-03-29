@@ -15,6 +15,7 @@ import com.maurya.dtxloopplayer.activities.PlayListActivity
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.activities.SearchActivity
+import com.maurya.dtxloopplayer.activities.SelectionActivity
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ItemMusicBinding
 import com.maurya.dtxloopplayer.fragments.ListsFragment
@@ -84,6 +85,7 @@ class AdapterMusic(
                     checkbox.visibility = View.VISIBLE
                     checkbox.isClickable = false
                     checkbox.isChecked = isSongAdded(musicList[position])
+                    SelectionActivity.selectionCount = PlayListActivity.currentPlayListMusicList.size
 
                     root.setOnClickListener {
                         val musicData = musicList[position]
@@ -155,6 +157,7 @@ class AdapterMusic(
         } else {
             PlayListActivity.currentPlayListMusicList.add(musicData)
         }
+        SelectionActivity.selectionCount = PlayListActivity.currentPlayListMusicList.size
 
         // Save playlist and its count
         sharedPreferenceHelper?.savePlayListSong(

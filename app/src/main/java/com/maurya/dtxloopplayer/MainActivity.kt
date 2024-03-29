@@ -32,17 +32,15 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayoutMediator
-import com.maurya.dtxloopplayer.activities.FolderTracksActivity
 import com.maurya.dtxloopplayer.activities.PlayListActivity
-import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.fragments.SongsFragment
 import com.maurya.dtxloopplayer.databinding.ActivityMainBinding
-import com.maurya.dtxloopplayer.databinding.ActivityPlayerBinding
 import com.maurya.dtxloopplayer.databinding.PlayerControlsPanelBinding
+import com.maurya.dtxloopplayer.fragments.FolderTracksFragment
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.createMediaPlayer
 import com.maurya.dtxloopplayer.utils.pauseMusic
@@ -88,11 +86,15 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
 
 
         private var bindingRef: WeakReference<PlayerControlsPanelBinding>? = null
+        private var bindingMainRef: WeakReference<ActivityMainBinding>? = null
 
         fun getBottomPlayerBinding(): PlayerControlsPanelBinding? {
             return bindingRef?.get()
         }
 
+        fun getActivityMainBinding(): ActivityMainBinding? {
+            return bindingMainRef?.get()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,9 +104,12 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
 
         setContentView(activityMainBinding.root)
         bindingRef = WeakReference(playerControlsPanelBinding)
+        bindingMainRef = WeakReference(activityMainBinding)
 
         viewModel = ViewModelProvider(this)[ViewModelObserver::class.java]
         sharedPreferenceHelper = SharedPreferenceHelper(this)
+
+        activityMainBinding.topLayout.visibility = View.VISIBLE
 
         val favouriteListPreference =
             sharedPreferenceHelper.getPlayListSong("myFavouriteYouNoty572noty")
@@ -170,12 +175,12 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
             )
 
             "folderSongsActivity" -> initServiceAndPlaylist(
-                FolderTracksActivity.folderMusicList, shuffle = false
+                FolderTracksFragment.folderMusicList, shuffle = false
 
             )
 
             "folderSongsActivityShuffle" -> initServiceAndPlaylist(
-                FolderTracksActivity.folderMusicList, shuffle = true
+                FolderTracksFragment.folderMusicList, shuffle = true
             )
 
             "queueActivity" -> {

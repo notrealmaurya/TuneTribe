@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/MainDrawerLayout"
@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -62,18 +63,18 @@
             app:tabIndicatorGravity="bottom"
             app:tabMode="fixed" />
 
-
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/main_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/topLayout"
         android:orientation="vertical">
 
+
         <FrameLayout
-            android:id="@+id/container"
+            android:id="@+id/containerMainActivity"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
@@ -91,6 +92,6 @@
     </LinearLayout>
 
 
-</RelativeLayout>
+</LinearLayout>
 
 

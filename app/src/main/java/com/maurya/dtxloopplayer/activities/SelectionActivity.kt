@@ -11,12 +11,13 @@ import com.maurya.dtxloopplayer.databinding.ActivitySelectionBinding
 import com.maurya.dtxloopplayer.fragments.SongsFragment
 import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
+import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class SelectionActivity : AppCompatActivity() ,MediaControlInterface{
+class SelectionActivity : AppCompatActivity(), MediaControlInterface {
 
     private lateinit var adapterMusic: AdapterMusic
 
@@ -25,7 +26,9 @@ class SelectionActivity : AppCompatActivity() ,MediaControlInterface{
     @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
+
     companion object {
+        var selectionCount: Int = 0
 
     }
 
@@ -62,6 +65,10 @@ class SelectionActivity : AppCompatActivity() ,MediaControlInterface{
 
     private fun listeners() {
 
+        binding.selectedSongSelectionActivity.text =
+            "${updateTextViewWithItemCount(selectionCount)} selected"
+
+
         //backBtn
         binding.backBtnSelectionActivity.setOnClickListener {
             finish()
@@ -87,7 +94,6 @@ class SelectionActivity : AppCompatActivity() ,MediaControlInterface{
 
 
     }
-
 
 
     override fun onSongSelected(musicList: ArrayList<MusicDataClass>, position: Int) {

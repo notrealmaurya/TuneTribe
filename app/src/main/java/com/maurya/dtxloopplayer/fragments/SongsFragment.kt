@@ -1,7 +1,6 @@
 package com.maurya.dtxloopplayer.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +14,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
 import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
@@ -180,11 +178,10 @@ class SongsFragment : Fragment(), MediaControlInterface {
 
     }
 
-    override fun onSongSelected(songList: ArrayList<MusicDataClass>, position: Int) {
+    override fun onSongSelected(musicList: ArrayList<MusicDataClass>, position: Int) {
         if (activity is MainActivity) {
-            (activity as MainActivity).onSongSelected(songList, position)
+            (activity as MainActivity).onSongSelected(musicList, position)
         }
-
     }
 
     override fun onAddToQueue(song: MusicDataClass) {
