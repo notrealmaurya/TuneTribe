@@ -12,7 +12,6 @@ import com.maurya.dtxloopplayer.databinding.ActivityPlaylistBinding
 import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.checkListData
-import com.maurya.dtxloopplayer.utils.sendIntent
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -101,7 +100,7 @@ class PlayListActivity : AppCompatActivity(),MediaControlInterface {
         }
 
         binding.shuffleBtnPlayListActivity.setOnClickListener {
-            sendIntent(this@PlayListActivity, position = 0, reference = "PlayListActivityShuffle")
+//            sendIntent(this@PlayListActivity, position = 0, reference = "PlayListActivityShuffle")
         }
 
         binding.removeAllBtnPlayListActivity.setOnClickListener {

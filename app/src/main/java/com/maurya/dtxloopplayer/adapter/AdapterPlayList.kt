@@ -24,7 +24,6 @@ import com.maurya.dtxloopplayer.databinding.PopupDialogPlaylistEditBinding
 import com.maurya.dtxloopplayer.databinding.PopupDialogRenameBinding
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
-import com.maurya.dtxloopplayer.utils.sendIntent
 import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 import java.util.UUID

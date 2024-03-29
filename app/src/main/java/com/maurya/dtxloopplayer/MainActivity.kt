@@ -33,6 +33,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayoutMediator
 import com.maurya.dtxloopplayer.activities.PlayListActivity
+import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
@@ -46,7 +47,6 @@ import com.maurya.dtxloopplayer.utils.createMediaPlayer
 import com.maurya.dtxloopplayer.utils.pauseMusic
 import com.maurya.dtxloopplayer.utils.playMusic
 import com.maurya.dtxloopplayer.utils.prevNextSong
-import com.maurya.dtxloopplayer.utils.sendIntent
 import com.maurya.dtxloopplayer.utils.setMusicData
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import dagger.hilt.android.AndroidEntryPoint
@@ -225,11 +225,9 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
         }
 
         playerControlsPanelBinding.root.setOnClickListener {
-            sendIntent(
-                this,
-                position = musicPosition,
-                reference = "NowPlaying"
-            )
+            val intent = Intent(this, PlayerActivity::class.java)
+            intent.putExtra("index", musicPosition)
+            ContextCompat.startActivity(this, intent, null)
         }
 
         playerControlsPanelBinding.queueNowPlayingFragment.setOnClickListener {

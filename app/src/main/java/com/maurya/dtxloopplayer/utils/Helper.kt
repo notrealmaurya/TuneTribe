@@ -370,15 +370,6 @@ fun updateTextViewWithItemCount(itemCount: Int): String {
 }
 
 
-//for sending intent from activity/fragment/ adapter to player activity
-fun sendIntent(context: Context, position: Int, reference: String) {
-    val intent = Intent(context, PlayerActivity::class.java)
-    intent.putExtra("class", reference)
-    intent.putExtra("index", position)
-    ContextCompat.startActivity(context, intent, null)
-}
-
-
 fun playMusic(musicService: MusicService) {
     val playerBinding = PlayerActivity.getPlayerActivityBinding()
     val bottomPlayerBinding = MainActivity.getBottomPlayerBinding()
