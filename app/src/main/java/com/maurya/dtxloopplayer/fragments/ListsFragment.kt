@@ -82,7 +82,7 @@ class ListsFragment : Fragment() {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapterPlayList = AdapterPlayList(
                 requireContext(),
-                playList, sharedPreferenceHelper
+                playList, sharedPreferenceHelper, requireActivity().supportFragmentManager
             )
             adapter = adapterPlayList
         }
@@ -102,9 +102,6 @@ class ListsFragment : Fragment() {
                             fragmentListsBinding.progressBar.visibility = View.GONE
                             folderList.clear()
                             folderList.addAll(it.data!!)
-                            val size = folderList.size
-                            fragmentListsBinding.ListsFolderListSize.text =
-                                if (size <= 1) "${size} folder " else "${size} folders "
                         }
 
                         is ModelResult.Error -> {
@@ -131,13 +128,6 @@ class ListsFragment : Fragment() {
 
         fragmentListsBinding.ListsMyFavouritesSize.text =
             updateTextViewWithItemCount(sharedPreferenceHelper.getPlayListSongCount("myFavouriteYouNoty572notyCount"))
-
-        fragmentListsBinding.LayoutFolderList.setOnClickListener {
-            val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.containerMainActivity, FolderFragment())
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commit()
-        }
 
 
         fragmentListsBinding.LayoutMyFavourites.setOnClickListener {

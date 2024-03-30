@@ -7,18 +7,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.maurya.dtxloopplayer.MainActivity
-import com.maurya.dtxloopplayer.activities.PlayListActivity
-import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.activities.SelectionActivity
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ItemMusicBinding
-import com.maurya.dtxloopplayer.fragments.ListsFragment
+import com.maurya.dtxloopplayer.fragments.PlayListFragment
 import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.showToast
@@ -38,6 +37,35 @@ class AdapterMusic(
 ) :
     RecyclerView.Adapter<AdapterMusic.MusicHolder>() {
 
+    private var previousPlayingId: String = ""
+    private var currentPlayingId: String = ""
+
+    fun updatePlaybackState(newPlayingId: String) {
+        previousPlayingId = currentPlayingId
+        currentPlayingId = newPlayingId
+        val previousPlayingPosition = getPositionById(previousPlayingId)
+        val currentPlayingPosition = getPositionById(currentPlayingId)
+        notifyItemChanged(previousPlayingPosition)
+//        notifyItemChanged(currentPlayingPosition)
+        notifyItemChanged(MainActivity.musicPosition)
+
+
+        Log.d("prevItemClass", previousPlayingId)
+        Log.d("prevItemClass", previousPlayingPosition.toString())
+        Log.d("curItemClass", currentPlayingId)
+        Log.d("curItemClass", currentPlayingPosition.toString())
+    }
+
+    private fun getPositionById(id: String): Int {
+        for ((index, item) in musicList.withIndex()) {
+            if (item.id == id) {
+                return index
+            }
+        }
+        return -1
+    }
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicHolder {
         return MusicHolder(ItemMusicBinding.inflate(LayoutInflater.from(context), parent, false))
     }
@@ -48,10 +76,25 @@ class AdapterMusic(
 
         with(holder) {
             musicName.isSelected = true
-            musicArist.isSelected = true
+            musicArtist.isSelected = true
             musicName.text = currentItem.musicName
-            musicArist.text = currentItem.albumArtist
+            musicArtist.text = currentItem.albumArtist
             musicDuration.text = DateUtils.formatElapsedTime(currentItem.durationText / 1000)
+
+            val redColor = ContextCompat.getColor(context, R.color.red)
+            val defaultColor = ContextCompat.getColor(context, R.color.ImageViewAndTextViewColour)
+
+            if (currentItem.id == currentPlayingId) {
+                holder.musicName.setTextColor(redColor)
+                holder.musicArtist.setTextColor(redColor)
+                holder.musicDuration.visibility = View.GONE
+                holder.lottieView.visibility = View.VISIBLE
+            } else {
+                holder.musicName.setTextColor(defaultColor)
+                holder.musicArtist.setTextColor(defaultColor)
+                holder.musicDuration.visibility = View.VISIBLE
+                holder.lottieView.visibility = View.GONE
+            }
 
             when {
                 selectionActivity -> {
@@ -61,6 +104,7 @@ class AdapterMusic(
                 queueActivity -> {
                     musicArt.visibility = View.GONE
                 }
+
 
                 else -> {
                     Glide.with(context)
@@ -84,12 +128,12 @@ class AdapterMusic(
             selectionActivity -> {
                 with(holder) {
                     musicName.isSelected = false
-                    musicArist.isSelected = false
+                    musicArtist.isSelected = false
                     checkbox.visibility = View.VISIBLE
                     checkbox.isClickable = false
                     checkbox.isChecked = isSongAdded(musicList[position])
                     SelectionActivity.selectionCount =
-                        PlayListActivity.currentPlayListMusicList.size
+                        PlayListFragment.currentPlayListMusicList.size
 
                     root.setOnClickListener {
                         val musicData = musicList[position]
@@ -101,6 +145,7 @@ class AdapterMusic(
             }
 
             queueActivity -> {
+                holder.musicArtist.isSelected = false
                 holder.root.setOnClickListener {
                     listener?.onSongSelected(musicList, position)
                 }
@@ -149,7 +194,7 @@ class AdapterMusic(
 
     //for playlist selection activity
     private fun isSongAdded(musicData: MusicDataClass): Boolean {
-        return PlayListActivity.currentPlayListMusicList.contains(musicData)
+        return PlayListFragment.currentPlayListMusicList.contains(musicData)
     }
 
 
@@ -157,19 +202,19 @@ class AdapterMusic(
     private fun addOrRemoveSong(musicData: MusicDataClass): Boolean {
         val isAdded = isSongAdded(musicData)
         if (isAdded) {
-            PlayListActivity.currentPlayListMusicList.remove(musicData)
+            PlayListFragment.currentPlayListMusicList.remove(musicData)
         } else {
-            PlayListActivity.currentPlayListMusicList.add(musicData)
+            PlayListFragment.currentPlayListMusicList.add(musicData)
         }
-        SelectionActivity.selectionCount = PlayListActivity.currentPlayListMusicList.size
+        SelectionActivity.selectionCount = PlayListFragment.currentPlayListMusicList.size
 
         // Save playlist and its count
         sharedPreferenceHelper?.savePlayListSong(
-            PlayListActivity.currentPlayListMusicList,
+            PlayListFragment.currentPlayListMusicList,
             uuidCurrentPlayList
         )
         sharedPreferenceHelper?.savePlayListSongCount(
-            PlayListActivity.currentPlayListMusicList.size,
+            PlayListFragment.currentPlayListMusicList.size,
             uuidCurrentPlayList
         )
 
@@ -190,11 +235,12 @@ class AdapterMusic(
 
     class MusicHolder(binding: ItemMusicBinding) : RecyclerView.ViewHolder(binding.root) {
         val musicName = binding.musicNameMusicItem
-        val musicArist = binding.artistNameMusicItem
+        val musicArtist = binding.artistNameMusicItem
         val musicDuration = binding.musicDurationMusicItem
         val musicArt = binding.musicImageMusicItem
         val root = binding.root
         val checkbox = binding.checkBoxMusicItem
+        val lottieView = binding.lotteView
 
 
     }

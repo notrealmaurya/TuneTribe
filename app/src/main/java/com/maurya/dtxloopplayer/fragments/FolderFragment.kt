@@ -25,16 +25,12 @@ class FolderFragment : Fragment() {
     ): View? {
         fragmentFolderBinding = FragmentFolderBinding.inflate(inflater, container, false)
         val view = fragmentFolderBinding.root
-        view.setOnTouchListener { _, _ -> true }
         return view
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val mainBinding = MainActivity.getActivityMainBinding()
-        mainBinding?.topLayout?.visibility = View.GONE
 
         fragmentFolderBinding.recyclerViewFolderActivity.apply {
             setHasFixedSize(true)
@@ -49,11 +45,6 @@ class FolderFragment : Fragment() {
         }
 
         fragmentFolderBinding.totalFoldersFolderActivity.text = "${adapterFolder.itemCount} folders"
-
-        fragmentFolderBinding.backFolderActivity.setOnClickListener {
-            mainBinding?.topLayout?.visibility = View.VISIBLE
-            requireActivity().onBackPressed()
-        }
 
 
     }

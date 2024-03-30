@@ -133,7 +133,10 @@ class FolderTracksFragment : Fragment(), MediaControlInterface {
 
     }
 
-    override fun onSongSelected(musicList: ArrayList<MusicDataClass>, position: Int) {
+    override fun onSongSelected(
+        musicList: ArrayList<MusicDataClass>,
+        position: Int
+    ) {
 
 
     }

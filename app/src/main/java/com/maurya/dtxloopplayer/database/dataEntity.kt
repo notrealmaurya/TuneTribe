@@ -38,8 +38,3 @@ data class PlayListDataClass(
     var isChecked: Boolean = false
 )
 
-
-data class PathDataClass(
-    var path: String
-)
-

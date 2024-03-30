@@ -20,12 +20,11 @@ class FavouriteFragment : Fragment(), MediaControlInterface {
 
     private lateinit var fragmentFavouriteBinding: FragmentFavouriteBinding
 
-    private lateinit var adapterMusic: AdapterMusic
 
 
     companion object {
 
-
+        lateinit var adapterMusic: AdapterMusic
     }
 
 
@@ -105,7 +104,10 @@ class FavouriteFragment : Fragment(), MediaControlInterface {
         changeItemCount()
     }
 
-    override fun onSongSelected(musicList: ArrayList<MusicDataClass>, position: Int) {
+    override fun onSongSelected(
+        musicList: ArrayList<MusicDataClass>,
+        position: Int
+    ) {
         if (activity is MainActivity) {
             (activity as MainActivity).onSongSelected(musicList, position)
         }

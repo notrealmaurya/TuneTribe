@@ -2,36 +2,31 @@ package com.maurya.dtxloopplayer.adapter
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.maurya.dtxloopplayer.activities.PlayListActivity
 import com.maurya.dtxloopplayer.R
-import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.database.PlayListDataClass
 import com.maurya.dtxloopplayer.databinding.ItemPlaylistBinding
-import com.maurya.dtxloopplayer.databinding.PopupDialogPlayeractivityMenuBinding
 import com.maurya.dtxloopplayer.databinding.PopupDialogPlaylistEditBinding
 import com.maurya.dtxloopplayer.databinding.PopupDialogRenameBinding
-import com.maurya.dtxloopplayer.fragments.ListsFragment
+import com.maurya.dtxloopplayer.fragments.FolderTracksFragment
+import com.maurya.dtxloopplayer.fragments.PlayListFragment
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
-import java.util.UUID
 
 class AdapterPlayList(
     private val context: Context,
     private var playListList: ArrayList<PlayListDataClass>,
-    private var sharedPreferenceHelper: SharedPreferenceHelper
+    private var sharedPreferenceHelper: SharedPreferenceHelper,
+    private val fragmentManager: FragmentManager
 ) :
     RecyclerView.Adapter<AdapterPlayList.PlayListHolder>() {
 
@@ -63,9 +58,17 @@ class AdapterPlayList(
 
 
             root.setOnClickListener {
-                val intent = Intent(context, PlayListActivity::class.java)
-                intent.putExtra("playListName", playListList[position].playListName)
-                ContextCompat.startActivity(context, intent, null)
+                val bundle = Bundle()
+                bundle.putString("playListName",playListList[position].playListName)
+
+                val receivingFragment = PlayListFragment()
+                receivingFragment.arguments = bundle
+
+                val transaction = fragmentManager.beginTransaction()
+                transaction.replace(R.id.containerMainActivity, receivingFragment)
+                transaction.commit()
+
+
             }
 
             root.setOnLongClickListener {

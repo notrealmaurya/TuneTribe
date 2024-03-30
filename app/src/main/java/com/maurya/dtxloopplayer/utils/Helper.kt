@@ -22,7 +22,6 @@ import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.FolderDataClass
 import com.maurya.dtxloopplayer.database.MusicDataClass
-import com.maurya.dtxloopplayer.database.PathDataClass
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -183,51 +182,6 @@ fun sortMusicList(
 }
 
 
-//get path
-
-suspend fun getAllPath(
-    context: Context
-): ArrayList<PathDataClass> =
-    withContext(Dispatchers.IO) {
-        val tempList = ArrayList<PathDataClass>()
-
-        val projection = arrayOf(
-            DATA
-        )
-
-        val selection: String?
-        val selectionArgs: Array<String>?
-
-        selection =
-            "$DURATION >= ? AND $IS_MUSIC != 0"
-        selectionArgs = arrayOf("30000")
-
-        val cursor = context.contentResolver.query(
-            EXTERNAL_CONTENT_URI, projection, selection, selectionArgs,
-            "DATE_ADDED DESC"
-        )
-
-        cursor?.use {
-            while (it.moveToNext()) {
-                val data = it.getString(it.getColumnIndexOrThrow(DATA))
-
-                val fileCursor = File(data)
-
-                if (fileCursor.exists()) {
-                    val musicData = PathDataClass(
-                        data
-                    )
-                    tempList.add(musicData)
-                }
-
-            }
-
-        }
-
-        return@withContext tempList
-    }
-
-
 //counting files in folder
 fun countMusicFilesInFolder(context: Context, folderPath: String): Int {
     val projection = arrayOf(DATA)
@@ -305,18 +259,6 @@ fun getMusicArt(path: String): ByteArray? {
     return retriever.embeddedPicture
 }
 
-private fun getAlbumArtThumbnail(context: Context, musicFilePath: String): Uri? {
-    val retriever = MediaMetadataRetriever()
-    retriever.setDataSource(musicFilePath)
-    val albumArtBytes = retriever.embeddedPicture
-    return if (albumArtBytes != null) {
-        val file = File.createTempFile("album_art", null, context.cacheDir)
-        file.writeBytes(albumArtBytes)
-        Uri.fromFile(file)
-    } else {
-        null
-    }
-}
 
 fun setSongPosition(increment: Boolean) {
     if (!PlayerActivity.repeat) {
@@ -403,7 +345,6 @@ fun prevNextSong(
     setSongPosition(increment = increment)
     createMediaPlayer(musicService)
     setMusicData(MainActivity.viewModel)
-    setMusicData(PlayerActivity.viewModel)
     setLayout(musicService)
     playMusic(musicService)
 }

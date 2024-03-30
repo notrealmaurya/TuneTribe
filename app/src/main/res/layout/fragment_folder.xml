@@ -8,47 +8,18 @@
     android:orientation="vertical"
     tools:context=".fragments.FolderFragment">
 
-
-    <LinearLayout
-        android:id="@+id/topLayout"
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:background="@color/StatusBarColour"
-        android:orientation="horizontal">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/backFolderActivity"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
-            android:background="@drawable/bg_ripplefactor"
-            android:padding="17dp"
-            android:src="@drawable/icon_back" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="15dp"
-            android:ellipsize="end"
-            android:fontFamily="@font/font_title"
-            android:gravity="start"
-            android:singleLine="true"
-            android:text="Folder list"
-            android:textColor="@color/ImageViewAndTextViewColour"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true" />
 
     <LinearLayout
         android:id="@+id/midLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/topLayout"
         android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="visible">

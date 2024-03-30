@@ -138,84 +138,10 @@
 
     </LinearLayout>
 
-
-    <LinearLayout
-        android:id="@+id/LayoutFolderList"
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:background="@drawable/bg_ripplefactor_without_corner"
-        android:clickable="true"
-        android:gravity="center"
-        android:minHeight="?attr/actionBarSize"
-        android:orientation="horizontal">
-
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="20dp"
-            android:src="@drawable/icon_folderlist" />
-
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/Lists_FolderList"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/font_title"
-                    android:gravity="center"
-                    android:scrollHorizontally="false"
-                    android:singleLine="true"
-                    android:text="Folder list"
-                    android:textAlignment="gravity"
-                    android:textColor="@color/ImageViewAndTextViewColour"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/Lists_FolderList_Size"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="0 folder"
-                    android:fontFamily="@font/font_songcount"
-                    android:textColor="#737A91"
-                    android:textSize="15sp" />
-
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-
-    <View
-        android:id="@+id/midView"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/LayoutFolderList"
-        android:background="@color/ViewColor" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/midView"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:orientation="vertical">
 
         <TextView

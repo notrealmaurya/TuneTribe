@@ -15,7 +15,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.IBinder
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -32,7 +31,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayoutMediator
-import com.maurya.dtxloopplayer.activities.PlayListActivity
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
@@ -41,9 +39,9 @@ import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.fragments.SongsFragment
 import com.maurya.dtxloopplayer.databinding.ActivityMainBinding
 import com.maurya.dtxloopplayer.databinding.PlayerControlsPanelBinding
-import com.maurya.dtxloopplayer.fragments.FavouriteFragment
 import com.maurya.dtxloopplayer.fragments.FolderFragment
 import com.maurya.dtxloopplayer.fragments.FolderTracksFragment
+import com.maurya.dtxloopplayer.fragments.PlayListFragment
 import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.createMediaPlayer
@@ -111,6 +109,7 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
 
         viewModel = ViewModelProvider(this)[ViewModelObserver::class.java]
         sharedPreferenceHelper = SharedPreferenceHelper(this)
+        musicAdapter = AdapterMusic(this, arrayListOf())
 
         activityMainBinding.topLayout.visibility = View.VISIBLE
 
@@ -168,12 +167,12 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
             )
 
             "PlayListActivity" -> initServiceAndPlaylist(
-                PlayListActivity.currentPlayListMusicList,
+                PlayListFragment.currentPlayListMusicList,
                 shuffle = false
             )
 
             "PlayListActivityShuffle" -> initServiceAndPlaylist(
-                PlayListActivity.currentPlayListMusicList,
+                PlayListFragment.currentPlayListMusicList,
                 shuffle = true
             )
 
@@ -200,12 +199,11 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
         playlist: ArrayList<MusicDataClass>,
         shuffle: Boolean,
     ) {
-        createMediaPlayer(musicService!!)
-        musicService!!.mediaPlayer!!.setOnCompletionListener(this@MainActivity)
-
         musicListPlayerFragment = ArrayList()
         musicListPlayerFragment.addAll(playlist)
         if (shuffle) musicListPlayerFragment.shuffle()
+        createMediaPlayer(musicService!!)
+        musicService!!.mediaPlayer!!.setOnCompletionListener(this@MainActivity)
         setMusicData(viewModel)
     }
 
@@ -333,26 +331,20 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
         musicService!!.mediaPlayer!!.setOnCompletionListener(this)
     }
 
-    fun onSongSelectedFromOtherFragment(
-        songs: ArrayList<MusicDataClass>,
+
+    override fun onSongSelected(
+        musicList: ArrayList<MusicDataClass>,
         position: Int
     ) {
         musicPosition = position
-        Log.d("posItemClass", position.toString())
-        Log.d("posItemClass", musicPosition.toString())
-        initServiceAndPlaylist(songs, false)
-    }
-
-    override fun onSongSelected(musicList: ArrayList<MusicDataClass>, position: Int) {
-        musicPosition = position
-        Log.d("posItemClass", position.toString())
-        Log.d("posItemClass", musicPosition.toString())
+        musicAdapter.updatePlaybackState(musicList[position].id)
         initServiceAndPlaylist(musicList, false)
     }
 
     override fun onAddToQueue(song: MusicDataClass) {
-        TODO("Not yet implemented")
+
     }
+
 
 
     private fun initViewPager() {
@@ -360,6 +352,7 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
         val myAdapter = ViewPagerAdapter(this)
         myAdapter.addFragment(SongsFragment(), "Songs")
         myAdapter.addFragment(ListsFragment(), "Lists")
+        myAdapter.addFragment(FolderFragment(), "Folders")
 
 
         val viewPager = activityMainBinding.viewPAGER

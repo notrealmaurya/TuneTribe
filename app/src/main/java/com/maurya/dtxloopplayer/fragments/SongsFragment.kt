@@ -16,8 +16,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.R
+import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
+import com.maurya.dtxloopplayer.databinding.ActivityPlayerBinding
 import com.maurya.dtxloopplayer.databinding.FragmentSongsBinding
 import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
@@ -27,6 +29,7 @@ import com.maurya.dtxloopplayer.viewModelsObserver.ModelResult
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -35,7 +38,6 @@ class SongsFragment : Fragment(), MediaControlInterface {
 
     private lateinit var fragmentSongsBinding: FragmentSongsBinding
 
-    private lateinit var adapterMusic: AdapterMusic
 
     @Inject
     lateinit var sharedPreferencesHelper: SharedPreferenceHelper
@@ -53,6 +55,12 @@ class SongsFragment : Fragment(), MediaControlInterface {
     )
 
     companion object {
+        private var bindingRef: WeakReference<FragmentSongsBinding>? = null
+        lateinit var adapterMusic: AdapterMusic
+        fun getSongFragmentBinding(): FragmentSongsBinding? {
+            return bindingRef?.get()
+        }
+
         var musicList: ArrayList<MusicDataClass> = arrayListOf()
     }
 
@@ -69,6 +77,8 @@ class SongsFragment : Fragment(), MediaControlInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+       bindingRef = WeakReference(fragmentSongsBinding)
 
         sharedPreferencesHelper = SharedPreferenceHelper(requireContext())
         sortingOrder = sharedPreferencesHelper.getSortingOrder().toString()
@@ -177,7 +187,10 @@ class SongsFragment : Fragment(), MediaControlInterface {
 
     }
 
-    override fun onSongSelected(musicList: ArrayList<MusicDataClass>, position: Int) {
+    override fun onSongSelected(
+        musicList: ArrayList<MusicDataClass>,
+        position: Int
+    ) {
         if (activity is MainActivity) {
             (activity as MainActivity).onSongSelected(musicList, position)
         }

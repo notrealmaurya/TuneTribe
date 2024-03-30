@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     app:cardBackgroundColor="@android:color/transparent"
-    app:cardCornerRadius="30dp"
+    app:cardCornerRadius="20dp"
     app:cardElevation="0dp"
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true">
@@ -28,47 +28,48 @@
             app:lottie_fileName="lottie_newplaylist.json"
             app:lottie_loop="true" />
 
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="40dp"
-            android:text="New playList"
-            android:textColor="@color/ImageViewAndTextViewColour"
-            android:textSize="17sp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="40dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="20dp"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/font_songcount"
+                android:text="New playList"
+                android:textColor="@color/ImageViewAndTextViewColour"
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/newPlayListEditTextDialog"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:autofillHints="name"
                 android:background="@drawable/bg_edittext"
+                android:inputType="text"
                 android:paddingHorizontal="15dp"
+                android:paddingVertical="10dp"
                 android:text="My PlayList 1"
                 android:textColor="@color/ImageViewAndTextViewColour"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height=".1dp"
             android:background="@color/ViewColor" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="50dp"
             android:orientation="horizontal">
 
             <TextView
@@ -80,11 +81,11 @@
                 android:background="@drawable/bg_about_ripple"
                 android:gravity="center"
                 android:text="Cancel"
-                android:textColor="@color/ImageViewAndTextViewColour"
+                android:textColor="@color/red"
                 android:textSize="16sp" />
 
             <LinearLayout
-                android:layout_width="1dp"
+                android:layout_width=".1dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
@@ -102,11 +103,9 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="@drawable/bg_about_ripple"
-                android:clickable="true"
                 android:gravity="center"
-                android:padding="15dp"
-                android:text="OK"
-                android:textColor="@color/ImageViewAndTextViewColour"
+                android:text="Save"
+                android:textColor="#2958FF"
                 android:textSize="16sp" />
 
         </LinearLayout>

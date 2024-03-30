@@ -53,8 +53,6 @@ class PlayerActivity : AppCompatActivity() {
 
 
     companion object {
-        lateinit var viewModel: ViewModelObserver
-
         private var bindingRef: WeakReference<ActivityPlayerBinding>? = null
 
         fun getPlayerActivityBinding(): ActivityPlayerBinding? {
@@ -71,7 +69,6 @@ class PlayerActivity : AppCompatActivity() {
         var favouriteIndex: Int = -1
 
         lateinit var loudnessEnhancer: LoudnessEnhancer
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,7 +79,7 @@ class PlayerActivity : AppCompatActivity() {
         bindingRef = WeakReference(binding)
 
         sharedPreferenceHelper = SharedPreferenceHelper(this)
-        viewModel = ViewModelProvider(this)[ViewModelObserver::class.java]
+
 
         val savedTheme = sharedPreferenceHelper.getPlayerActivityTheme()
 
@@ -96,8 +93,15 @@ class PlayerActivity : AppCompatActivity() {
         binding.songNAME.isSelected = true
         binding.songARTIST.isSelected = true
 
+        if (MainActivity.isPlaying){
+            binding.playPausePlayerActivity.setImageResource(R.drawable.icon_pause)
+        }
+        else{
+            binding.playPausePlayerActivity.setImageResource(R.drawable.icon_play)
+        }
 
-        viewModel.songInfo.observe(this) { musicData ->
+
+        MainActivity.viewModel.songInfo.observe(this) { musicData ->
             binding.songNAME.text = musicData.musicName
             binding.songARTIST.text = musicData.albumArtist
             Glide.with(this)
@@ -109,7 +113,7 @@ class PlayerActivity : AppCompatActivity() {
                 .into(binding.songImagePlayerActivity)
         }
 
-        setMusicData(viewModel)
+        setMusicData(MainActivity.viewModel)
 
         setLayout(MainActivity.musicService!!)
 
