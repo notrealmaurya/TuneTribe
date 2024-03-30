@@ -83,6 +83,11 @@ class SearchActivity : AppCompatActivity(), MediaControlInterface {
         TODO("Not yet implemented")
     }
 
+    override fun onSongShuffled(musicList: ArrayList<MusicDataClass>, shuffle: Boolean) {
+
+
+    }
+
 
     override fun onAddToQueue(song: MusicDataClass) {
         TODO("Not yet implemented")

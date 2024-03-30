@@ -61,6 +61,11 @@ class FolderTracksFragment : Fragment(), MediaControlInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        val mainBinding = MainActivity.getActivityMainBinding()
+        mainBinding?.topLayout?.visibility = View.GONE
+
+
         viewModel = ViewModelProvider(this)[ViewModelObserver::class.java]
 
         val bundle = arguments
@@ -121,6 +126,7 @@ class FolderTracksFragment : Fragment(), MediaControlInterface {
         }
 
         fragmentFolderTracksBinding.folderTracksBackBtn.setOnClickListener {
+            mainBinding?.topLayout?.visibility = View.VISIBLE
             requireActivity().onBackPressed()
         }
 
@@ -138,6 +144,10 @@ class FolderTracksFragment : Fragment(), MediaControlInterface {
         position: Int
     ) {
 
+
+    }
+
+    override fun onSongShuffled(musicList: ArrayList<MusicDataClass>, shuffle: Boolean) {
 
     }
 

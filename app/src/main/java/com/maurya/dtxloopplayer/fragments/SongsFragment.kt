@@ -78,7 +78,7 @@ class SongsFragment : Fragment(), MediaControlInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-       bindingRef = WeakReference(fragmentSongsBinding)
+        bindingRef = WeakReference(fragmentSongsBinding)
 
         sharedPreferencesHelper = SharedPreferenceHelper(requireContext())
         sortingOrder = sharedPreferencesHelper.getSortingOrder().toString()
@@ -138,7 +138,9 @@ class SongsFragment : Fragment(), MediaControlInterface {
     private fun listener() {
 
         fragmentSongsBinding.shuffleBtnSongFragment.setOnClickListener {
-
+            if (activity is MainActivity) {
+                (activity as MainActivity).onSongShuffled(musicList, true)
+            }
         }
 
         fragmentSongsBinding.sortingVideoFragment.setOnClickListener {
@@ -194,6 +196,10 @@ class SongsFragment : Fragment(), MediaControlInterface {
         if (activity is MainActivity) {
             (activity as MainActivity).onSongSelected(musicList, position)
         }
+    }
+
+    override fun onSongShuffled(musicList: ArrayList<MusicDataClass>, shuffle: Boolean) {
+
     }
 
     override fun onAddToQueue(song: MusicDataClass) {

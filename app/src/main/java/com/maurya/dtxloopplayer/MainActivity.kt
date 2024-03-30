@@ -137,61 +137,7 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
     }
 
     private fun handleIntent(intent: Intent?) {
-        musicPosition = intent!!.getIntExtra("index", 0)
 
-        when (intent.getStringExtra("class")) {
-
-            "MusicAdapterSearch" -> initServiceAndPlaylist(
-                SearchActivity.musicListSearch,
-                shuffle = false
-            )
-
-            "SongsFragment" -> initServiceAndPlaylist(
-                SongsFragment.musicList,
-                shuffle = false
-            )
-
-            "SongsFragmentShuffle" -> initServiceAndPlaylist(
-                SongsFragment.musicList,
-                shuffle = true
-            )
-
-            "FavouriteAdapter" -> initServiceAndPlaylist(
-                favouriteMusicList,
-                shuffle = false
-            )
-
-            "FavouriteActivityShuffle" -> initServiceAndPlaylist(
-                favouriteMusicList,
-                shuffle = true
-            )
-
-            "PlayListActivity" -> initServiceAndPlaylist(
-                PlayListFragment.currentPlayListMusicList,
-                shuffle = false
-            )
-
-            "PlayListActivityShuffle" -> initServiceAndPlaylist(
-                PlayListFragment.currentPlayListMusicList,
-                shuffle = true
-            )
-
-            "folderSongsActivity" -> initServiceAndPlaylist(
-                FolderTracksFragment.folderMusicList, shuffle = false
-
-            )
-
-            "folderSongsActivityShuffle" -> initServiceAndPlaylist(
-                FolderTracksFragment.folderMusicList, shuffle = true
-            )
-
-            "queueActivity" -> {
-                initServiceAndPlaylist(
-                    musicListPlayerFragment, shuffle = false
-                )
-            }
-
-        }
 
     }
 
@@ -345,6 +291,42 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
 
     }
 
+    override fun onSongShuffled(musicList: ArrayList<MusicDataClass>, shuffle: Boolean) {
+        initServiceAndPlaylist(musicList, true)
+    }
+
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!isPlaying && musicService != null) {
+            musicService!!.stopForeground(true)
+            val mediaPlayer = musicService!!.mediaPlayer
+            mediaPlayer?.release()
+            musicService = null
+            stopService(mainIntent)
+            if (boundEnabled) unbindService(connection)
+            exitProcess(1)
+        }
+    }
+
+    override fun onBackPressed() {
+        val fragmentManager = supportFragmentManager
+        val fragment = fragmentManager.findFragmentById(R.id.containerMainActivity)
+        if (fragment is FolderTracksFragment) {
+            fragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
+            activityMainBinding.topLayout.visibility = View.VISIBLE
+            supportFragmentManager.popBackStack()
+        }
+    }
+
+
+
+
+
+
 
 
     private fun initViewPager() {
@@ -460,30 +442,6 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
             .show()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (!isPlaying && musicService != null) {
-            musicService!!.stopForeground(true)
-            val mediaPlayer = musicService!!.mediaPlayer
-            mediaPlayer?.release()
-            musicService = null
-            stopService(mainIntent)
-            if (boundEnabled) unbindService(connection)
-            exitProcess(1)
-        }
-    }
-
-    override fun onBackPressed() {
-        val fragmentManager = supportFragmentManager
-        val fragment = fragmentManager.findFragmentById(R.id.containerMainActivity)
-        if (fragment is FolderTracksFragment) {
-            fragmentManager.popBackStack()
-        } else {
-            super.onBackPressed()
-            activityMainBinding.topLayout.visibility = View.VISIBLE
-            supportFragmentManager.popBackStack()
-        }
-    }
 
 
 }
