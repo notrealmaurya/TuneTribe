@@ -9,10 +9,11 @@ import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivitySearchBinding
 import com.maurya.dtxloopplayer.fragments.SongsFragment
 import com.maurya.dtxloopplayer.utils.MediaControlInterface
+import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SearchActivity : AppCompatActivity(),MediaControlInterface {
+class SearchActivity : AppCompatActivity(), MediaControlInterface {
 
     private lateinit var binding: ActivitySearchBinding
 
@@ -42,14 +43,14 @@ class SearchActivity : AppCompatActivity(),MediaControlInterface {
                 LinearLayoutManager(this@SearchActivity, LinearLayoutManager.VERTICAL, false)
             adapterMusic = AdapterMusic(
                 this@SearchActivity,
-                SongsFragment.musicList, this@SearchActivity,searchActivity = true
+                SongsFragment.musicList, this@SearchActivity, searchActivity = true
             )
             adapter = adapterMusic
         }
 
 
-        binding.MusicListTotalSongFragment.text = "${SongsFragment.musicList} songs"
-
+        binding.MusicListTotalSearchActivity.text =
+            updateTextViewWithItemCount(SongsFragment.musicList.size)
 
         binding.SearchMusicViewSearchActivity.setOnQueryTextListener(object :
             SearchView.OnQueryTextListener {
@@ -64,7 +65,8 @@ class SearchActivity : AppCompatActivity(),MediaControlInterface {
                     }
                     search = true
                     adapterMusic.updateSearchList(searchList = musicListSearch)
-                    binding.MusicListTotalSongFragment.text = "${adapterMusic.itemCount} songs"
+                    binding.MusicListTotalSearchActivity.text =
+                        updateTextViewWithItemCount(adapterMusic.itemCount)
                 }
                 return true
             }
@@ -75,7 +77,7 @@ class SearchActivity : AppCompatActivity(),MediaControlInterface {
 
 
     override fun onSongSelected(
-        songs: ArrayList<MusicDataClass>,
+        musicList: ArrayList<MusicDataClass>,
         position: Int
     ) {
         TODO("Not yet implemented")

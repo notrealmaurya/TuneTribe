@@ -58,6 +58,10 @@ class AdapterMusic(
                     musicArt.visibility = View.GONE
                 }
 
+                queueActivity -> {
+                    musicArt.visibility = View.GONE
+                }
+
                 else -> {
                     Glide.with(context)
                         .asBitmap()
@@ -84,7 +88,8 @@ class AdapterMusic(
                     checkbox.visibility = View.VISIBLE
                     checkbox.isClickable = false
                     checkbox.isChecked = isSongAdded(musicList[position])
-                    SelectionActivity.selectionCount = PlayListActivity.currentPlayListMusicList.size
+                    SelectionActivity.selectionCount =
+                        PlayListActivity.currentPlayListMusicList.size
 
                     root.setOnClickListener {
                         val musicData = musicList[position]

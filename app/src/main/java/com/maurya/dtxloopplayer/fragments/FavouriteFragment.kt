@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maurya.dtxloopplayer.MainActivity
@@ -28,13 +29,13 @@ class FavouriteFragment : Fragment(), MediaControlInterface {
     }
 
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         fragmentFavouriteBinding = FragmentFavouriteBinding.inflate(inflater, container, false)
         val view = fragmentFavouriteBinding.root
-
 
         view.setOnTouchListener { _, _ -> true }
 

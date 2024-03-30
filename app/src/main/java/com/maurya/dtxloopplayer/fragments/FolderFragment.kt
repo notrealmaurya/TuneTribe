@@ -1,16 +1,16 @@
 package com.maurya.dtxloopplayer.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maurya.dtxloopplayer.MainActivity
-import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.adapter.AdapterFolder
 import com.maurya.dtxloopplayer.databinding.FragmentFolderBinding
-import com.maurya.dtxloopplayer.databinding.FragmentSongsBinding
 
 
 class FolderFragment : Fragment() {
@@ -33,10 +33,8 @@ class FolderFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         val mainBinding = MainActivity.getActivityMainBinding()
         mainBinding?.topLayout?.visibility = View.GONE
-        mainBinding?.viewPAGER?.visibility = View.GONE
 
         fragmentFolderBinding.recyclerViewFolderActivity.apply {
             setHasFixedSize(true)
@@ -52,11 +50,11 @@ class FolderFragment : Fragment() {
 
         fragmentFolderBinding.totalFoldersFolderActivity.text = "${adapterFolder.itemCount} folders"
 
-        fragmentFolderBinding.layoutTopBTN.setOnClickListener {
+        fragmentFolderBinding.backFolderActivity.setOnClickListener {
             mainBinding?.topLayout?.visibility = View.VISIBLE
-            mainBinding?.viewPAGER?.visibility = View.VISIBLE
             requireActivity().onBackPressed()
         }
+
 
     }
 

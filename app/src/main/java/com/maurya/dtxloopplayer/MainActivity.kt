@@ -41,7 +41,10 @@ import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.fragments.SongsFragment
 import com.maurya.dtxloopplayer.databinding.ActivityMainBinding
 import com.maurya.dtxloopplayer.databinding.PlayerControlsPanelBinding
+import com.maurya.dtxloopplayer.fragments.FavouriteFragment
+import com.maurya.dtxloopplayer.fragments.FolderFragment
 import com.maurya.dtxloopplayer.fragments.FolderTracksFragment
+import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.createMediaPlayer
 import com.maurya.dtxloopplayer.utils.pauseMusic
@@ -56,7 +59,7 @@ import kotlin.system.exitProcess
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
+class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, MediaControlInterface {
 
     private lateinit var activityMainBinding: ActivityMainBinding
     private lateinit var playerControlsPanelBinding: PlayerControlsPanelBinding
@@ -247,6 +250,7 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
                 AdapterMusic(
                     this,
                     musicListPlayerFragment,
+                    this@MainActivity,
                     queueActivity = true
                 )
             recyclerView.adapter = musicAdapter
@@ -329,7 +333,7 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
         musicService!!.mediaPlayer!!.setOnCompletionListener(this)
     }
 
-    fun onSongSelected(
+    fun onSongSelectedFromOtherFragment(
         songs: ArrayList<MusicDataClass>,
         position: Int
     ) {
@@ -337,6 +341,17 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
         Log.d("posItemClass", position.toString())
         Log.d("posItemClass", musicPosition.toString())
         initServiceAndPlaylist(songs, false)
+    }
+
+    override fun onSongSelected(musicList: ArrayList<MusicDataClass>, position: Int) {
+        musicPosition = position
+        Log.d("posItemClass", position.toString())
+        Log.d("posItemClass", musicPosition.toString())
+        initServiceAndPlaylist(musicList, false)
+    }
+
+    override fun onAddToQueue(song: MusicDataClass) {
+        TODO("Not yet implemented")
     }
 
 
@@ -439,7 +454,7 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
             .setMessage("This permission is required to access the app.")
             .setPositiveButton(
                 "Go to Settings"
-            ) { dialog, which ->
+            ) { _, _ ->
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 val uri = Uri.fromParts("package", packageName, null)
                 intent.data = uri
@@ -447,23 +462,34 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
             }
             .setNegativeButton(
                 "Cancel"
-            ) { dialog, which -> finish() }
+            ) { _, _ -> finish() }
             .setCancelable(false)
             .show()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-
         if (!isPlaying && musicService != null) {
             musicService!!.stopForeground(true)
-            musicService!!.mediaPlayer!!.release()
+            val mediaPlayer = musicService!!.mediaPlayer
+            mediaPlayer?.release()
             musicService = null
             stopService(mainIntent)
             if (boundEnabled) unbindService(connection)
             exitProcess(1)
         }
+    }
 
+    override fun onBackPressed() {
+        val fragmentManager = supportFragmentManager
+        val fragment = fragmentManager.findFragmentById(R.id.containerMainActivity)
+        if (fragment is FolderTracksFragment) {
+            fragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
+            activityMainBinding.topLayout.visibility = View.VISIBLE
+            supportFragmentManager.popBackStack()
+        }
     }
 
 

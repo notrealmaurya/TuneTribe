@@ -10,7 +10,7 @@
 
 
     <LinearLayout
-        android:id="@+id/layout_topBTN"
+        android:id="@+id/topLayout"
         android:layout_width="match_parent"
         android:layout_height="65dp"
         android:background="@color/StatusBarColour"
@@ -46,9 +46,9 @@
         android:id="@+id/midLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layout_topBTN"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
+        android:layout_below="@id/topLayout"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="visible">

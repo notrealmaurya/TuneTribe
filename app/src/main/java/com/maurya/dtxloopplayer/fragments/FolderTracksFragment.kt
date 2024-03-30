@@ -2,6 +2,7 @@ package com.maurya.dtxloopplayer.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +10,11 @@ import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.R
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
@@ -23,21 +26,25 @@ import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 import com.maurya.dtxloopplayer.viewModelsObserver.ModelResult
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.File
 
 
+@AndroidEntryPoint
 class FolderTracksFragment : Fragment(), MediaControlInterface {
 
     private lateinit var fragmentFolderTracksBinding: FragmentFolderTracksBinding
 
 
-    private val viewModel by viewModels<ViewModelObserver>()
+    private lateinit var viewModel: ViewModelObserver
     private lateinit var adapterMusic: AdapterMusic
 
     companion object {
         var folderMusicList = ArrayList<MusicDataClass>()
     }
+
+    var folderPath: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,22 +53,27 @@ class FolderTracksFragment : Fragment(), MediaControlInterface {
         fragmentFolderTracksBinding =
             FragmentFolderTracksBinding.inflate(inflater, container, false)
         val view = fragmentFolderTracksBinding.root
+        view.setOnTouchListener { _, _ -> true }
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProvider(this)[ViewModelObserver::class.java]
+
         val bundle = arguments
 
         if (bundle != null) {
             val folderPath = bundle.getString("folderPath")
+            Log.d("folderItemClass", folderPath.toString())
             viewModel.fetchSongsFromFolder(requireContext(), folderPath!!)
             fragmentFolderTracksBinding.foldersNameFoldersTrackActivity.text = File(folderPath).name
+        } else {
+            showToast(requireContext(), "Error in fetching MusicFiles")
         }
-        else{
-            showToast(requireContext(),"Error in fetching MusicFiles")
-        }
+
 
         fragmentFolderTracksBinding.recyclerViewFoldersTrackActivity.apply {
             setHasFixedSize(true)
@@ -109,7 +121,7 @@ class FolderTracksFragment : Fragment(), MediaControlInterface {
         }
 
         fragmentFolderTracksBinding.folderTracksBackBtn.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            requireActivity().onBackPressed()
         }
 
         fragmentFolderTracksBinding.shuffleBtnFoldersTrackActivity.setOnClickListener {

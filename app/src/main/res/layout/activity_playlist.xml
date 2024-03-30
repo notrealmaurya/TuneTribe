@@ -102,7 +102,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/bottomadd"
         android:layout_below="@id/viewLine"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="10dp" />
 
     <LinearLayout
         android:id="@+id/bottomadd"
