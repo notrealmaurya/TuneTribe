@@ -113,6 +113,11 @@ class FavouriteFragment : Fragment(), MediaControlInterface {
         }
     }
 
+    override fun onSongShuffled(musicList: ArrayList<MusicDataClass>, shuffle: Boolean) {
+
+
+    }
+
     override fun onAddToQueue(song: MusicDataClass) {
 
     }

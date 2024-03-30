@@ -101,7 +101,6 @@ class FolderTracksFragment : Fragment(), MediaControlInterface {
                     fragmentFolderTracksBinding.progressBar.visibility = View.GONE
                     when (it) {
                         is ModelResult.Success -> {
-                            folderMusicList.clear()
                             folderMusicList.addAll(it.data!!)
                             val count = updateTextViewWithItemCount(folderMusicList.size)
                             fragmentFolderTracksBinding.totalSongsFoldersTrackActivity.text = count
@@ -116,6 +115,7 @@ class FolderTracksFragment : Fragment(), MediaControlInterface {
                         }
 
                         is ModelResult.Loading -> {
+                            folderMusicList.clear()
                             fragmentFolderTracksBinding.progressBar.visibility = View.VISIBLE
                         }
 

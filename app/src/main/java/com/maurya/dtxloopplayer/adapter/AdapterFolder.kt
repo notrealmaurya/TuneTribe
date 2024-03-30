@@ -56,6 +56,7 @@ class AdapterFolder(
 
             val transaction = fragmentManager.beginTransaction()
             transaction.replace(R.id.containerMainActivity, receivingFragment)
+            transaction.addToBackStack(null)
             transaction.commit()
 
         }

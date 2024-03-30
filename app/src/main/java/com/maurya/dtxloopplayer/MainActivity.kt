@@ -49,6 +49,7 @@ import com.maurya.dtxloopplayer.utils.pauseMusic
 import com.maurya.dtxloopplayer.utils.playMusic
 import com.maurya.dtxloopplayer.utils.prevNextSong
 import com.maurya.dtxloopplayer.utils.setMusicData
+import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.ref.WeakReference
@@ -118,7 +119,6 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
         favouriteMusicList.clear()
         favouriteMusicList.addAll(favouriteListPreference)
 
-
         permission()
         initViewPager()
         listeners()
@@ -134,6 +134,7 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
                 .error(R.drawable.icon_music)
                 .into(playerControlsPanelBinding.AlbumArtMiniPlayer)
         }
+
     }
 
     private fun handleIntent(intent: Intent?) {
@@ -141,17 +142,6 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
 
     }
 
-    private fun initServiceAndPlaylist(
-        playlist: ArrayList<MusicDataClass>,
-        shuffle: Boolean,
-    ) {
-        musicListPlayerFragment = ArrayList()
-        musicListPlayerFragment.addAll(playlist)
-        if (shuffle) musicListPlayerFragment.shuffle()
-        createMediaPlayer(musicService!!)
-        musicService!!.mediaPlayer!!.setOnCompletionListener(this@MainActivity)
-        setMusicData(viewModel)
-    }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
@@ -180,48 +170,44 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
         playerControlsPanelBinding.queueNowPlayingFragment.setOnClickListener {
             val bottomSheetDialog =
                 BottomSheetDialog(this, R.style.ThemeOverlay_App_BottomSheetDialog)
-            val bottomSheetView = layoutInflater.inflate(R.layout.popup_dialog_queue, null)
+            val bottomSheetView =
+                layoutInflater.inflate(R.layout.popup_dialog_queue, null)
             val recyclerView =
                 bottomSheetView.findViewById<RecyclerView>(R.id.recyclerViewQueueActivity)
             val totalSongsTextView =
                 bottomSheetView.findViewById<TextView>(R.id.totalSongsQueueActivity)
-
-            recyclerView.setHasFixedSize(true)
-            recyclerView.setItemViewCacheSize(13)
-            recyclerView.layoutManager = LinearLayoutManager(this)
-
-            musicAdapter =
-                AdapterMusic(
-                    this,
-                    musicListPlayerFragment,
-                    this@MainActivity,
-                    queueActivity = true
-                )
-            recyclerView.adapter = musicAdapter
-
-            recyclerView.smoothScrollToPosition(musicPosition)
-
-            val musicListSize = musicListPlayerFragment.size
-            val songText = if (musicListSize == 1) "song" else "songs"
-            totalSongsTextView.text = "Track Queue ($musicListSize $songText)"
-
             bottomSheetDialog.setContentView(bottomSheetView)
             bottomSheetDialog.setCanceledOnTouchOutside(true)
-
-            // Set a fixed height for the Bottom Sheet Dialog (e.g., 400dp)
             val layoutParams = bottomSheetView.layoutParams
             layoutParams.height =
-                resources.getDimensionPixelSize(R.dimen.fixed_bottom_sheet_height) // Create a dimension resource for the fixed height
+                resources.getDimensionPixelSize(R.dimen.fixed_bottom_sheet_height)
             bottomSheetView.layoutParams = layoutParams
-
-            // Set BottomSheetBehavior to fixed height and disable dragging to expand
             val behavior = BottomSheetBehavior.from(bottomSheetView.parent as View)
             behavior.state = BottomSheetBehavior.STATE_EXPANDED
             behavior.isDraggable = false
 
+            recyclerView.apply {
+                setHasFixedSize(true)
+                setItemViewCacheSize(13)
+                layoutManager =
+                    LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+                musicAdapter = AdapterMusic(
+                    this@MainActivity,
+                    musicListPlayerFragment,
+                    this@MainActivity,
+                    queueActivity = true
+                )
+                adapter = musicAdapter
+                smoothScrollToPosition(musicPosition)
+            }
+
+
             bottomSheetDialog.show()
 
-            musicAdapter.notifyDataSetChanged()
+            totalSongsTextView.text = "Track Queue (${
+                updateTextViewWithItemCount(musicListPlayerFragment.size)
+            })"
+
         }
 
         playerControlsPanelBinding.playPauseMiniPlayer.setOnClickListener {
@@ -278,24 +264,37 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
     }
 
 
+    private fun initServiceAndPlaylist(
+        playlist: ArrayList<MusicDataClass>,
+    ) {
+        musicListPlayerFragment = ArrayList()
+        musicListPlayerFragment.addAll(playlist)
+        createMediaPlayer(musicService!!)
+        musicService!!.mediaPlayer!!.setOnCompletionListener(this@MainActivity)
+        setMusicData(viewModel)
+    }
+
     override fun onSongSelected(
         musicList: ArrayList<MusicDataClass>,
         position: Int
     ) {
         musicPosition = position
         musicAdapter.updatePlaybackState(musicList[position].id)
-        initServiceAndPlaylist(musicList, false)
+        initServiceAndPlaylist(musicList)
     }
+
+
+    override fun onSongShuffled(musicList: ArrayList<MusicDataClass>, shuffle: Boolean) {
+        musicList.shuffle()
+        musicPosition = 0
+        musicAdapter.updatePlaybackState(musicList[musicPosition].id)
+        initServiceAndPlaylist(musicList)
+    }
+
 
     override fun onAddToQueue(song: MusicDataClass) {
 
     }
-
-    override fun onSongShuffled(musicList: ArrayList<MusicDataClass>, shuffle: Boolean) {
-        initServiceAndPlaylist(musicList, true)
-    }
-
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -311,22 +310,10 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
     }
 
     override fun onBackPressed() {
-        val fragmentManager = supportFragmentManager
-        val fragment = fragmentManager.findFragmentById(R.id.containerMainActivity)
-        if (fragment is FolderTracksFragment) {
-            fragmentManager.popBackStack()
-        } else {
-            super.onBackPressed()
-            activityMainBinding.topLayout.visibility = View.VISIBLE
-            supportFragmentManager.popBackStack()
-        }
+        super.onBackPressed()
+        activityMainBinding.topLayout.visibility = View.VISIBLE
+        supportFragmentManager.popBackStack()
     }
-
-
-
-
-
-
 
 
     private fun initViewPager() {
@@ -441,7 +428,6 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
             .setCancelable(false)
             .show()
     }
-
 
 
 }

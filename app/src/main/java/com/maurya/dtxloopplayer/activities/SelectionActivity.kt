@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class SelectionActivity : AppCompatActivity(), MediaControlInterface {
+class SelectionActivity : AppCompatActivity() {
 
     private lateinit var adapterMusic: AdapterMusic
 
@@ -29,7 +29,6 @@ class SelectionActivity : AppCompatActivity(), MediaControlInterface {
 
     companion object {
         var selectionCount: Int = 0
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +49,7 @@ class SelectionActivity : AppCompatActivity(), MediaControlInterface {
             adapterMusic = AdapterMusic(
                 this@SelectionActivity,
                 SongsFragment.musicList,
-                this@SelectionActivity,
+                null,
                 sharedPreferenceHelper,
                 selectionActivity = true,
                 uuidCurrentPlayList = currentPlayListUUID.toString()
@@ -93,15 +92,6 @@ class SelectionActivity : AppCompatActivity(), MediaControlInterface {
         })
 
 
-    }
-
-
-    override fun onSongSelected(musicList: ArrayList<MusicDataClass>, position: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onAddToQueue(song: MusicDataClass) {
-        TODO("Not yet implemented")
     }
 
 }

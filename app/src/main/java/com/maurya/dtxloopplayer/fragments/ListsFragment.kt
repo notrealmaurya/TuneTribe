@@ -33,10 +33,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ListsFragment : Fragment() {
 
-    private lateinit var folderAdapter: AdapterFolder
-
-
-    private val viewModel: ViewModelObserver by viewModels()
 
     private lateinit var fragmentListsBinding: FragmentListsBinding
 
@@ -47,7 +43,6 @@ class ListsFragment : Fragment() {
 
     companion object {
         var playList: ArrayList<PlayListDataClass> = arrayListOf()
-        var folderList: ArrayList<FolderDataClass> = arrayListOf()
     }
 
     override fun onCreateView(
@@ -64,7 +59,6 @@ class ListsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        fetchFolderUsingViewModel()
         fetchPlayListUsingViewModel()
 
         val playListPreference = sharedPreferenceHelper.getPlayList()
@@ -87,38 +81,6 @@ class ListsFragment : Fragment() {
             adapter = adapterPlayList
         }
 
-
-    }
-
-    private fun fetchFolderUsingViewModel() {
-
-        viewModel.fetchFolders(requireContext())
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.foldersStateFLow.collect {
-                    when (it) {
-                        is ModelResult.Success -> {
-                            fragmentListsBinding.progressBar.visibility = View.GONE
-                            folderList.clear()
-                            folderList.addAll(it.data!!)
-                        }
-
-                        is ModelResult.Error -> {
-                            showToast(
-                                requireContext(),
-                                it.message.toString()
-                            )
-                        }
-
-                        is ModelResult.Loading -> {
-                        }
-
-                        else -> {}
-                    }
-                }
-            }
-        }
 
     }
 
