@@ -267,7 +267,6 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
     private fun initServiceAndPlaylist(
         playlist: ArrayList<MusicDataClass>,
     ) {
-        musicListPlayerFragment = ArrayList()
         musicListPlayerFragment.addAll(playlist)
         createMediaPlayer(musicService!!)
         musicService!!.mediaPlayer!!.setOnCompletionListener(this@MainActivity)
