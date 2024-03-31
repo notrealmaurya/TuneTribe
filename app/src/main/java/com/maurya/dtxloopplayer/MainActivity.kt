@@ -35,13 +35,11 @@ import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
-import com.maurya.dtxloopplayer.fragments.ListsFragment
-import com.maurya.dtxloopplayer.fragments.SongsFragment
 import com.maurya.dtxloopplayer.databinding.ActivityMainBinding
 import com.maurya.dtxloopplayer.databinding.PlayerControlsPanelBinding
 import com.maurya.dtxloopplayer.fragments.FolderFragment
-import com.maurya.dtxloopplayer.fragments.FolderTracksFragment
-import com.maurya.dtxloopplayer.fragments.PlayListFragment
+import com.maurya.dtxloopplayer.fragments.ListsFragment
+import com.maurya.dtxloopplayer.fragments.SongsFragment
 import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.createMediaPlayer
@@ -52,6 +50,10 @@ import com.maurya.dtxloopplayer.utils.setMusicData
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 import kotlin.system.exitProcess
@@ -170,45 +172,49 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
         playerControlsPanelBinding.queueNowPlayingFragment.setOnClickListener {
             val bottomSheetDialog =
                 BottomSheetDialog(this, R.style.ThemeOverlay_App_BottomSheetDialog)
-            val bottomSheetView =
-                layoutInflater.inflate(R.layout.popup_dialog_queue, null)
+            val bottomSheetView = layoutInflater.inflate(R.layout.popup_dialog_queue, null)
             val recyclerView =
                 bottomSheetView.findViewById<RecyclerView>(R.id.recyclerViewQueueActivity)
             val totalSongsTextView =
                 bottomSheetView.findViewById<TextView>(R.id.totalSongsQueueActivity)
-            bottomSheetDialog.setContentView(bottomSheetView)
-            bottomSheetDialog.setCanceledOnTouchOutside(true)
-            val layoutParams = bottomSheetView.layoutParams
-            layoutParams.height =
-                resources.getDimensionPixelSize(R.dimen.fixed_bottom_sheet_height)
-            bottomSheetView.layoutParams = layoutParams
-            val behavior = BottomSheetBehavior.from(bottomSheetView.parent as View)
-            behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            behavior.isDraggable = false
 
-            recyclerView.apply {
-                setHasFixedSize(true)
-                setItemViewCacheSize(13)
-                layoutManager =
-                    LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+
+            CoroutineScope(Dispatchers.Default).launch {
                 musicAdapter = AdapterMusic(
                     this@MainActivity,
                     musicListPlayerFragment,
                     this@MainActivity,
                     queueActivity = true
                 )
-                adapter = musicAdapter
-                smoothScrollToPosition(musicPosition)
+                withContext(Dispatchers.Main) {
+                    recyclerView.apply {
+                        setHasFixedSize(true)
+                        setItemViewCacheSize(13)
+                        layoutManager =
+                            LinearLayoutManager(this@MainActivity, RecyclerView.VERTICAL, false)
+                        adapter = musicAdapter
+                    }
+
+                    totalSongsTextView.text =
+                        "Track Queue (${updateTextViewWithItemCount(musicListPlayerFragment.size)})"
+
+                    bottomSheetDialog.setContentView(bottomSheetView)
+                    bottomSheetDialog.setCanceledOnTouchOutside(true)
+                    val layoutParams = bottomSheetView.layoutParams
+                    layoutParams.height =
+                        resources.getDimensionPixelSize(R.dimen.fixed_bottom_sheet_height)
+                    bottomSheetView.layoutParams = layoutParams
+                    val behavior = BottomSheetBehavior.from(bottomSheetView.parent as View)
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    behavior.isDraggable = false
+
+                    bottomSheetDialog.show()
+
+                    recyclerView.smoothScrollToPosition(musicPosition)
+                }
             }
-
-
-            bottomSheetDialog.show()
-
-            totalSongsTextView.text = "Track Queue (${
-                updateTextViewWithItemCount(musicListPlayerFragment.size)
-            })"
-
         }
+
 
         playerControlsPanelBinding.playPauseMiniPlayer.setOnClickListener {
             if (isPlaying) pauseMusic(musicService!!)
@@ -267,6 +273,7 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
     private fun initServiceAndPlaylist(
         playlist: ArrayList<MusicDataClass>,
     ) {
+        musicListPlayerFragment.clear()
         musicListPlayerFragment.addAll(playlist)
         createMediaPlayer(musicService!!)
         musicService!!.mediaPlayer!!.setOnCompletionListener(this@MainActivity)
