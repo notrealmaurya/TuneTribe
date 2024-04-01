@@ -3,10 +3,13 @@ package com.maurya.dtxloopplayer.viewModelsObserver
 import android.content.Context
 import com.maurya.dtxloopplayer.database.FolderDataClass
 import com.maurya.dtxloopplayer.database.MusicDataClass
+import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.getAllFolders
 import com.maurya.dtxloopplayer.utils.getAllSongs
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class Repository @Inject constructor() {
@@ -30,6 +33,12 @@ class Repository @Inject constructor() {
         MutableStateFlow<ModelResult<ArrayList<MusicDataClass>>>(ModelResult.Loading())
 
     val songsFromFolderStateFlow: StateFlow<ModelResult<ArrayList<MusicDataClass>>> get() = _songsFromFolderStateFlow
+
+
+    private val _songsFromPlayListStateFlow =
+        MutableStateFlow<ModelResult<ArrayList<MusicDataClass>>>(ModelResult.Loading())
+
+    val songsFromPlayListStateFlow: StateFlow<ModelResult<ArrayList<MusicDataClass>>> get() = _songsFromPlayListStateFlow
 
 
     private val _statusStateFlow = MutableStateFlow<ModelResult<String>>(ModelResult.Loading())
@@ -65,18 +74,34 @@ class Repository @Inject constructor() {
         }
     }
 
-    suspend fun getVideosFromFolder(context: Context, folderId: String) {
+    suspend fun getMusicFromFolder(context: Context, folderId: String) {
         _songsFromFolderStateFlow.emit(ModelResult.Loading())
         try {
-            val videos = getAllSongs(context, folderId,isFolder = true)
+            val videos = getAllSongs(context, folderId, isFolder = true)
             _songsFromFolderStateFlow.emit(ModelResult.Success(videos))
         } catch (e: Exception) {
-            _songsFromFolderStateFlow.emit(ModelResult.Error("Failed to fetch z: ${e.message}"))
+            _songsFromFolderStateFlow.emit(ModelResult.Error("Failed to fetch Songs: ${e.message}"))
         }
 
     }
 
+    suspend fun getMusicFromPlayList(
+        playListName: String,
+        sharedPreferenceHelper: SharedPreferenceHelper
+    ) {
+        _songsFromPlayListStateFlow.emit(ModelResult.Loading())
+        try {
+            val songs = withContext(Dispatchers.IO) {
+                sharedPreferenceHelper.getPlayListSong(playListName)
+            }
+            val itemList: ArrayList<MusicDataClass> = arrayListOf()
+            itemList.addAll(songs)
+            _songsFromPlayListStateFlow.emit(ModelResult.Success(itemList))
+        } catch (e: Exception) {
+            _songsFromFolderStateFlow.emit(ModelResult.Error("Failed to fetch Songs: ${e.message}"))
+        }
 
+    }
 
 
 }

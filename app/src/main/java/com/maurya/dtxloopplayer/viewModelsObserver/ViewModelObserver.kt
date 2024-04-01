@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maurya.dtxloopplayer.database.MusicDataClass
+import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.showToast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ class ViewModelObserver @Inject constructor(private val repository: Repository) 
 
     val foldersStateFLow get() = repository.foldersStateFlow
     val songFromFoldersStateFLow get() = repository.songsFromFolderStateFlow
+    val songFromPlayListStateFLow get() = repository.songsFromPlayListStateFlow
 
 
     fun fetchSongs(context: Context) {
@@ -45,12 +47,27 @@ class ViewModelObserver @Inject constructor(private val repository: Repository) 
     fun fetchSongsFromFolder(context: Context, folderId: String) {
         viewModelScope.launch {
             try {
-                repository.getVideosFromFolder(context, folderId)
+                repository.getMusicFromFolder(context, folderId)
             } catch (e: Exception) {
                 showToast(context, e.message.toString())
             }
         }
 
+    }
+
+
+    fun fetchSongsFromPlayList(
+        context: Context,
+        playListName: String,
+        sharedPreferenceHelper: SharedPreferenceHelper
+    ) {
+        viewModelScope.launch {
+            try {
+                repository.getMusicFromPlayList(playListName, sharedPreferenceHelper)
+            } catch (e: Exception) {
+                showToast(context, e.message.toString())
+            }
+        }
     }
 
 
