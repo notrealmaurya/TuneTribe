@@ -21,12 +21,10 @@ class FavouriteFragment : Fragment(), MediaControlInterface {
     private lateinit var fragmentFavouriteBinding: FragmentFavouriteBinding
 
 
-
     companion object {
 
         lateinit var adapterMusic: AdapterMusic
     }
-
 
 
     override fun onCreateView(
@@ -53,7 +51,12 @@ class FavouriteFragment : Fragment(), MediaControlInterface {
         changeItemCount()
 
         fragmentFavouriteBinding.shuffleFavouriteActivity.setOnClickListener {
-//            sendIntent(requireContext(), position = 0, reference = "FavouriteActivityShuffle")
+            if (activity is MainActivity) {
+                (activity as MainActivity).onSongShuffled(
+                    MainActivity.favouriteMusicList,
+                    true
+                )
+            }
         }
 
         fragmentFavouriteBinding.FavouriteBackBtn.setOnClickListener {

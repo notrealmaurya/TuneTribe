@@ -210,7 +210,7 @@ class PlayListFragment : Fragment(), MediaControlInterface {
         binding.totalSongsPlayListActivity.text =
             updateTextViewWithItemCount(currentPlayListMusicList.size)
     }
-    
+
 
     override fun onDestroy() {
         super.onDestroy()
