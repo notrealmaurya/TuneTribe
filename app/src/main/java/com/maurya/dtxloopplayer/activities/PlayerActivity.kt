@@ -71,6 +71,7 @@ class PlayerActivity : AppCompatActivity() {
         lateinit var loudnessEnhancer: LoudnessEnhancer
     }
 
+    private lateinit var viewModel: ViewModelObserver
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
@@ -78,6 +79,7 @@ class PlayerActivity : AppCompatActivity() {
 
         bindingRef = WeakReference(binding)
 
+        viewModel = ViewModelProvider(this)[ViewModelObserver::class.java]
         sharedPreferenceHelper = SharedPreferenceHelper(this)
 
 
@@ -93,10 +95,9 @@ class PlayerActivity : AppCompatActivity() {
         binding.songNAME.isSelected = true
         binding.songARTIST.isSelected = true
 
-        if (MainActivity.isPlaying){
+        if (MainActivity.isPlaying) {
             binding.playPausePlayerActivity.setImageResource(R.drawable.icon_pause)
-        }
-        else{
+        } else {
             binding.playPausePlayerActivity.setImageResource(R.drawable.icon_play)
         }
 
@@ -274,11 +275,13 @@ class PlayerActivity : AppCompatActivity() {
                 isFavourite = false
                 binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_empty)
                 MainActivity.favouriteMusicList.removeAt(favouriteIndex)
+                viewModel.setFavouriteList(MainActivity.favouriteMusicList)
                 showToast(this, "Removed from Favourite")
             } else {
                 isFavourite = true
                 binding.addFavouritePlayerActivity.setImageResource(R.drawable.icon_favourite_added)
                 MainActivity.favouriteMusicList.add(MainActivity.musicListPlayerFragment[MainActivity.musicPosition])
+                viewModel.setFavouriteList(MainActivity.favouriteMusicList)
                 showToast(this, "Added in Favourite")
             }
             sharedPreferenceHelper.savePlayListSong(

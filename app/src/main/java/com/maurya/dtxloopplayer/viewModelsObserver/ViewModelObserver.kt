@@ -78,4 +78,15 @@ class ViewModelObserver @Inject constructor(private val repository: Repository) 
     fun setMusicData(musicData: MusicDataClass) {
         _songInfo.value = musicData
     }
+
+
+    //for favourite list
+    private val _favouriteList = MutableLiveData<ArrayList<MusicDataClass>>()
+    val favouriteList: LiveData<ArrayList<MusicDataClass>> get() = _favouriteList
+
+    fun setFavouriteList(playlistData: ArrayList<MusicDataClass>) {
+        _favouriteList.value = playlistData
+    }
+
+
 }

@@ -7,6 +7,8 @@ import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
@@ -14,6 +16,7 @@ import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.FragmentFavouriteBinding
 import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
+import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 
 
 class FavouriteFragment : Fragment(), MediaControlInterface {
@@ -21,6 +24,7 @@ class FavouriteFragment : Fragment(), MediaControlInterface {
     private lateinit var fragmentFavouriteBinding: FragmentFavouriteBinding
 
 
+    private val viewModel: ViewModelObserver by viewModels()
     companion object {
 
         lateinit var adapterMusic: AdapterMusic
@@ -62,6 +66,10 @@ class FavouriteFragment : Fragment(), MediaControlInterface {
         fragmentFavouriteBinding.FavouriteBackBtn.setOnClickListener {
             mainBinding?.topLayout?.visibility = View.VISIBLE
             requireActivity().onBackPressed()
+        }
+
+        viewModel.favouriteList.observe(viewLifecycleOwner) {
+            MainActivity.favouriteMusicList.addAll(it)
         }
 
     }

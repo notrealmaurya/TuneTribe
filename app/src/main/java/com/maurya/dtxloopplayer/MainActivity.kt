@@ -121,6 +121,12 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
         favouriteMusicList.clear()
         favouriteMusicList.addAll(favouriteListPreference)
 
+        viewModel.setFavouriteList(favouriteMusicList)
+
+        viewModel.favouriteList.observe(this) {
+            favouriteMusicList.addAll(it)
+        }
+
         permission()
         initViewPager()
         listeners()
