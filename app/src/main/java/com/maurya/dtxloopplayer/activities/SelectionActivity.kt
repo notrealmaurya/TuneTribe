@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivitySelectionBinding
+import com.maurya.dtxloopplayer.fragments.SearchFragment
 import com.maurya.dtxloopplayer.fragments.SongsFragment
 import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
@@ -77,15 +78,15 @@ class SelectionActivity : AppCompatActivity() {
             SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = true
             override fun onQueryTextChange(newText: String?): Boolean {
-                SearchActivity.musicListSearch = ArrayList()
+                SearchFragment.musicListSearch.clear()
                 if (newText != null) {
                     val userInput = newText.lowercase()
                     for (song in SongsFragment.musicList) {
                         if (song.musicName.lowercase().contains(userInput))
-                            SearchActivity.musicListSearch.add(song)
+                            SearchFragment.musicListSearch.add(song)
                     }
-                    SearchActivity.search = true
-                    adapterMusic.updateSearchList(searchList = SearchActivity.musicListSearch)
+                    SearchFragment.isSearchViewOpen = true
+                    adapterMusic.updateSearchList(searchList = SearchFragment.musicListSearch)
                 }
                 return true
             }

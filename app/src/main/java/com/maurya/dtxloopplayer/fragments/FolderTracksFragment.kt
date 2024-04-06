@@ -131,10 +131,9 @@ class FolderTracksFragment : Fragment(), MediaControlInterface {
         }
 
         fragmentFolderTracksBinding.shuffleBtnFoldersTrackActivity.setOnClickListener {
-//            val intent = Intent(this, PlayerActivity::class.java)
-//            intent.putExtra("index", 0)
-//            intent.putExtra("class", "folderSongsActivityShuffle")
-//            startActivity(intent)
+            if (activity is MainActivity) {
+                (activity as MainActivity).onSongShuffled(folderMusicList, true)
+            }
         }
 
     }
@@ -143,16 +142,13 @@ class FolderTracksFragment : Fragment(), MediaControlInterface {
         musicList: ArrayList<MusicDataClass>,
         position: Int
     ) {
-
-
+        if (activity is MainActivity) {
+            (activity as MainActivity).onSongSelected(musicList, position)
+        }
     }
 
     override fun onSongShuffled(musicList: ArrayList<MusicDataClass>, shuffle: Boolean) {
 
-    }
-
-    override fun onAddToQueue(song: MusicDataClass) {
-        TODO("Not yet implemented")
     }
 
 

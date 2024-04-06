@@ -17,8 +17,10 @@ import com.maurya.dtxloopplayer.databinding.FragmentFavouriteBinding
 import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class FavouriteFragment : Fragment(), MediaControlInterface {
 
     private lateinit var fragmentFavouriteBinding: FragmentFavouriteBinding
@@ -70,9 +72,6 @@ class FavouriteFragment : Fragment(), MediaControlInterface {
             requireActivity().onBackPressed()
         }
 
-        viewModel.favouriteList.observe(viewLifecycleOwner) {
-            MainActivity.favouriteMusicList.addAll(it)
-        }
 
     }
 
@@ -128,10 +127,6 @@ class FavouriteFragment : Fragment(), MediaControlInterface {
 
     override fun onSongShuffled(musicList: ArrayList<MusicDataClass>, shuffle: Boolean) {
 
-
-    }
-
-    override fun onAddToQueue(song: MusicDataClass) {
 
     }
 

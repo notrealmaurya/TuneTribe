@@ -36,14 +36,15 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.maurya.dtxloopplayer.activities.PlayerActivity
-import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivityMainBinding
 import com.maurya.dtxloopplayer.databinding.PlayerControlsPanelBinding
 import com.maurya.dtxloopplayer.databinding.PopupVideoSpeedBinding
+import com.maurya.dtxloopplayer.fragments.FavouriteFragment
 import com.maurya.dtxloopplayer.fragments.FolderFragment
 import com.maurya.dtxloopplayer.fragments.ListsFragment
+import com.maurya.dtxloopplayer.fragments.SearchFragment
 import com.maurya.dtxloopplayer.fragments.SongsFragment
 import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
@@ -180,8 +181,10 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
         //top toolbar
 
         activityMainBinding.SearchMusicViewMainActivity.setOnClickListener {
-            val intent = Intent(this, SearchActivity::class.java)
-            startActivity(intent)
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.containerMainActivity, SearchFragment())
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
         }
 
         playerControlsPanelBinding.root.setOnClickListener {
@@ -346,10 +349,6 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
         initServiceAndPlaylist(musicList)
     }
 
-
-    override fun onAddToQueue(song: MusicDataClass) {
-
-    }
 
     override fun onDestroy() {
         super.onDestroy()

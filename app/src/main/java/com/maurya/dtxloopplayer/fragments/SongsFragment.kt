@@ -202,10 +202,7 @@ class SongsFragment : Fragment(), MediaControlInterface {
 
     }
 
-    override fun onAddToQueue(song: MusicDataClass) {
 
-
-    }
 
 
 }

@@ -13,11 +13,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.maurya.dtxloopplayer.MainActivity
 import com.maurya.dtxloopplayer.R
-import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.activities.SelectionActivity
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ItemMusicBinding
 import com.maurya.dtxloopplayer.fragments.PlayListFragment
+import com.maurya.dtxloopplayer.fragments.SearchFragment
 import com.maurya.dtxloopplayer.utils.MediaControlInterface
 import com.maurya.dtxloopplayer.utils.SharedPreferenceHelper
 import com.maurya.dtxloopplayer.utils.showToast
@@ -105,6 +105,10 @@ class AdapterMusic(
                     musicArt.visibility = View.GONE
                 }
 
+                searchActivity -> {
+                    musicArt.visibility = View.GONE
+                }
+
 
                 else -> {
                     Glide.with(context)
@@ -159,7 +163,7 @@ class AdapterMusic(
 
             searchActivity -> {
                 holder.root.setOnClickListener {
-                    if (SearchActivity.search) {
+                    if (SearchFragment.search) {
                         listener?.onSongSelected(musicList, position)
                     }
                 }

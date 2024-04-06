@@ -218,8 +218,9 @@ class PlayListFragment : Fragment(), MediaControlInterface {
     }
 
     override fun onSongSelected(musicList: ArrayList<MusicDataClass>, position: Int) {
-
-
+        if (activity is MainActivity) {
+            (activity as MainActivity).onSongSelected(musicList, position)
+        }
     }
 
     override fun onSongShuffled(musicList: ArrayList<MusicDataClass>, shuffle: Boolean) {
@@ -227,7 +228,4 @@ class PlayListFragment : Fragment(), MediaControlInterface {
 
     }
 
-    override fun onAddToQueue(song: MusicDataClass) {
-
-    }
 }
