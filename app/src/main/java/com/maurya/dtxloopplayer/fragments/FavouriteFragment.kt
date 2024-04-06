@@ -25,9 +25,11 @@ class FavouriteFragment : Fragment(), MediaControlInterface {
 
 
     private val viewModel: ViewModelObserver by viewModels()
+
+    private lateinit var adapterMusic: AdapterMusic
+
     companion object {
 
-        lateinit var adapterMusic: AdapterMusic
     }
 
 

@@ -311,6 +311,15 @@ fun updateTextViewWithItemCount(itemCount: Int): String {
     return itemCountText
 }
 
+fun updateTextViewWithFolderCount(itemCount: Int): String {
+    val itemCountText = if (itemCount == 1 || itemCount == 0) {
+        "$itemCount folder"
+    } else {
+        "$itemCount folders"
+    }
+    return itemCountText
+}
+
 
 fun playMusic(musicService: MusicService) {
     val playerBinding = PlayerActivity.getPlayerActivityBinding()

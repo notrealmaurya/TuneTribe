@@ -17,6 +17,8 @@ import com.maurya.dtxloopplayer.adapter.AdapterFolder
 import com.maurya.dtxloopplayer.database.FolderDataClass
 import com.maurya.dtxloopplayer.databinding.FragmentFolderBinding
 import com.maurya.dtxloopplayer.utils.showToast
+import com.maurya.dtxloopplayer.utils.updateTextViewWithFolderCount
+import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 import com.maurya.dtxloopplayer.viewModelsObserver.ModelResult
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import dagger.hilt.android.AndroidEntryPoint
@@ -79,6 +81,8 @@ class FolderFragment : Fragment() {
                         is ModelResult.Success -> {
                             fragmentFolderBinding.progressBar.visibility = View.GONE
                             folderList.addAll(it.data!!)
+                            fragmentFolderBinding.totalFoldersFolderActivity.text =
+                                updateTextViewWithFolderCount(folderList.size)
                         }
 
                         is ModelResult.Error -> {
