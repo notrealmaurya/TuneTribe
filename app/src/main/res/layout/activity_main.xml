@@ -39,13 +39,23 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/SearchMusicViewMainActivity"
-                android:layout_width="40dp"
+                android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="10dp"
-                android:padding="7dp"
+                android:layout_marginStart="10dp"
+                android:padding="12dp"
+                android:background="@drawable/bg_ripplefactor"
                 android:src="@drawable/icon_search" />
 
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/timerMainActivity"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/bg_ripplefactor"
+                android:padding="12dp"
+                android:src="@drawable/icon_timer" />
 
         </LinearLayout>
 

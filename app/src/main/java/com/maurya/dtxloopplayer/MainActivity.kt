@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.IBinder
 import android.provider.Settings
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -30,13 +31,17 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.maurya.dtxloopplayer.activities.PlayerActivity
 import com.maurya.dtxloopplayer.activities.SearchActivity
 import com.maurya.dtxloopplayer.adapter.AdapterMusic
 import com.maurya.dtxloopplayer.database.MusicDataClass
 import com.maurya.dtxloopplayer.databinding.ActivityMainBinding
 import com.maurya.dtxloopplayer.databinding.PlayerControlsPanelBinding
+import com.maurya.dtxloopplayer.databinding.PopupVideoSpeedBinding
 import com.maurya.dtxloopplayer.fragments.FolderFragment
 import com.maurya.dtxloopplayer.fragments.ListsFragment
 import com.maurya.dtxloopplayer.fragments.SongsFragment
@@ -47,6 +52,7 @@ import com.maurya.dtxloopplayer.utils.pauseMusic
 import com.maurya.dtxloopplayer.utils.playMusic
 import com.maurya.dtxloopplayer.utils.prevNextSong
 import com.maurya.dtxloopplayer.utils.setMusicData
+import com.maurya.dtxloopplayer.utils.showToast
 import com.maurya.dtxloopplayer.utils.updateTextViewWithItemCount
 import com.maurya.dtxloopplayer.viewModelsObserver.ViewModelObserver
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,6 +61,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
+import java.util.Timer
+import java.util.TimerTask
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.system.exitProcess
 
@@ -73,6 +82,11 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
     private lateinit var mainIntent: Intent
 
     private lateinit var musicAdapter: AdapterMusic
+
+    //timer
+    private var isTimerOn: Boolean = false
+    private var timerText: String = ""
+    private var timer: Timer? = null
 
     companion object {
         var favouriteMusicList: ArrayList<MusicDataClass> = ArrayList()
@@ -115,6 +129,7 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
         musicAdapter = AdapterMusic(this, arrayListOf())
 
         activityMainBinding.topLayout.visibility = View.VISIBLE
+        playerControlsPanelBinding.playerLayoutVisibility.visibility = View.GONE
 
         val favouriteListPreference =
             sharedPreferenceHelper.getPlayListSong("myFavouriteYouNoty572noty")
@@ -231,6 +246,33 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
             prevNextSong(increment = true, musicService!!)
         }
 
+        activityMainBinding.timerMainActivity.setOnClickListener {
+            if (!isTimerOn) {
+                timerMainDialog()
+            } else {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("Reset Time")
+                    .setMessage("Do you want to reset time? ${timerText} min")
+                    .setPositiveButton("Yes") { _, _ ->
+                        timer?.cancel()
+                        isTimerOn = false
+                    }
+                    .setNeutralButton("Modify Timer") { _, _ ->
+                        timerMainDialog()
+                    }
+                    .setNegativeButton("No") { dialog, _ ->
+                        dialog.dismiss()
+                        showToast(this, "Sleep timer is reset.")
+                        isTimerOn = false
+                        timer?.cancel()
+                    }
+                    .setCancelable(false)
+                    .create()
+                    .show()
+
+            }
+        }
+
     }
 
 
@@ -284,6 +326,7 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
         createMediaPlayer(musicService!!)
         musicService!!.mediaPlayer!!.setOnCompletionListener(this@MainActivity)
         setMusicData(viewModel)
+        playerControlsPanelBinding.playerLayoutVisibility.visibility = View.VISIBLE
     }
 
     override fun onSongSelected(
@@ -325,6 +368,107 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
         super.onBackPressed()
         activityMainBinding.topLayout.visibility = View.VISIBLE
         supportFragmentManager.popBackStack()
+    }
+
+    //
+    //
+    //
+    //
+    //
+    private fun timerMainDialog() {
+
+        val presetDurations = arrayOf("15 min", "30 min", "45 min", "1 hr")
+        val timeIntervals = intArrayOf(15, 30, 45, 60)
+
+        val customDuration = "Set Custom Time"
+
+        val customView = LayoutInflater.from(this)
+            .inflate(R.layout.popup_video_speed, activityMainBinding.root, false)
+        val bindingSlider = PopupVideoSpeedBinding.bind(customView)
+
+        bindingSlider.speedSlider.valueFrom = 0f
+        bindingSlider.speedSlider.valueTo = presetDurations.size - 1.toFloat()
+        bindingSlider.speedSlider.setLabelFormatter { value ->
+            presetDurations[value.toInt()]
+        }
+
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Select Sleep Timer")
+            .setView(customView)
+            .setNeutralButton(customDuration) { _, _ ->
+                timer?.cancel()
+                showCustomTimePicker()
+            }
+            .setPositiveButton("Set") { _, _ ->
+                timer?.cancel()
+                val selectedDurationIndex = bindingSlider.speedSlider.value.toInt()
+                startCountdownTimer(timeIntervals[selectedDurationIndex] * 60 * 1000L)
+            }
+            .setNegativeButton("Cancel") { self, _ ->
+                self.dismiss()
+            }
+            .create()
+            .show()
+    }
+
+    private fun showCustomTimePicker() {
+        val timePicker = MaterialTimePicker.Builder()
+            .setTimeFormat(TimeFormat.CLOCK_24H)
+            .setHour(0)
+            .setMinute(0)
+            .setTitleText("Set Custom Time")
+            .build()
+
+        timePicker.addOnPositiveButtonClickListener { _ ->
+            val selectedHour = timePicker.hour
+            val selectedMinute = timePicker.minute
+
+            val selectedTimeMillis = (selectedHour * 60 + selectedMinute) * 60 * 1000L
+
+            startCountdownTimer(selectedTimeMillis)
+        }
+
+        timePicker.show(supportFragmentManager, "CustomTimePicker")
+    }
+
+    private fun startCountdownTimer(durationMillis: Long) {
+        timer = Timer()
+        val task = object : TimerTask() {
+            override fun run() {
+                timerExpired()
+            }
+        }
+        timer!!.schedule(task, durationMillis)
+
+        val durationMinutes =
+            TimeUnit.MILLISECONDS.toMinutes(durationMillis)
+        showToast(this, "Sleep timer set for $durationMinutes min")
+        timerText = durationMinutes.toString()
+        isTimerOn = true
+    }
+
+    private fun timerExpired() {
+        runOnUiThread {
+            pauseMusic(musicService!!)
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Timer Expired")
+                .setMessage("Do you want to exit the application?")
+                .setPositiveButton("Yes") { _, _ ->
+                    moveTaskToBack(true)
+                    exitProcess(1)
+                }
+                .setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                    showToast(this, "Sleep timer is reset.")
+                    isTimerOn = false
+                    timer?.cancel()
+                    playMusic(musicService!!)
+                }
+                .setCancelable(false)
+                .create()
+                .show()
+        }
     }
 
 

@@ -1,10 +1,15 @@
 package com.maurya.dtxloopplayer.activities
 
+import android.content.ContentValues
 import android.content.Intent
+import android.media.RingtoneManager
 import android.media.audiofx.AudioEffect
 import android.media.audiofx.LoudnessEnhancer
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.provider.MediaStore.*
+import android.provider.MediaStore.MediaColumns.*
 import android.view.LayoutInflater
 import android.widget.PopupMenu
 import android.widget.SeekBar
@@ -44,7 +49,6 @@ import kotlin.system.exitProcess
 @AndroidEntryPoint
 class PlayerActivity : AppCompatActivity() {
 
-    private var timer: Timer? = null
 
     private lateinit var binding: ActivityPlayerBinding
 
@@ -59,9 +63,6 @@ class PlayerActivity : AppCompatActivity() {
             return bindingRef?.get()
         }
 
-        //timer
-        var isTimerOn: Boolean = false
-        var timerText: String = ""
 
         var repeat: Boolean = false
 
@@ -354,35 +355,18 @@ class PlayerActivity : AppCompatActivity() {
 
         }
 
-        //for sleep using same slider as in speed
-        bindingPopUp.bottomMenuSleepModeOption.setOnClickListener {
-            bottomSheetDialog.dismiss()
-            if (!isTimerOn) {
-                timerMainDialog()
-            } else {
-                MaterialAlertDialogBuilder(this)
-                    .setTitle("Reset Time")
-                    .setMessage("Do you want to reset time? $timerText min")
-                    .setPositiveButton("Yes") { _, _ ->
-                        timer?.cancel()
-                        isTimerOn = false
-                    }
-                    .setNeutralButton("Modify Timer") { _, _ ->
-                        timerMainDialog()
-                    }
-                    .setNegativeButton("No") { dialog, _ ->
-                        dialog.dismiss()
-                        showToast(this, "Sleep timer is reset.")
-                        isTimerOn = false
-                        timer?.cancel()
-                    }
-                    .setCancelable(false)
-                    .create()
-                    .show()
-
-            }
-
+        //for setting music as ringtone
+        bindingPopUp.bottomMenuRingtoneOption.setOnClickListener {
+            showToast(this, "Feature coming soon")
+//            val uri = Uri.parse(MainActivity.musicListPlayerFragment[MainActivity.musicPosition].path)
+//            val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
+//                putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL)
+//                putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone")
+//                putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, uri)
+//            }
+//            startActivityForResult(intent, 1)
         }
+
 
     }
 
@@ -397,102 +381,6 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun saveLottieAnimationTheme(theme: String) {
         sharedPreferenceHelper.savePlayerActivityTheme(theme)
-    }
-
-    private fun timerMainDialog() {
-
-        val presetDurations = arrayOf("15 min", "30 min", "45 min", "1 hr")
-        val timeIntervals = intArrayOf(15, 30, 45, 60)
-
-        val customDuration = "Set Custom Time"
-
-        val customView = LayoutInflater.from(this)
-            .inflate(R.layout.popup_video_speed, binding.root, false)
-        val bindingSlider = PopupVideoSpeedBinding.bind(customView)
-
-        bindingSlider.speedSlider.valueFrom = 0f
-        bindingSlider.speedSlider.valueTo = presetDurations.size - 1.toFloat()
-        bindingSlider.speedSlider.setLabelFormatter { value ->
-            presetDurations[value.toInt()]
-        }
-
-
-        MaterialAlertDialogBuilder(this)
-            .setTitle("Select Sleep Timer")
-            .setView(customView)
-            .setNeutralButton(customDuration) { _, _ ->
-                timer?.cancel()
-                showCustomTimePicker()
-            }
-            .setPositiveButton("Set") { _, _ ->
-                timer?.cancel()
-                val selectedDurationIndex = bindingSlider.speedSlider.value.toInt()
-                startCountdownTimer(timeIntervals[selectedDurationIndex] * 60 * 1000L)
-            }
-            .setNegativeButton("Cancel") { self, _ ->
-                self.dismiss()
-            }
-            .create()
-            .show()
-    }
-
-    private fun showCustomTimePicker() {
-        val timePicker = MaterialTimePicker.Builder()
-            .setTimeFormat(TimeFormat.CLOCK_24H)
-            .setHour(0)
-            .setMinute(0)
-            .setTitleText("Set Custom Time")
-            .build()
-
-        timePicker.addOnPositiveButtonClickListener { _ ->
-            val selectedHour = timePicker.hour
-            val selectedMinute = timePicker.minute
-
-            val selectedTimeMillis = (selectedHour * 60 + selectedMinute) * 60 * 1000L
-
-            startCountdownTimer(selectedTimeMillis)
-        }
-
-        timePicker.show(supportFragmentManager, "CustomTimePicker")
-    }
-
-    private fun startCountdownTimer(durationMillis: Long) {
-        timer = Timer()
-        val task = object : TimerTask() {
-            override fun run() {
-                timerExpired()
-            }
-        }
-        timer!!.schedule(task, durationMillis)
-
-        val durationMinutes =
-            TimeUnit.MILLISECONDS.toMinutes(durationMillis)
-        showToast(this, "Sleep timer set for $durationMinutes min")
-        timerText = durationMinutes.toString()
-
-        isTimerOn = true
-    }
-
-    private fun timerExpired() {
-        runOnUiThread {
-            pauseMusic(MainActivity.musicService!!)
-            MaterialAlertDialogBuilder(this)
-                .setTitle("Timer Expired")
-                .setMessage("Do you want to exit the application?")
-                .setPositiveButton("Yes") { _, _ ->
-                    moveTaskToBack(true)
-                    exitProcess(1)
-                }
-                .setNegativeButton("No") { dialog, _ ->
-                    dialog.dismiss()
-                    showToast(this, "Sleep timer is reset.")
-                    isTimerOn = false
-                    timer?.cancel()
-                }
-                .setCancelable(false)
-                .create()
-                .show()
-        }
     }
 
 }
