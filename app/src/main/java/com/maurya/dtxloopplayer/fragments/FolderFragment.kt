@@ -32,10 +32,9 @@ class FolderFragment : Fragment() {
 
     private lateinit var adapterFolder: AdapterFolder
 
-    private lateinit var folderAdapter: AdapterFolder
 
     companion object {
-        var folderList: ArrayList<FolderDataClass> = arrayListOf()
+        lateinit var folderList: ArrayList<FolderDataClass>
     }
 
     override fun onCreateView(
@@ -51,6 +50,8 @@ class FolderFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        folderList = ArrayList()
+
         fragmentFolderBinding.recyclerViewFolderActivity.apply {
             setHasFixedSize(true)
             setItemViewCacheSize(13)
@@ -62,8 +63,6 @@ class FolderFragment : Fragment() {
             )
             adapter = adapterFolder
         }
-
-        fragmentFolderBinding.totalFoldersFolderActivity.text = "${adapterFolder.itemCount} folders"
 
         fetchFolderUsingViewModel()
 
@@ -80,6 +79,7 @@ class FolderFragment : Fragment() {
                     when (it) {
                         is ModelResult.Success -> {
                             fragmentFolderBinding.progressBar.visibility = View.GONE
+                            folderList.clear()
                             folderList.addAll(it.data!!)
                             fragmentFolderBinding.totalFoldersFolderActivity.text =
                                 updateTextViewWithFolderCount(folderList.size)
@@ -93,9 +93,7 @@ class FolderFragment : Fragment() {
                         }
 
                         is ModelResult.Loading -> {
-                            folderList.clear()
                             fragmentFolderBinding.progressBar.visibility = View.VISIBLE
-                            adapterFolder.notifyDataSetChanged()
                         }
 
                         else -> {}
@@ -106,5 +104,9 @@ class FolderFragment : Fragment() {
 
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        folderList.clear()
+    }
 
 }

@@ -163,7 +163,7 @@ class AdapterMusic(
 
             searchActivity -> {
                 holder.root.setOnClickListener {
-                    if (SearchFragment.search) {
+                    if (SearchFragment.isSearchViewOpen) {
                         listener?.onSongSelected(musicList, position)
                     }
                 }

@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.graphics.PorterDuff
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
@@ -137,11 +138,11 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
         favouriteMusicList.clear()
         favouriteMusicList.addAll(favouriteListPreference)
 
-        viewModel.setFavouriteList(favouriteMusicList)
-
-        viewModel.favouriteList.observe(this) {
-            favouriteMusicList.addAll(it)
-        }
+//        viewModel.setFavouriteList(favouriteMusicList)
+//
+//        viewModel.favouriteList.observe(this) {
+//            favouriteMusicList.addAll(it)
+//        }
 
         permission()
         initViewPager()
@@ -432,6 +433,12 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
     }
 
     private fun startCountdownTimer(durationMillis: Long) {
+        activityMainBinding.timerMainActivity.setColorFilter(
+            ContextCompat.getColor(
+                this,
+                R.color.deep_blue
+            ), PorterDuff.Mode.SRC_IN
+        )
         timer = Timer()
         val task = object : TimerTask() {
             override fun run() {
@@ -458,6 +465,13 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
                     exitProcess(1)
                 }
                 .setNegativeButton("No") { dialog, _ ->
+                    val color = R.color.ImageViewAndTextViewColour
+                    activityMainBinding.timerMainActivity.setColorFilter(
+                        ContextCompat.getColor(
+                            this,
+                            color
+                        ), PorterDuff.Mode.SRC_IN
+                    )
                     dialog.dismiss()
                     showToast(this, "Sleep timer is reset.")
                     isTimerOn = false
