@@ -13,14 +13,13 @@ import javax.inject.Inject
 
 
 @HiltAndroidApp
-class ApplicationClass:Application() {
+class ApplicationClass : Application() {
 
-    companion object{
-        const val CHANNEL_ID  = "channel1"
+    companion object {
+        const val CHANNEL_ID = "channel1"
         const val ACTION_PLAY = "play"
-        const val ACTION_NEXT  = "next"
-        const val ACTION_PAUSE  = "pause"
-        const val ACTION_PREVIOUS  = "previous"
+        const val ACTION_NEXT = "next"
+        const val ACTION_PREVIOUS = "previous"
     }
 
     @Inject
@@ -32,9 +31,14 @@ class ApplicationClass:Application() {
         AppCompatDelegate.setDefaultNightMode(sharedPreferencesHelper.themeFlag[sharedPreferencesHelper.theme])
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel = NotificationChannel(CHANNEL_ID,"Now Playing Song",NotificationManager.IMPORTANCE_HIGH)
+            val notificationChannel = NotificationChannel(
+                CHANNEL_ID,
+                "Now Playing Song",
+                NotificationManager.IMPORTANCE_HIGH
+            )
             notificationChannel.description = "This is Important Channel for showing Songs"
-            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(notificationChannel)
 
         } else {
