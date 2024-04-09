@@ -133,6 +133,7 @@ suspend fun getAllFolders(
         val tempFolderList = ArrayList<String>()
         val folderList = ArrayList<FolderDataClass>()
 
+
         val selection =
             "$DURATION >= ? AND $IS_MUSIC != 0"
         val selectionArgs = arrayOf("30000")
@@ -161,7 +162,7 @@ suspend fun getAllFolders(
     }
 
 
-//sorting Video List
+//sorting Music List
 fun sortMusicList(
     sortBy: String,
     videoList: ArrayList<MusicDataClass>,
@@ -185,8 +186,15 @@ fun sortMusicList(
 //counting files in folder
 fun countMusicFilesInFolder(context: Context, folderPath: String): Int {
     val projection = arrayOf(DATA)
-    val selection = "$DATA like ?"
-    val selectionArgs = arrayOf("$folderPath%")
+
+
+    val selection =
+        "$DATA LIKE ? AND $DURATION >= ? AND $IS_MUSIC != 0"
+    val selectionArgs = arrayOf("$folderPath%", "30000")
+
+
+//    val selection = "$DATA like ?"
+//    val selectionArgs = arrayOf("$folderPath%")
 
     var count = 0
 
@@ -211,39 +219,6 @@ fun countMusicFilesInFolder(context: Context, folderPath: String): Int {
     return count
 }
 
-// for converting bytes to MB and GB
-fun getFormattedFileSize(sizeInBytes: Long): String {
-    if (sizeInBytes <= 0) return "0 B"
-
-    val units = arrayOf("B", "KB", "MB", "GB", "TB")
-    val digitGroups = (ln(sizeInBytes.toDouble()) / ln(1024.0)).toInt()
-
-    val sizeInUnit = sizeInBytes / 1024.0.pow(digitGroups.toDouble())
-    return "%.1f %s".format(sizeInUnit, units[digitGroups])
-}
-
-
-@SuppressLint("UseCompatTextViewDrawableApis")
-fun setTextViewColorsForChangingSelection(
-    context: Context,
-    textViews: Array<TextView>,
-    textColorId: Int,
-    clickable: Boolean
-) {
-    val redColor = ContextCompat.getColor(context, textColorId)
-    textViews.forEachIndexed { _, textView ->
-        textView.setTextColor(redColor)
-        textView.compoundDrawableTintList = ColorStateList.valueOf(redColor)
-        textView.isClickable = clickable
-    }
-}
-
-fun getFormattedDate(epochTime: Long): String {
-    val date = Date(epochTime * 1000)
-    val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
-
-    return dateFormat.format(date)
-}
 
 fun formatDuration(duration: Long): String {
     val minutes = TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS)
@@ -311,6 +286,7 @@ fun updateTextViewWithItemCount(itemCount: Int): String {
     return itemCountText
 }
 
+//folder or folders count
 fun updateTextViewWithFolderCount(itemCount: Int): String {
     val itemCountText = if (itemCount == 1 || itemCount == 0) {
         "$itemCount folder"
@@ -321,6 +297,7 @@ fun updateTextViewWithFolderCount(itemCount: Int): String {
 }
 
 
+//music controls
 fun playMusic(musicService: MusicService) {
     val playerBinding = PlayerActivity.getPlayerActivityBinding()
     val bottomPlayerBinding = MainActivity.getBottomPlayerBinding()
@@ -342,10 +319,10 @@ fun pauseMusic(musicService: MusicService) {
     MainActivity.musicService!!.mediaPlayer!!.pause()
     playerBinding?.playPausePlayerActivity?.setImageResource(R.drawable.icon_play)
     bottomPlayerBinding?.playPauseMiniPlayer?.setImageResource(R.drawable.icon_play)
-    musicService.showNotification(R.drawable.icon_play, "Play")
     playerBinding?.lottiePlayerActivity?.pauseAnimation()
-}
 
+    musicService.showNotification(R.drawable.icon_play, "Play")
+}
 
 fun prevNextSong(
     increment: Boolean,
@@ -392,7 +369,6 @@ fun setLayout(musicService: MusicService) {
 
 fun setMusicData(viewModel: ViewModelObserver) {
 
-
     viewModel.setMusicData(
         MusicDataClass(
             MainActivity.musicListPlayerFragment[MainActivity.musicPosition].id,
@@ -424,8 +400,42 @@ fun createMediaPlayer(musicService: MusicService) {
     }
 }
 
-
+//toast
 fun showToast(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
+
+// for converting bytes to MB and GB
+fun getFormattedFileSize(sizeInBytes: Long): String {
+    if (sizeInBytes <= 0) return "0 B"
+
+    val units = arrayOf("B", "KB", "MB", "GB", "TB")
+    val digitGroups = (ln(sizeInBytes.toDouble()) / ln(1024.0)).toInt()
+
+    val sizeInUnit = sizeInBytes / 1024.0.pow(digitGroups.toDouble())
+    return "%.1f %s".format(sizeInUnit, units[digitGroups])
+}
+
+
+@SuppressLint("UseCompatTextViewDrawableApis")
+fun setTextViewColorsForChangingSelection(
+    context: Context,
+    textViews: Array<TextView>,
+    textColorId: Int,
+    clickable: Boolean
+) {
+    val redColor = ContextCompat.getColor(context, textColorId)
+    textViews.forEachIndexed { _, textView ->
+        textView.setTextColor(redColor)
+        textView.compoundDrawableTintList = ColorStateList.valueOf(redColor)
+        textView.isClickable = clickable
+    }
+}
+
+fun getFormattedDate(epochTime: Long): String {
+    val date = Date(epochTime * 1000)
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+
+    return dateFormat.format(date)
+}

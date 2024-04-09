@@ -172,7 +172,7 @@ class MainActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener, Medi
         super.onNewIntent(intent)
         if (intent != null) {
             handleIntent(intent)
-            if (!isPlaying) pauseMusic(musicService!!)
+            if (isPlaying) pauseMusic(musicService!!)
         }
     }
 
